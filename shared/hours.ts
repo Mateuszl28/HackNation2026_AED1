@@ -109,3 +109,24 @@ export function describeHours(oh: string | undefined): string {
   for (const [en, pl] of Object.entries(DAY_PL)) s = s.replace(new RegExp(`\\b${en}\\b`, 'g'), pl);
   return s.replace(/\boff\b/g, 'nieczynne').replace(/;\s*/g, '; ');
 }
+
+/** Reguła z formularza: zaznaczone dni (Pn..Nd) i przedział godzin. */
+export interface HoursRule { days: boolean[]; from: string; to: string; }
+const OH_DAYS = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+/** Zamienia wybrane dni (np. Pn–Pt) i godziny na zapis opening_hours: „Mo-Fr 08:00-16:00; Sa 09:00-13:00”. */
+export function rulesToOpeningHours(rules: HoursRule[], always: boolean): string {
+  if (always) return '24/7';
+  return rules.filter((r) => r.days.some(Boolean) && r.from && r.to).map((r) => {
+    const parts: string[] = [];
+    let i = 0;
+    while (i < 7) {
+      if (!r.days[i]) { i++; continue; }
+      let j = i;
+      while (j + 1 < 7 && r.days[j + 1]) j++;
+      parts.push(j - i >= 2 ? `${OH_DAYS[i]}-${OH_DAYS[j]}` : j > i ? `${OH_DAYS[i]},${OH_DAYS[j]}` : OH_DAYS[i]);
+      i = j + 1;
+    }
+    return `${parts.join(',')} ${r.from}-${r.to}`;
+  }).join('; ');
+}
+

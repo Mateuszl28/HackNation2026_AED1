@@ -130,3 +130,16 @@ test('kalendarz serwisowy: elektrody, bateria, kontrola + poprawny iCalendar', (
   assert.match(ics, /DTSTART;VALUE=DATE:20270228/);
   assert.ok(ics.split('\r\n').every((l) => new TextEncoder().encode(l).length <= 75));
 });
+
+test('formularz: dni i godziny → opening_hours, rozumiane przez interpreter', async () => {
+  const { rulesToOpeningHours, isOpenAt } = await import('../shared/hours.ts');
+  const wd = [true, true, true, true, true, false, false], sat = [false, false, false, false, false, true, false];
+  const oh = rulesToOpeningHours([{ days: wd, from: '08:00', to: '16:00' }, { days: sat, from: '09:00', to: '13:00' }], false);
+  assert.equal(oh, 'Mo-Fr 08:00-16:00; Sa 09:00-13:00');
+  assert.equal(rulesToOpeningHours([{ days: [true, false, true, false, true, false, false], from: '10:00', to: '12:00' }], false), 'Mo,We,Fr 10:00-12:00');
+  assert.equal(rulesToOpeningHours([{ days: [false, false, false, false, false, true, true], from: '10:00', to: '12:00' }], false), 'Sa,Su 10:00-12:00');
+  assert.equal(rulesToOpeningHours([], true), '24/7');
+  assert.equal(isOpenAt(oh, new Date(2026, 10, 21, 10, 0)), true);   // sobota 10:00
+  assert.equal(isOpenAt(oh, new Date(2026, 10, 22, 10, 0)), false);  // niedziela
+  assert.equal(isOpenAt('Mo,We,Fr 10:00-12:00', new Date(2026, 10, 25, 11, 0)), true); // środa
+});

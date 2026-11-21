@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MyAeds from '../components/MyAeds';
+import AedForm from '../components/AedForm';
 import { aedLink } from '../config';
 import { STICKERS_KEY } from './StickersPage';
 import type { StickerItem } from './StickersPage';
@@ -158,6 +159,12 @@ export default function ProvidersPage() {
 
       <MyAeds onLoad={(name, rows) => {
         load({ name, headers: FIELDS.map((f) => f.name), rows, fixes: [] });
+        setTimeout(() => document.getElementById('s2')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+      }} />
+
+      <AedForm onLoad={(name, rows) => {
+        load({ name, headers: FIELDS.map((f) => f.name), rows, fixes: [] });
+        setDefaults({ dysponent: rows[0]?.dysponent || '', miejscowosc: rows[0]?.miejscowosc || '' });
         setTimeout(() => document.getElementById('s2')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
       }} />
 

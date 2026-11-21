@@ -742,3 +742,21 @@ summary { cursor: pointer; font-weight: 700; padding: 6px 0; }
 .cl-b.del { background: #fdecec; color: #b01c23; }
 .cl-b.chg { background: #fff4dc; color: #8a5600; }
 .changelog details { margin-top: 6px; font-size: .92rem; }
+
+/* formularz AED dla dysponentów */
+.form-cta { display: flex; gap: 16px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.form-cta h2 { margin: 0 0 4px; }
+.aed-form fieldset { border: 1px solid var(--border); border-radius: 14px; padding: 12px 14px; margin: 0 0 14px; }
+.aed-form legend { font-weight: 800; padding: 0 6px; }
+.form-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 4px 14px; }
+.af-map { height: 300px; border-radius: 12px; margin: 8px 0; border: 1px solid var(--border); }
+.af-hours { margin: 10px 0; padding: 10px 12px; background: var(--surface-2); border-radius: 12px; display: flex; flex-direction: column; gap: 8px; }
+.af-check { display: flex; gap: 8px; align-items: center; min-height: 40px; }
+.af-check input { width: 20px; height: 20px; accent-color: var(--green); }
+.af-rule { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
+.af-days { display: flex; gap: 4px; }
+.af-days button { min-width: 40px; min-height: 40px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); font: inherit; font-weight: 700; cursor: pointer; color: inherit; }
+.af-days button.on { background: var(--green); border-color: var(--green); color: #fff; }
+.af-rule input[type=time] { min-height: 40px; border-radius: 10px; border: 1px solid var(--border); padding: 0 8px; font: inherit; }
+.af-list { margin: 10px 0 0; padding-left: 18px; } .af-list li { margin-bottom: 4px; }
+@media (max-width: 600px) { .af-days button { min-width: 36px; padding: 0; } }
