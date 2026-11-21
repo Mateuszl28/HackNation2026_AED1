@@ -1,8 +1,9 @@
 // Pipeline integracji danych o AED: pobranie → mapowanie do standardu → walidacja → deduplikacja → publikacja.
 // Uruchom: node pipeline/build.ts [--fetch]
-//   --fetch  pobiera świeże pliki ze źródeł (dane.gov.pl API, OpenAEDMap) przed budową.
+//   --fetch  wykrywa zbiory w API dane.gov.pl (discover.ts) i pobiera świeży eksport OpenAEDMap przed budową.
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ExcelJS from 'exceljs';
@@ -11,6 +12,8 @@ import type { AedRecord } from '../shared/schema.ts';
 import { parseCsv, parseJson, autoMap, mapRow, osmToRecord, qualityScore, flattenRow, datasetChecks } from '../shared/mapper.ts';
 import type { Issue } from '../shared/mapper.ts';
 import { SOURCES, KIND_PRIORITY } from './sources.ts';
+import { dcatXml, MEDIA } from '../shared/dcat.ts';
+import { loadRegions, regionOf, regionStats } from './regions.ts';
 import type { SourceDef } from './sources.ts';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -29,17 +32,53 @@ interface SourceReport {
   rejectedExamples: string[]; autoFixes: Record<string, number>; topIssues: Record<string, number>; mapping: Record<string, string>; avgQuality: number;
 }
 
+interface AutoFile { zrodla: any[]; odrzucone: { datasetId: string; title: string; publisher: string; url: string; reason: string }[] }
+
+/** Lista źródeł = wykryte automatycznie w dane.gov.pl (+ ręczne poprawki) + OpenStreetMap. */
+function resolveSources(): { sources: SourceDef[]; rejected: AutoFile['odrzucone'] } {
+  const autoPath = join(ROOT, 'pipeline', 'sources.auto.json');
+  if (!existsSync(autoPath)) return { sources: SOURCES, rejected: [] };
+  const auto: AutoFile = JSON.parse(readFileSync(autoPath, 'utf8'));
+  const manual = new Map(SOURCES.map((s) => [s.id, s]));
+  const out: SourceDef[] = auto.zrodla.map((a) => {
+    const m = manual.get(a.id);
+    return {
+      id: a.id, title: a.title, kind: 'dysponent', publisher: a.publisher, license: a.license, url: a.url, downloadUrl: a.downloadUrl,
+      file: a.file, format: a.format, regon: a.regon, modified: a.modified, discovered: true,
+      mappingOverrides: m?.mappingOverrides,
+      defaults: { dysponent: a.publisher, ...(a.regon ? { dysponent_regon: a.regon } : {}), ...(m?.defaults || {}) },
+    } as SourceDef;
+  });
+  for (const s of SOURCES) if (s.format === 'geojson-osm') out.push(s);
+  return { sources: out, rejected: auto.odrzucone || [] };
+}
+
 async function fetchSources() {
-  for (const s of SOURCES) {
-    if (!s.downloadUrl) continue;
+  console.log('→ wykrywanie zbiorów w API dane.gov.pl');
+  execFileSync(process.execPath, [join(ROOT, 'pipeline', 'discover.ts')], { stdio: 'inherit' });
+  for (const s of SOURCES.filter((x) => x.format === 'geojson-osm')) {
     process.stdout.write(`↓ ${s.id} … `);
     try {
-      const r = await fetch(s.downloadUrl, { headers: { 'User-Agent': 'AEDostepni-pipeline/1.0 (hackathon prototype)' } });
+      const r = await fetch(s.downloadUrl!, { headers: { 'User-Agent': 'AEDostepni-pipeline/1.0 (open data prototype)' } });
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       writeFileSync(join(RAW, s.file), Buffer.from(await r.arrayBuffer()));
       console.log('ok');
     } catch (e) { console.log(`błąd (${(e as Error).message}) — używam kopii lokalnej`); }
   }
+}
+
+async function readXlsx(path: string): Promise<{ rows: Record<string, unknown>[]; fixes: string[] }> {
+  const wb = new ExcelJS.Workbook();
+  await wb.xlsx.readFile(path);
+  const ws = wb.worksheets[0];
+  const headers: string[] = [];
+  const rows: Record<string, unknown>[] = [];
+  ws.eachRow((row, n) => {
+    const vals = (row.values as unknown[]).slice(1).map((v: any) => (v && typeof v === 'object' ? v.text ?? v.result ?? (v instanceof Date ? v.toISOString().slice(0, 10) : '') : v));
+    if (n === 1) vals.forEach((v) => headers.push(String(v ?? '').trim()));
+    else rows.push(Object.fromEntries(headers.map((h, i) => [h, vals[i] ?? ''])));
+  });
+  return { rows, fixes: [] };
 }
 
 function haversine(a: [number, number], b: [number, number]): number {
@@ -49,8 +88,8 @@ function haversine(a: [number, number], b: [number, number]): number {
   return 2 * R * Math.asin(Math.sqrt(h));
 }
 
-function loadSource(s: SourceDef): { recs: Rec[]; report: SourceReport } {
-  const text = readFileSync(join(RAW, s.file), 'utf8');
+async function loadSource(s: SourceDef): Promise<{ recs: Rec[]; report: SourceReport }> {
+  const text = s.format === 'xlsx' ? '' : readFileSync(join(RAW, s.file), 'utf8');
   const report: SourceReport = {
     id: s.id, title: s.title, publisher: s.publisher, kind: s.kind, license: s.license, url: s.url, format: s.format,
     rows: 0, valid: 0, rejected: 0, rejectedExamples: [], matchedExisting: 0, newRecords: 0, autoFixes: {}, topIssues: {}, mapping: {}, avgQuality: 0,
@@ -66,7 +105,7 @@ function loadSource(s: SourceDef): { recs: Rec[]; report: SourceReport } {
     report.rows = recs.length;
     report.mapping = { 'tagi OSM (emergency=defibrillator)': 'wg kolumny „osm” w standardzie' };
   } else {
-    const parsed = s.format === 'csv' ? parseCsv(text) : parseJson(text);
+    const parsed = s.format === 'csv' ? parseCsv(text) : s.format === 'xlsx' ? await readXlsx(join(RAW, s.file)) : parseJson(text);
     const rows = parsed.rows.map(flattenRow);
     const headers = Array.from(new Set(rows.flatMap((r) => Object.keys(r)))).filter((h) => !h.startsWith('__'));
     const mapping = { ...autoMap(headers, rows), ...(s.mappingOverrides || {}) };
@@ -90,14 +129,15 @@ async function main() {
   const today = new Date().toISOString().slice(0, 10);
 
   // Kolejność: najpierw źródła o najwyższym priorytecie (dane dysponentów są referencyjne).
-  const ordered = [...SOURCES].sort((a, b) => KIND_PRIORITY[b.kind] - KIND_PRIORITY[a.kind]);
+  const { sources: allSources, rejected: rejectedDatasets } = resolveSources();
+  const ordered = [...allSources].sort((a, b) => KIND_PRIORITY[b.kind] - KIND_PRIORITY[a.kind]);
   const integrated: { rec: AedRecord; sources: string[]; main: SourceDef; lat: number; lon: number; issues: Issue[] }[] = [];
   const grid = new Map<string, number[]>();
   const reports: SourceReport[] = [];
 
   for (const s of ordered) {
     if (!existsSync(join(RAW, s.file))) { console.warn(`! brak pliku ${s.file} — pomijam ${s.id}`); continue; }
-    const { recs, report } = loadSource(s);
+    const { recs, report } = await loadSource(s);
     let qsum = 0;
     for (const r of recs) {
       const lat = Number(r.rec.szerokosc_geograficzna), lon = Number(r.rec.dlugosc_geograficzna);
@@ -142,10 +182,12 @@ async function main() {
     console.log(`✓ ${s.id}: ${report.rows} wierszy, ${report.valid} poprawnych, ${report.matchedExisting} scalonych, ${report.newRecords} nowych`);
   }
 
-  // finalizacja rekordów
+  // finalizacja rekordów (+ województwo z granic PRG, gdy źródło go nie podaje)
+  const { regions, geojson: wojGeo } = loadRegions(join(ROOT, 'pipeline', 'ref', 'wojewodztwa.geojson'));
   const final = integrated.map((it) => {
     const r: Record<string, string> = {};
     for (const f of FIELDS) r[f.name] = it.rec[f.name] || '';
+    if (!r.wojewodztwo) r.wojewodztwo = regionOf(regions, it.lon, it.lat);
     if (!r.data_aktualizacji) r.data_aktualizacji = today;
     if (!r.stan) r.stan = 'nieznany';
     if (!r.dostep) r.dostep = 'nieznany';
@@ -194,14 +236,41 @@ async function main() {
     z_data_kontroli: final.filter((r) => r.data_ostatniej_kontroli).length,
     srednia_jakosc: Math.round(final.reduce((s, r) => s + Number(r.jakosc), 0) / final.length),
     zrodla: reports,
+    odrzucone_zbiory: rejectedDatasets,
   };
   writeFileSync(join(OUT, 'zrodla-raport.json'), JSON.stringify(stats, null, 2));
+
+  // Metadane DCAT-AP zbioru krajowego (import/harvesting w dane.gov.pl)
+  const REPO = 'https://raw.githubusercontent.com/Mateuszl28/HackNation2026_AED1/main/data';
+  const dcat = dcatXml({
+    id: 'aedostepni-krajowy-zbior-aed',
+    title: 'Krajowy zbiór danych o defibrylatorach AED (AEDostępni)',
+    description: `Zintegrowany zbiór ${final.length} lokalizacji defibrylatorów AED w Polsce, zbudowany automatycznie z ${reports.length} źródeł (zbiory dysponentów z dane.gov.pl oraz OpenStreetMap). Każdy rekord wskazuje źródło referencyjne i wskaźnik jakości. Zakres danych zgodny ze standardem AEDostępni v${SCHEMA_VERSION}. Część danych pochodzących z OpenStreetMap jest na licencji ODbL.`,
+    publisher: 'AEDostępni (prototyp HackNation 2026)',
+    keywords: ['AED', 'defibrylator', 'AEDostępni', 'ratownictwo', 'zdrowie', 'pierwsza pomoc'],
+    modified: today, accrualPeriodicity: 'DAILY', license: 'https://opendatacommons.org/licenses/odbl/1-0/',
+    conformsTo: `${REPO.replace('/data', '/standard')}/datapackage.json`, spatial: 'Polska',
+    distributions: [
+      { title: 'Zbiór AED — CSV', url: `${REPO}/aed.csv`, format: 'CSV', mediaType: MEDIA.CSV },
+      { title: 'Zbiór AED — XLSX', url: `${REPO}/aed.xlsx`, format: 'XLSX', mediaType: MEDIA.XLSX },
+      { title: 'Zbiór AED — JSON', url: `${REPO}/aed.json`, format: 'JSON', mediaType: MEDIA.JSON },
+      { title: 'Zbiór AED — GeoJSON', url: `${REPO}/aed.geojson`, format: 'GEOJSON', mediaType: MEDIA.GEOJSON },
+    ],
+  });
+  writeFileSync(join(OUT, 'dcat.xml'), dcat);
+  writeFileSync(join(APP_OUT, 'dcat.xml'), dcat);
 
   // Wersja kompaktowa dla aplikacji (mapa)
   const APP_COLS = ['aed_uid', 'szerokosc_geograficzna', 'dlugosc_geograficzna', 'nazwa', 'opis_lokalizacji', 'nazwa_ulicy', 'nr_budynku', 'miejscowosc',
     'godziny_dostepnosci', 'dostep', 'zabezpieczenie', 'dysponent', 'telefon_kontaktowy', 'data_ostatniej_kontroli', 'zrodla', 'jakosc', 'kondygnacja', 'wewnatrz_budynku', 'zdjecie_url', 'stan', 'elektrody_dzieciece', 'instrukcja_dostepu'];
-  writeFileSync(join(APP_OUT, 'aed-app.json'), JSON.stringify({ cols: APP_COLS, generated: today, rows: final.map((r) => APP_COLS.map((c) => (c.includes('geograficzna') ? Number(Number(r[c]).toFixed(6)) : r[c] || ''))) }));
+  const sourceNames = Object.fromEntries(reports.map((r) => [r.id, { name: r.id === 'osm' ? 'OpenStreetMap (OpenAEDMap)' : `dane.gov.pl — ${r.publisher}`, url: r.url }]));
+  writeFileSync(join(APP_OUT, 'aed-app.json'), JSON.stringify({ cols: APP_COLS, generated: today, sources: sourceNames, rows: final.map((r) => APP_COLS.map((c) => (c.includes('geograficzna') ? Number(Number(r[c]).toFixed(6)) : r[c] || ''))) }));
   writeFileSync(join(APP_OUT, 'stats.json'), JSON.stringify(stats));
+  const regiony = regionStats(final);
+  writeFileSync(join(OUT, 'regiony.json'), JSON.stringify({ data_wygenerowania: today, zrodlo_ludnosci: 'GUS, stan na 31.12.2023 (zaokrąglone)', regiony }, null, 2));
+  writeFileSync(join(APP_OUT, 'regiony.json'), JSON.stringify({ data_wygenerowania: today, regiony }));
+  writeFileSync(join(APP_OUT, 'wojewodztwa.geojson'), JSON.stringify(wojGeo));
+  console.log(`  poza granicami województw: ${final.filter((r) => !r.wojewodztwo).length} rekordów`);
   for (const f of ['aed.csv', 'aed.json', 'aed.geojson', 'aed.xlsx']) writeFileSync(join(APP_OUT, f), readFileSync(join(OUT, f)));
 
   console.log(`\n= Zbiór krajowy: ${final.length} AED (${stats.z_wieloma_zrodlami} potwierdzonych w ≥2 źródłach), średnia jakość ${stats.srednia_jakosc}/100`);

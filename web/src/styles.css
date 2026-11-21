@@ -136,7 +136,7 @@ meter { width: 90px; vertical-align: middle; }
 /* ---------- buttons ---------- */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 10px 16px; border-radius: 12px;
-  border: 2px solid var(--green); background: var(--surface); color: var(--green); font: 700 1rem/1.2 inherit; font-family: inherit; text-decoration: none; cursor: pointer;
+  border: 2px solid var(--green); background: var(--surface); color: var(--green); font-weight: 700; font-size: 1rem; line-height: 1.2; font-family: inherit; text-decoration: none; cursor: pointer;
 }
 .btn:hover { background: var(--mint); }
 .btn-primary { background: var(--green); color: #fff !important; }
@@ -210,7 +210,7 @@ code { font-family: Consolas, 'Cascadia Mono', monospace; font-size: .9em; }
 .hero .btn-row { justify-content: center; }
 .small-print { font-size: .85rem; text-align: center; margin-top: 24px; }
 .segmented { display: inline-flex; border: 2px solid var(--green); border-radius: 12px; overflow: hidden; }
-.segmented button { border: 0; background: var(--surface); color: var(--text); padding: 10px 18px; font: 700 1rem inherit; font-family: inherit; min-height: 44px; cursor: pointer; }
+.segmented button { border: 0; background: var(--surface); color: var(--text); padding: 10px 18px; font-weight: 700; font-size: 1rem; font-family: inherit; min-height: 44px; cursor: pointer; }
 .segmented button.on { background: var(--green); color: #fff; }
 .form fieldset { border: 1px solid var(--border); border-radius: 10px; margin: 0 0 12px; }
 .radio { display: flex; align-items: center; gap: 8px; min-height: 40px; }
@@ -220,3 +220,42 @@ code { font-family: Consolas, 'Cascadia Mono', monospace; font-size: .9em; }
 .marker-cluster { border-radius: 50%; background-clip: padding-box; }
 .marker-cluster div { width: 30px; height: 30px; margin: 5px; border-radius: 50%; text-align: center; }
 .marker-cluster span { line-height: 30px; }
+
+/* ---------- tryb ratunkowy ---------- */
+.is-rescue .topbar, .is-rescue .tabbar { display: none; }
+.rescue { max-width: 640px; margin: 0 auto; padding: 12px 16px 40px; padding-top: calc(12px + env(safe-area-inset-top)); }
+.rescue-head { display: flex; align-items: center; gap: 12px; }
+.rescue-head h1 { font-size: 1.5rem; margin: 0; color: var(--red); }
+.rescue-back { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--border); color: var(--text); text-decoration: none; font-size: 1.2rem; }
+.rescue .big { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--navy); color: #fff; font-weight: 900; margin-right: 8px; flex: none; }
+.rescue-112 { display: flex; align-items: center; gap: 12px; margin: 14px 0; padding: 18px; border-radius: 18px; background: var(--red); color: #fff !important; text-decoration: none; font-size: 1.5rem; box-shadow: var(--shadow); }
+.rescue-112 .big { background: #fff; color: var(--red); }
+.rescue-112 b { font-size: 2rem; }
+.rescue-112 small { display: block; font-size: .9rem; opacity: .95; }
+.rescue-step { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 16px; margin: 14px 0; }
+.rescue-step h2 { display: flex; align-items: center; font-size: 1.25rem; margin: 0 0 10px; }
+.rescue-dist { font-size: 1.1rem; margin: 0; } .rescue-dist b { font-size: 1.6rem; color: var(--green); }
+.rescue-name { font-size: 1.3rem; font-weight: 800; margin: 4px 0; }
+.rescue-where { font-size: 1.15rem; margin: 0 0 4px; }
+.pulse-text { animation: pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .4; } }
+.metronome { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.metro-btn { width: 190px; height: 190px; border-radius: 50%; border: 0; background: var(--green); color: #fff; font-weight: 800; font-size: 1.3rem; line-height: 1.2; font-family: inherit; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; box-shadow: var(--shadow); }
+.metro-btn small { font-weight: 600; font-size: .85rem; opacity: .9; }
+.metro-btn.on { background: var(--red); animation-name: beat; animation-iteration-count: infinite; animation-timing-function: ease-out; }
+@keyframes beat { 0% { transform: scale(1.08); } 40% { transform: scale(.96); } 100% { transform: scale(1); } }
+.metro-count { font-size: 1.2rem; margin: 0; } .metro-count b { font-size: 2.2rem; }
+.small { font-size: .9rem; }
+.btn-rescue { background: var(--red) !important; border-color: var(--red) !important; color: #fff !important; }
+
+/* ---------- mapa luk ---------- */
+.metric-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+.metric-tabs button { border: 1px solid var(--border); background: var(--surface); color: var(--text); border-radius: 999px; padding: 8px 14px; font-weight: 600; font-size: .9rem; font-family: inherit; cursor: pointer; min-height: 40px; }
+.metric-tabs button.on { background: var(--navy); border-color: var(--navy); color: #fff; }
+.grid-map { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; align-items: start; }
+@media (max-width: 860px) { .grid-map { grid-template-columns: 1fr; } }
+.choropleth { height: 460px; border-radius: 12px; background: var(--bg); border: 1px solid var(--border); }
+@media (max-width: 860px) { .choropleth { height: 340px; } }
+.legend { display: flex; align-items: center; gap: 8px; font-size: .85rem; color: var(--muted); margin-bottom: 8px; }
+.legend-ramp { display: flex; gap: 2px; } .legend-ramp i { width: 28px; height: 12px; border-radius: 3px; display: block; }
+.swatch { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 8px; vertical-align: -1px; }

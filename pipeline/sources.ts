@@ -1,5 +1,7 @@
 // Rejestr źródeł danych o AED. Każde źródło = dysponent + format + (opcjonalnie) ręczne poprawki mapowania.
-// Nowe źródła z dane.gov.pl są wykrywane automatycznie (discover.ts) i trafiają tu jako wpisy „auto”.
+// Źródła z dane.gov.pl są wykrywane automatycznie (discover.ts → sources.auto.json).
+// Wpisy poniżej służą jako wartości domyślne i ręczne poprawki dla znanych zbiorów (łączone po id = dgp-<id zasobu>)
+// oraz jako lista awaryjna, gdy wykrywanie nie było uruchamiane.
 
 export type SourceKind = 'dysponent' | 'rejestr' | 'spolecznosc';
 
@@ -12,7 +14,10 @@ export interface SourceDef {
   url: string;                   // strona zbioru (referencja)
   downloadUrl?: string;
   file: string;                  // plik w pipeline/raw
-  format: 'csv' | 'json' | 'geojson-osm';
+  format: 'csv' | 'json' | 'geojson' | 'xlsx' | 'geojson-osm';
+  regon?: string;
+  modified?: string;
+  discovered?: boolean;           // true = wykryte automatycznie w API dane.gov.pl
   mappingOverrides?: Record<string, string>;  // kolumna źródła → pole standardu ('' = pomiń)
   defaults?: Record<string, string>;
   bbox?: [number, number, number, number];   // [minLon, minLat, maxLon, maxLat] — do raportu zasięgu

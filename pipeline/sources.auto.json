@@ -1,0 +1,78 @@
+{
+  "wygenerowano": "2026-11-21T14:20:12.116Z",
+  "zrodla": [
+    {
+      "id": "dgp-54632",
+      "datasetId": "3624",
+      "resourceId": "54632",
+      "title": "Defibrylatory zlokalizowane w Mieście Krosno",
+      "publisher": "Urząd Miasta Krosna",
+      "regon": "000526989",
+      "city": "Krosno",
+      "license": "CC0 1.0",
+      "url": "https://dane.gov.pl/pl/dataset/3624",
+      "downloadUrl": "https://api.dane.gov.pl/resources/54632,defibrylatory-zlokalizowane-w-miescie-krosno/file",
+      "file": "auto/54632.csv",
+      "format": "csv",
+      "modified": "2024-02-19",
+      "opennessScore": 4
+    },
+    {
+      "id": "dgp-62095",
+      "datasetId": "4581",
+      "resourceId": "62095",
+      "title": "Lokalizacje AED – Automatycznych Defibrylatorów Zewnętrznych w Przemyślu",
+      "publisher": "Urząd Miejski w Przemyślu",
+      "regon": "650900341",
+      "city": "Przemyśl",
+      "license": "CC0 1.0",
+      "url": "https://dane.gov.pl/pl/dataset/4581",
+      "downloadUrl": "https://api.dane.gov.pl/resources/62095,lokalizacje-aed-automatycznych-defibrylatorow-zewnetrznych-w-przemyslu/file",
+      "file": "auto/62095.csv",
+      "format": "csv",
+      "modified": "2024-11-06",
+      "opennessScore": 3
+    },
+    {
+      "id": "dgp-68353",
+      "datasetId": "4955",
+      "resourceId": "68353",
+      "title": "Defibrylatory zlokalizowane na terenie Miasta Marki",
+      "publisher": "Urząd Miasta Marki",
+      "regon": "000526009",
+      "city": "Marki",
+      "license": "CC BY 4.0",
+      "url": "https://dane.gov.pl/pl/dataset/4955",
+      "downloadUrl": "https://api.dane.gov.pl/resources/68353,defibrylatory-zlokalizowane-na-terenie-miasta-marki/file",
+      "file": "auto/68353.csv",
+      "format": "csv",
+      "modified": "2025-07-10",
+      "opennessScore": 3
+    },
+    {
+      "id": "dgp-2625221",
+      "datasetId": "40593",
+      "resourceId": "2625221",
+      "title": "Wykaz defibrylatorów AED wraz z ich lokalizacją w Legionowie.",
+      "publisher": "Urząd Miasta Legionowo",
+      "regon": "000524832",
+      "city": "Legionowo",
+      "license": "CC0 1.0",
+      "url": "https://dane.gov.pl/pl/dataset/40593",
+      "downloadUrl": "https://api.dane.gov.pl/resources/2625221,wykaz-defibrylatorow-aed-wraz-z-ich-lokalizacja-w-legionowie/file",
+      "file": "auto/2625221.csv",
+      "format": "csv",
+      "modified": "2026-09-14",
+      "opennessScore": 4
+    }
+  ],
+  "odrzucone": [
+    {
+      "datasetId": "39512",
+      "title": "Lokalizacja defibrylatorów (AED)",
+      "publisher": "Urząd m.st. Warszawy",
+      "url": "https://dane.gov.pl/pl/dataset/39512",
+      "reason": "Zasób opisany jako dane, ale link prowadzi do strony WWW, a nie do pliku z danymi."
+    }
+  ]
+}

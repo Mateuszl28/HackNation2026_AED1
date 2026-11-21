@@ -14,13 +14,15 @@ export const BYDGOSZCZ: [number, number] = [53.1235, 18.0084];
 let cache: Promise<Aed[]> | null = null;
 export function loadAeds(): Promise<Aed[]> {
   if (!cache) {
-    cache = fetch('./data/aed-app.json').then((r) => r.json()).then((d: { cols: string[]; rows: unknown[][] }) =>
-      d.rows.map((row) => {
+    cache = fetch('./data/aed-app.json').then((r) => r.json()).then((d: { cols: string[]; rows: unknown[][]; sources: typeof SOURCES }) => {
+      Object.assign(SOURCES, d.sources || {});
+      return d.rows.map((row) => {
         const o: Record<string, unknown> = {};
         d.cols.forEach((c, i) => { o[c] = row[i]; });
         o.lat = o.szerokosc_geograficzna; o.lon = o.dlugosc_geograficzna;
         return o as unknown as Aed;
-      }));
+      });
+    });
   }
   return cache;
 }
@@ -33,6 +35,7 @@ export interface Stats {
     rejected: number; rejectedExamples: string[]; matchedExisting: number; newRecords: number; autoFixes: Record<string, number>; topIssues: Record<string, number>;
     mapping: Record<string, string>; avgQuality: number;
   }[];
+  odrzucone_zbiory: { datasetId: string; title: string; publisher: string; url: string; reason: string }[];
 }
 export const loadStats = (): Promise<Stats> => fetch('./data/stats.json').then((r) => r.json());
 
@@ -72,14 +75,11 @@ export const SECURITY_LABEL: Record<string, string> = {
   nieznane: 'brak informacji',
 };
 
-export const SOURCE_NAMES: Record<string, string> = {
-  osm: 'OpenStreetMap (OpenAEDMap)', 'dgp-54632': 'dane.gov.pl — UM Krosno', 'dgp-62095': 'dane.gov.pl — UM Przemyśl',
-  'dgp-68353': 'dane.gov.pl — UM Marki', 'dgp-2625221': 'dane.gov.pl — UM Legionowo',
-};
+const SOURCES: Record<string, { name: string; url: string }> = {};
 export function sourceList(a: Aed): { id: string; ref: string; name: string; url: string }[] {
   return a.zrodla.split('|').filter(Boolean).map((s) => {
     const [id, ...rest] = s.split(':'); const ref = rest.join(':');
-    const url = id === 'osm' ? `https://www.openstreetmap.org/${ref}` : `https://dane.gov.pl/pl/dataset/resource/${id.replace('dgp-', '')}`;
-    return { id, ref, name: SOURCE_NAMES[id] || id, url };
+    const url = id === 'osm' ? `https://www.openstreetmap.org/${ref}` : SOURCES[id]?.url || 'https://dane.gov.pl';
+    return { id, ref, name: SOURCES[id]?.name || id, url };
   });
 }

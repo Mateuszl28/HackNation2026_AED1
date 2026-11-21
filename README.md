@@ -7,8 +7,10 @@ AEDostępni to otwarty mechanizm zbierania, ujednolicania i udostępniania danyc
 | Element | Gdzie | Co robi |
 |---|---|---|
 | **Wzorcowy zakres danych** | `standard/` | 35 pól (lokalizacja, dostępność, stan techniczny, dysponent) zgodnych z TERYT, WGS84, ISO 8601 i OpenStreetMap. XLSX z opisem pól, słownikami, szablonem z listami rozwijanymi i przykładem + `datapackage.json` (Table Schema). |
-| **Pipeline integracji** | `pipeline/` | Pobiera dane z wielu źródeł (dane.gov.pl API, OpenStreetMap/OpenAEDMap), automatycznie mapuje kolumny, naprawia typowe błędy, waliduje, deduplikuje (promień 35 m) i wskazuje źródło referencyjne każdego rekordu. Wynik: CSV, XLSX, JSON, GeoJSON + raport źródeł. |
-| **Aplikacja web (PWA)** | `web/` | Mapa AED z filtrem „dostępne teraz”, najbliższy AED z czasem dojścia tam i z powrotem, walidator/konwerter dla dysponentów, otwarte dane, zgłoszenia obywateli. |
+| **Wykrywanie zbiorów** | `pipeline/discover.ts` | Przeszukuje API dane.gov.pl (zbiory **i pojedyncze zasoby** w ogólnych zbiorach), wybiera zasób odczytywalny maszynowo, sprawdza, czy link prowadzi do danych, a nie do strony WWW, pobiera dysponenta i REGON z metadanych instytucji. |
+| **Pipeline integracji** | `pipeline/` | Integruje wykryte zbiory i OpenStreetMap/OpenAEDMap, automatycznie mapuje kolumny, naprawia typowe błędy, waliduje (także na poziomie całego pliku), deduplikuje (promień 35 m), wskazuje źródło referencyjne, przypisuje województwo. Wynik: CSV, XLSX, JSON, GeoJSON, **metadane DCAT-AP (XML)**, raport źródeł, statystyki regionów. |
+| **Automatyzacja** | `.github/workflows/` | CI przy każdym pushu + **nocna aktualizacja danych** (wykrycie → pobranie → integracja → commit). |
+| **Aplikacja web (PWA)** | `web/` | Mapa AED z filtrem „dostępne teraz”; **tryb ratunkowy** (najbliższy dostępny AED, „wyślij kogoś po AED”, metronom RKO 110/min z dźwiękiem i wibracją); walidator/konwerter dla dysponentów z eksportem DCAT-AP; **mapa luk w danych** (kartogram i ranking województw); otwarte dane; zgłoszenia obywateli. |
 | **Aplikacja Android** | `web/android/` | Ta sama aplikacja opakowana w Capacitor (natywna lokalizacja, ikona, splash). |
 | **Identyfikacja wizualna** | `brand/` | Logotyp (SVG/PNG/JPG/PDF), ikony aplikacji, księga znaku `brand/ksiega-znaku.pdf`. |
 
@@ -21,7 +23,9 @@ AEDostępni to otwarty mechanizm zbierania, ujednolicania i udostępniania danyc
   - Przemyśl: niestandardowa geometria `{"lat","long"}` zamiast GeoJSON `[lon, lat]`;
   - Krosno/Marki: kolumna „Nazwa” stała („Defibrylator”), adres w jednym polu → rozbijany na ulicę, numer, kod, miejscowość;
   - Legionowo: kod TERC 6-cyfrowy zamiast 7-cyfrowego.
-- Luki, które pokazują wartość danych od dysponentów: ~60% AED bez godzin dostępności, ~2/3 bez daty kontroli.
+  - Warszawa: zasób opisany jako JSON prowadzi do strony WWW katalogu, a nie do pliku z danymi → wykryty i oznaczony jako niemożliwy do pobrania maszynowo;
+  - Legionowo: AED opublikowane jako zasób ogólnego zbioru „Zdrowie” — znalezione dzięki wyszukiwaniu po zasobach.
+- Luki, które pokazują wartość danych od dysponentów: ~60% AED bez godzin dostępności, ~2/3 bez daty kontroli, **tylko 0,3% AED potwierdzonych w danych dysponentów** (mapa luk: `#/ranking`).
 
 ## Uruchomienie
 
@@ -31,7 +35,8 @@ Wymagania: Node.js 24+ (pipeline uruchamia pliki `.ts` natywnie), dla Androida J
 npm install                 # zależności pipeline (exceljs)
 npm run standard            # generuje standard/ (XLSX, CSV, datapackage.json)
 npm run data                # integracja danych z pipeline/raw → data/ i web/public/data
-npm run data:fetch          # jw., ale najpierw pobiera świeże dane ze źródeł
+npm run data:fetch          # wykrywa zbiory w API dane.gov.pl, pobiera je + OpenAEDMap, integruje
+node pipeline/discover.ts   # samo wykrywanie → pipeline/sources.auto.json
 
 cd web
 npm install
@@ -47,6 +52,9 @@ cd android && ./gradlew assembleDebug   # APK: android/app/build/outputs/apk/deb
 shared/schema.ts   ← jedno źródło prawdy: definicja 35 pól standardu
 shared/mapper.ts   ← parsowanie CSV/JSON/GeoJSON, auto-mapowanie kolumn, normalizacja, walidacja, kontrole zbioru
 shared/hours.ts    ← interpreter godzin (opening_hours) → „dostępny teraz”
+shared/dcat.ts     ← generator metadanych DCAT-AP (RDF/XML)
+pipeline/discover.ts ← wykrywanie zbiorów i zasobów o AED w API dane.gov.pl
+pipeline/regions.ts  ← województwa (point-in-polygon) i indeks gotowości danych
         │
         ├── standard/build-standard.ts → XLSX / CSV / datapackage.json
         ├── pipeline/build.ts          → zbiór krajowy + raport źródeł
@@ -58,8 +66,8 @@ Ten sam silnik walidacji działa w pipeline i w przeglądarce dysponenta. Plik d
 ## Zgodność z dane.gov.pl
 
 - Formaty odczytywalne maszynowo: CSV (UTF-8, RFC 4180), XLSX, JSON, GeoJSON (RFC 7946); bez PDF/DOC.
-- Metadane zbioru generowane w walidatorze (tytuł, opis, słowa kluczowe z tagiem **AEDostępni**, kategoria „Zdrowie”, licencja, częstotliwość aktualizacji).
-- Automatyczne wykrywanie nowych zbiorów przez API `api.dane.gov.pl/1.4` (słowo kluczowe / wyszukiwanie „defibrylator”).
+- Metadane zbioru generowane w walidatorze (tytuł, opis, słowa kluczowe z tagiem **AEDostępni**, kategoria „Zdrowie”, licencja, częstotliwość aktualizacji), także w profilu **DCAT-AP (RDF/XML)** do automatycznego importu (harvestingu) w dane.gov.pl; DCAT-AP dla zbioru krajowego: `data/dcat.xml`.
+- Automatyczne wykrywanie zbiorów przez API `api.dane.gov.pl/1.4` (`/datasets`, `/search`, `/resources`, `include=institution`) — codziennie w GitHub Actions.
 - Standard opisany maszynowo (Frictionless Table Schema) i w XLSX dla ludzi.
 - WCAG 2.2 AA: kontrast, nawigacja klawiaturą, skip-link, etykiety ARIA, status nie tylko kolorem (✓ ✕ ?), tryb ciemny, `prefers-reduced-motion`; responsywność od 320 px.
 

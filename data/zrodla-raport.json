@@ -8,14 +8,14 @@
   "bez_opisu_lokalizacji": 1415,
   "publiczne": 7938,
   "z_data_kontroli": 5981,
-  "srednia_jakosc": 44,
+  "srednia_jakosc": 46,
   "zrodla": [
     {
       "id": "dgp-54632",
       "title": "Defibrylatory zlokalizowane w Mieście Krosno",
       "publisher": "Urząd Miasta Krosna",
       "kind": "dysponent",
-      "license": "CC0 / dane.gov.pl",
+      "license": "CC0 1.0",
       "url": "https://dane.gov.pl/pl/dataset/3624",
       "format": "csv",
       "rows": 21,
@@ -42,14 +42,14 @@
         "Adres": "__adres",
         "Numer Id": "id"
       },
-      "avgQuality": 37
+      "avgQuality": 39
     },
     {
       "id": "dgp-62095",
       "title": "Lokalizacje AED – Automatycznych Defibrylatorów Zewnętrznych w Przemyślu",
       "publisher": "Urząd Miejski w Przemyślu",
       "kind": "dysponent",
-      "license": "CC0 / dane.gov.pl",
+      "license": "CC0 1.0",
       "url": "https://dane.gov.pl/pl/dataset/4581",
       "format": "csv",
       "rows": 21,
@@ -83,14 +83,14 @@
         "lat": "szerokosc_geograficzna",
         "lon": "dlugosc_geograficzna"
       },
-      "avgQuality": 36
+      "avgQuality": 38
     },
     {
       "id": "dgp-68353",
       "title": "Defibrylatory zlokalizowane na terenie Miasta Marki",
       "publisher": "Urząd Miasta Marki",
       "kind": "dysponent",
-      "license": "CC0 / dane.gov.pl",
+      "license": "CC BY 4.0",
       "url": "https://dane.gov.pl/pl/dataset/4955",
       "format": "csv",
       "rows": 8,
@@ -122,15 +122,15 @@
         "Adres": "__adres",
         "Numer Id": "id"
       },
-      "avgQuality": 38
+      "avgQuality": 40
     },
     {
       "id": "dgp-2625221",
-      "title": "Wykaz defibrylatorów AED wraz z ich lokalizacją w Legionowie",
+      "title": "Wykaz defibrylatorów AED wraz z ich lokalizacją w Legionowie.",
       "publisher": "Urząd Miasta Legionowo",
       "kind": "dysponent",
-      "license": "CC0 / dane.gov.pl",
-      "url": "https://dane.gov.pl/pl/dataset/resource/2625221",
+      "license": "CC0 1.0",
+      "url": "https://dane.gov.pl/pl/dataset/40593",
       "format": "csv",
       "rows": 24,
       "valid": 24,
@@ -162,7 +162,7 @@
         "szerokosc_geograficzna": "szerokosc_geograficzna",
         "dlugosc_geograficzna": "dlugosc_geograficzna"
       },
-      "avgQuality": 38
+      "avgQuality": 40
     },
     {
       "id": "osm",
@@ -184,6 +184,15 @@
         "tagi OSM (emergency=defibrillator)": "wg kolumny „osm” w standardzie"
       },
       "avgQuality": 34
+    }
+  ],
+  "odrzucone_zbiory": [
+    {
+      "datasetId": "39512",
+      "title": "Lokalizacja defibrylatorów (AED)",
+      "publisher": "Urząd m.st. Warszawy",
+      "url": "https://dane.gov.pl/pl/dataset/39512",
+      "reason": "Zasób opisany jako dane, ale link prowadzi do strony WWW, a nie do pliku z danymi."
     }
   ]
 }

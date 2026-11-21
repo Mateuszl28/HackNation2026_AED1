@@ -120,6 +120,7 @@ export default function MapPage() {
           <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm9 3h-2.1A7 7 0 0 0 13 5.1V3h-2v2.1A7 7 0 0 0 5.1 11H3v2h2.1a7 7 0 0 0 5.9 5.9V21h2v-2.1a7 7 0 0 0 5.9-5.9H21v-2zm-9 6a5 5 0 1 1 0-10 5 5 0 0 1 0 10z" /></svg>
           Znajdź najbliższy AED
         </button>
+        <Link className="btn btn-lg btn-rescue" to="/ratunek" aria-label="Tryb ratunkowy: najbliższy dostępny AED i metronom RKO">Ratunek</Link>
         <div className="chips" role="group" aria-label="Filtry">
           <label className="chip"><input type="checkbox" checked={onlyOpen} onChange={(e) => setOnlyOpen(e.target.checked)} /> Dostępne teraz</label>
           <label className="chip"><input type="checkbox" checked={only247} onChange={(e) => setOnly247(e.target.checked)} /> 24/7</label>
@@ -148,6 +149,7 @@ export default function MapPage() {
                 <li>Uciskaj klatkę piersiową: mocno, 100–120/min.</li>
                 <li>Wyślij kogoś po najbliższy AED — poniżej.</li>
               </ol>
+              <Link className="btn btn-rescue" to="/ratunek">Włącz tryb ratunkowy (AED + metronom RKO)</Link>
             </div>
             <h2 className="h-sm">{me ? 'Najbliżej Ciebie' : 'Najbliżej środka mapy'} <span className="muted">({filtered.length.toLocaleString('pl-PL')} AED na mapie)</span></h2>
             {aeds.length === 0 && <p role="status">Wczytywanie danych…</p>}

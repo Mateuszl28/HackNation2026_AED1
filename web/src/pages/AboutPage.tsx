@@ -26,8 +26,9 @@ export default function AboutPage() {
         <ol className="flow">
           <li><b>Standard.</b> Wzorcowy zakres danych (35 pól: lokalizacja, dostępność, stan techniczny, dysponent) zgodny z TERYT, WGS84, ISO 8601 i OpenStreetMap.</li>
           <li><b>Publikacja.</b> Dysponent wgrywa swój plik w dowolnym formacie. Walidator dopasowuje kolumny, naprawia błędy i generuje CSV/XLSX/JSON gotowe do dane.gov.pl.</li>
-          <li><b>Integracja.</b> Pipeline zbiera zbiory z dane.gov.pl (słowo kluczowe AEDostępni) i z innych źródeł (OpenStreetMap), deduplikuje je i wskazuje źródło referencyjne każdego rekordu.</li>
-          <li><b>Ratunek.</b> Aplikacja (web i Android) wskazuje najbliższy AED dostępny <em>teraz</em> oraz czas dojścia tam i z powrotem.</li>
+          <li><b>Integracja.</b> Co noc automat sam wykrywa w API dane.gov.pl zbiory i zasoby o AED, łączy je z innymi źródłami (OpenStreetMap), deduplikuje i wskazuje źródło referencyjne każdego rekordu. Zbiór krajowy ma metadane DCAT-AP gotowe do harvestingu.</li>
+          <li><b>Ratunek.</b> Aplikacja (web i Android) wskazuje najbliższy AED dostępny <em>teraz</em>, pozwala jednym dotknięciem wysłać kogoś po AED i prowadzi RKO metronomem 110/min.</li>
+          <li><b>Mobilizacja.</b> <a href="#/ranking">Mapa luk w danych</a> pokazuje województwom i gminom, ile brakuje do kompletnych danych, i zachęca do udziału w akcji.</li>
           <li><b>Pętla jakości.</b> Obywatele zgłaszają błędy, a dysponent poprawia dane u źródła, czyli w swoim zbiorze na dane.gov.pl.</li>
         </ol>
       </section>

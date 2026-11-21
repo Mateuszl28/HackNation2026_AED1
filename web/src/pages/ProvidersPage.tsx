@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react';
 import * as XLSX from 'xlsx';
 import { FIELDS, FIELD_BY_NAME, SCHEMA_VERSION } from '@shared/schema.ts';
+import { dcatXml, MEDIA } from '@shared/dcat.ts';
+import { stripDiacritics } from '@shared/mapper.ts';
 import { parseCsv, parseJson, autoMap, mapRow, qualityScore, flattenRow, datasetChecks } from '@shared/mapper.ts';
 import type { ColumnMapping, Row, MappedRow } from '@shared/mapper.ts';
 
@@ -101,6 +103,21 @@ export default function ProvidersPage() {
     czestotliwosc_aktualizacji: 'co miesiąc (oraz po każdej zmianie lokalizacji/stanu AED)',
     format: 'CSV (UTF-8) + XLSX + JSON',
   };
+  function exportDcat() {
+    const who = defaults.dysponent || 'Instytucja';
+    const slug = stripDiacritics(who).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    const base = 'https://twoja-instytucja.example/dane/aed'; // adres, pod którym dysponent udostępni pliki
+    const xml = dcatXml({
+      id: `aed-${slug}`, title: meta.tytul, description: meta.opis, publisher: who, keywords: meta.slowa_kluczowe as string[],
+      modified: new Date().toISOString().slice(0, 10), accrualPeriodicity: 'MONTHLY', license: 'https://creativecommons.org/publicdomain/zero/1.0/',
+      spatial: defaults.miejscowosc || undefined,
+      distributions: [
+        { title: 'Lokalizacje AED — CSV', url: `${base}/aed-standard.csv`, format: 'CSV', mediaType: MEDIA.CSV },
+        { title: 'Lokalizacje AED — XLSX', url: `${base}/aed-standard.xlsx`, format: 'XLSX', mediaType: MEDIA.XLSX },
+      ],
+    });
+    download('metadane-dcat-ap.xml', xml, 'application/rdf+xml');
+  }
 
   const ok = parsed && summary.errors === 0 && summary.missingRequired.length === 0;
 
@@ -232,7 +249,8 @@ export default function ProvidersPage() {
               <button className="btn btn-primary" onClick={exportCsv}>Pobierz CSV (standard)</button>
               <button className="btn" onClick={exportXlsx}>Pobierz XLSX</button>
               <button className="btn" onClick={exportJson}>Pobierz JSON</button>
-              <button className="btn btn-ghost" onClick={() => download('metadane-dane-gov-pl.json', JSON.stringify(meta, null, 2), 'application/json')}>Metadane zbioru</button>
+              <button className="btn btn-ghost" onClick={() => download('metadane-dane-gov-pl.json', JSON.stringify(meta, null, 2), 'application/json')}>Metadane (JSON)</button>
+              <button className="btn btn-ghost" onClick={exportDcat}>Metadane DCAT-AP (XML do harvestera)</button>
             </p>
             <h3>Gotowy opis zbioru do skopiowania</h3>
             <dl className="facts meta">

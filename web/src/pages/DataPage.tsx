@@ -28,7 +28,7 @@ export default function DataPage() {
             <div className="kpi kpi-bad"><b>{pct(s.liczba_aed - s.z_data_kontroli, s.liczba_aed)}</b><span>bez daty kontroli</span></div>
             <div className="kpi"><b>{s.srednia_jakosc}/100</b><span>średnia jakość rekordu</span></div>
           </section>
-          <p className="notice notice-info">Luki widoczne powyżej to powód, dla którego potrzebujemy danych od dysponentów. Dane społecznościowe mówią, <em>gdzie</em> jest AED, ale tylko dysponent wie, czy jest sprawny, kiedy był kontrolowany i czy szafka jest otwarta.</p>
+          <p className="notice notice-info">Luki widoczne powyżej to powód, dla którego potrzebujemy danych od dysponentów. Dane społecznościowe mówią, <em>gdzie</em> jest AED, ale tylko dysponent wie, czy jest sprawny, kiedy był kontrolowany i czy szafka jest otwarta. <a href="#/ranking"><b>Zobacz mapę luk w danych wg województw →</b></a></p>
 
           <section className="card" aria-labelledby="dl">
             <h2 id="dl">Pobierz zbiór</h2>
@@ -38,6 +38,7 @@ export default function DataPage() {
               <a className="btn" href="./data/aed.json" download>JSON</a>
               <a className="btn" href="./data/aed.geojson" download>GeoJSON</a>
               <a className="btn btn-ghost" href="./standard/datapackage.json" download>Table Schema (datapackage.json)</a>
+              <a className="btn btn-ghost" href="./data/dcat.xml" download>Metadane DCAT-AP (XML)</a>
               <a className="btn btn-ghost" href="./standard/aed-wzorcowy-zakres-danych.xlsx" download>Wzorcowy zakres danych (XLSX)</a>
             </p>
             <p className="muted">Wygenerowano: {s.data_wygenerowania}. Licencje: dane dysponentów — zgodnie z licencją zbioru na dane.gov.pl; dane OpenStreetMap — ODbL 1.0 (© współtwórcy OpenStreetMap), co wymaga uznania autorstwa i udostępniania na tych samych warunkach.</p>
@@ -71,6 +72,16 @@ export default function DataPage() {
               </details>
             ))}
           </section>
+
+          {s.odrzucone_zbiory?.length > 0 && (
+            <section className="card" aria-labelledby="rej">
+              <h2 id="rej">Zbiory wykryte, ale niemożliwe do zintegrowania</h2>
+              <p>Te zbiory są w dane.gov.pl, ale nie spełniają warunku danych odczytywalnych maszynowo. Wystarczy, że dysponent poprawi zasób, a przy najbliższej synchronizacji jego AED pojawią się w zbiorze krajowym.</p>
+              <ul className="issue-list">
+                {s.odrzucone_zbiory.map((z) => <li key={z.datasetId}><a href={z.url} target="_blank" rel="noopener">{z.publisher}: {z.title}</a> — {z.reason}</li>)}
+              </ul>
+            </section>
+          )}
         </>
       )}
 
@@ -96,8 +107,13 @@ export default function DataPage() {
 
       <section className="card" aria-labelledby="api">
         <h2 id="api">Automatyczne zbieranie z dane.gov.pl</h2>
-        <p>Pipeline AEDostępni co noc odpytuje API portalu i dołącza każdy nowy zbiór oznaczony słowem kluczowym <b>AEDostępni</b> lub zawierający dane o defibrylatorach. Dysponent publikuje raz, a dane trafiają do mapy i do zbioru krajowego bez dodatkowej pracy.</p>
-        <pre className="code"><code>GET https://api.dane.gov.pl/1.4/search?q=defibrylator{'\n'}GET https://api.dane.gov.pl/1.4/datasets?keyword=AEDostępni{'\n'}GET https://api.dane.gov.pl/1.4/datasets/{'{id}'}/resources</code></pre>
+        <p>Moduł wykrywania (<code>pipeline/discover.ts</code>) przeszukuje API portalu i <b>sam znajduje zbiory oraz pojedyncze zasoby o AED</b>, także ukryte w ogólnych zbiorach (np. Legionowo publikuje AED jako zasób zbioru „Zdrowie”). Z każdego zbioru wybiera zasób odczytywalny maszynowo (CSV → JSON → GeoJSON → XLSX), sprawdza, czy link prowadzi do danych, a nie do strony WWW, pobiera dysponenta i jego REGON z metadanych instytucji, a następnie przekazuje dane do pipeline integracji. Dysponent publikuje raz, z tagiem <b>AEDostępni</b>, a resztę robi automat.</p>
+        <pre className="code"><code>{[
+          'GET https://api.dane.gov.pl/1.4/datasets?q=defibrylator&include=institution',
+          'GET https://api.dane.gov.pl/1.4/search?q=AEDostępni',
+          'GET https://api.dane.gov.pl/1.4/datasets/{id}/resources',
+        ].join('\n')}</code></pre>
+        <p className="muted">Uruchomienie: <code>npm run data:fetch</code> (wykrywanie + pobranie + integracja). W repozytorium działa to codziennie jako GitHub Action.</p>
       </section>
     </div>
   );
