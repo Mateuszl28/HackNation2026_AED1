@@ -1,0 +1,15 @@
+{
+  "name": "aedostepni",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "AEDostępni — integracja otwartych danych o defibrylatorach AED dla dane.gov.pl",
+  "scripts": {
+    "data": "node pipeline/build.ts",
+    "data:fetch": "node pipeline/build.ts --fetch",
+    "standard": "node standard/build-standard.ts"
+  },
+  "dependencies": {
+    "exceljs": "^4.4.0"
+  }
+}

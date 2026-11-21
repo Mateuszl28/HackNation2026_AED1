@@ -1,0 +1,7 @@
+{
+  "appId": "pl.aedostepni.app",
+  "appName": "AEDostępni",
+  "webDir": "dist",
+  "android": { "allowMixedContent": false },
+  "server": { "androidScheme": "https" }
+}

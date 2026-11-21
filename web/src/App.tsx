@@ -1,0 +1,65 @@
+import { NavLink, Route, Routes, useLocation } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
+import { Symbol, Wordmark } from './Logo';
+import MapPage from './pages/MapPage';
+import DataPage from './pages/DataPage';
+import ProvidersPage from './pages/ProvidersPage';
+import ReportPage from './pages/ReportPage';
+import AboutPage from './pages/AboutPage';
+
+const NAV = [
+  { to: '/', label: 'Mapa AED', icon: 'M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z' },
+  { to: '/dysponenci', label: 'Dla dysponentów', icon: 'M4 4h16v4H4zM4 10h10v4H4zM4 16h16v4H4z' },
+  { to: '/dane', label: 'Otwarte dane', icon: 'M4 19h16v2H4zM6 10h3v7H6zM11 6h3v11h-3zM16 13h3v4h-3z' },
+  { to: '/zglos', label: 'Zgłoś', icon: 'M12 2 1 21h22L12 2zm1 15h-2v-2h2v2zm0-4h-2V9h2v4z' },
+  { to: '/akcja', label: 'O akcji', icon: 'M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6-8 11-8 11z' },
+];
+
+export default function App() {
+  const loc = useLocation();
+  const main = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const t = NAV.find((n) => n.to === loc.pathname)?.label ?? 'AEDostępni';
+    document.title = `${t} — AEDostępni`;
+    if (loc.pathname !== '/') main.current?.focus();
+  }, [loc.pathname]);
+
+  return (
+    <div className={`app ${loc.pathname === '/' ? 'is-map' : ''}`}>
+      <header className="topbar">
+        <NavLink to="/" className="brand" aria-label="AEDostępni — strona główna">
+          <Symbol size={34} />
+          <Wordmark />
+        </NavLink>
+        <nav className="topnav" aria-label="Główna nawigacja">
+          {NAV.map((n) => (
+            <NavLink key={n.to} to={n.to} end className={({ isActive }) => (isActive ? 'active' : '')}>{n.label}</NavLink>
+          ))}
+        </nav>
+        <a className="btn-112" href="tel:112" aria-label="Zadzwoń pod numer alarmowy 112">
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z" /></svg>
+          112
+        </a>
+      </header>
+
+      <main id="main" ref={main} tabIndex={-1}>
+        <Routes>
+          <Route path="/" element={<MapPage />} />
+          <Route path="/dysponenci" element={<ProvidersPage />} />
+          <Route path="/dane" element={<DataPage />} />
+          <Route path="/zglos" element={<ReportPage />} />
+          <Route path="/akcja" element={<AboutPage />} />
+        </Routes>
+      </main>
+
+      <nav className="tabbar" aria-label="Nawigacja dolna">
+        {NAV.map((n) => (
+          <NavLink key={n.to} to={n.to} end className={({ isActive }) => (isActive ? 'active' : '')}>
+            <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d={n.icon} /></svg>
+            <span>{n.label}</span>
+          </NavLink>
+        ))}
+      </nav>
+    </div>
+  );
+}

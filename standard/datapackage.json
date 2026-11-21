@@ -1,0 +1,400 @@
+{
+  "name": "aed-polska",
+  "title": "AEDostępni — wzorcowy zakres danych o defibrylatorach AED",
+  "version": "1.0.0",
+  "licenses": [
+    {
+      "name": "CC0-1.0",
+      "path": "https://creativecommons.org/publicdomain/zero/1.0/"
+    }
+  ],
+  "keywords": [
+    "AED",
+    "defibrylator",
+    "AEDostępni",
+    "dane.gov.pl"
+  ],
+  "resources": [
+    {
+      "name": "aed",
+      "path": "aed.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "schema": {
+        "primaryKey": [
+          "id"
+        ],
+        "fields": [
+          {
+            "name": "id",
+            "title": "Identyfikator AED u dysponenta",
+            "description": "Unikalny i stały identyfikator urządzenia w zbiorze dysponenta. Nie zmienia się przy aktualizacjach.",
+            "type": "string",
+            "constraints": {
+              "required": true
+            },
+            "x-osm-tag": "ref"
+          },
+          {
+            "name": "nazwa",
+            "title": "Nazwa miejsca / obiektu",
+            "description": "Nazwa obiektu, w którym znajduje się AED — tak, jak rozpozna ją świadek zdarzenia.",
+            "type": "string",
+            "constraints": {
+              "required": true
+            },
+            "x-osm-tag": "name"
+          },
+          {
+            "name": "szerokosc_geograficzna",
+            "title": "Szerokość geograficzna (WGS84)",
+            "description": "Szerokość geograficzna w układzie WGS84 (EPSG:4326), stopnie dziesiętne, min. 6 miejsc po przecinku, separator dziesiętny: kropka.",
+            "type": "number",
+            "constraints": {
+              "required": true,
+              "minimum": 49,
+              "maximum": 54.9
+            },
+            "x-osm-tag": "lat"
+          },
+          {
+            "name": "dlugosc_geograficzna",
+            "title": "Długość geograficzna (WGS84)",
+            "description": "Długość geograficzna w układzie WGS84 (EPSG:4326), stopnie dziesiętne, min. 6 miejsc po przecinku.",
+            "type": "number",
+            "constraints": {
+              "required": true,
+              "minimum": 14.1,
+              "maximum": 24.2
+            },
+            "x-osm-tag": "lon"
+          },
+          {
+            "name": "opis_lokalizacji",
+            "title": "Dokładne miejsce w obiekcie",
+            "description": "Gdzie dokładnie wisi AED: wejście, piętro, przy czym. Najważniejsza informacja dla świadka zdarzenia.",
+            "type": "string",
+            "constraints": {
+              "required": true
+            },
+            "x-osm-tag": "defibrillator:location"
+          },
+          {
+            "name": "kondygnacja",
+            "title": "Kondygnacja",
+            "description": "Numer kondygnacji: 0 = parter, -1 = piwnica/podziemie, 1 = I piętro.",
+            "type": "integer",
+            "constraints": {},
+            "x-osm-tag": "level"
+          },
+          {
+            "name": "wewnatrz_budynku",
+            "title": "Wewnątrz budynku",
+            "description": "TAK — AED wewnątrz budynku; NIE — na zewnątrz (np. kapsuła na elewacji).",
+            "type": "string",
+            "constraints": {
+              "enum": [
+                "TAK",
+                "NIE"
+              ]
+            },
+            "x-osm-tag": "indoor"
+          },
+          {
+            "name": "cecha_ulicy",
+            "title": "Cecha ulicy",
+            "description": "Cecha z rejestru TERYT ULIC.",
+            "type": "string",
+            "constraints": {
+              "enum": [
+                "ulica",
+                "aleja",
+                "plac",
+                "skwer",
+                "rondo",
+                "osiedle",
+                "bulwar",
+                "droga",
+                "park",
+                "inne"
+              ]
+            }
+          },
+          {
+            "name": "nazwa_ulicy",
+            "title": "Nazwa ulicy",
+            "description": "Nazwa ulicy bez cechy (bez „ul.”). Dla miejscowości bez ulic — pozostaw puste i podaj numer porządkowy.",
+            "type": "string",
+            "constraints": {
+              "required": true
+            },
+            "x-osm-tag": "addr:street"
+          },
+          {
+            "name": "nr_budynku",
+            "title": "Numer porządkowy budynku",
+            "description": "Numer porządkowy budynku wraz z literą.",
+            "type": "string",
+            "constraints": {
+              "required": true
+            },
+            "x-osm-tag": "addr:housenumber"
+          },
+          {
+            "name": "nr_lokalu",
+            "title": "Numer lokalu",
+            "description": "Numer lokalu, jeśli dotyczy.",
+            "type": "string",
+            "constraints": {}
+          },
+          {
+            "name": "kod_pocztowy",
+            "title": "Kod pocztowy",
+            "description": "Kod pocztowy w formacie NN-NNN.",
+            "type": "string",
+            "constraints": {
+              "required": true,
+              "pattern": "^\\d{2}-\\d{3}$"
+            },
+            "x-osm-tag": "addr:postcode"
+          },
+          {
+            "name": "miejscowosc",
+            "title": "Miejscowość",
+            "description": "Nazwa miejscowości zgodna z TERYT SIMC.",
+            "type": "string",
+            "constraints": {
+              "required": true
+            },
+            "x-osm-tag": "addr:city"
+          },
+          {
+            "name": "kod_terc",
+            "title": "Kod TERC gminy",
+            "description": "7-cyfrowy identyfikator gminy z rejestru TERYT TERC (z rodzajem gminy).",
+            "type": "string",
+            "constraints": {
+              "pattern": "^\\d{7}$"
+            }
+          },
+          {
+            "name": "kod_simc",
+            "title": "Kod SIMC miejscowości",
+            "description": "7-cyfrowy identyfikator miejscowości z rejestru TERYT SIMC.",
+            "type": "string",
+            "constraints": {
+              "pattern": "^\\d{7}$"
+            }
+          },
+          {
+            "name": "wojewodztwo",
+            "title": "Województwo",
+            "description": "Nazwa województwa małymi literami.",
+            "type": "string",
+            "constraints": {}
+          },
+          {
+            "name": "dostep",
+            "title": "Kto ma dostęp",
+            "description": "publiczny — każdy; dla_klientow — w godzinach otwarcia obiektu; ograniczony — np. tylko pracownicy/teren zamknięty; prywatny.",
+            "type": "string",
+            "constraints": {
+              "required": true,
+              "enum": [
+                "publiczny",
+                "dla_klientow",
+                "ograniczony",
+                "prywatny",
+                "nieznany"
+              ]
+            },
+            "x-osm-tag": "access"
+          },
+          {
+            "name": "godziny_dostepnosci",
+            "title": "Godziny dostępności",
+            "description": "Godziny, w których AED jest dostępny, w składni opening_hours (OpenStreetMap). „24/7” = całodobowo.",
+            "type": "string",
+            "constraints": {
+              "required": true
+            },
+            "x-osm-tag": "opening_hours"
+          },
+          {
+            "name": "zabezpieczenie",
+            "title": "Sposób zabezpieczenia",
+            "description": "Czy świadek zdarzenia może wyjąć AED samodzielnie. „zamkniete_na_klucz” oznacza konieczność znalezienia osoby z kluczem.",
+            "type": "string",
+            "constraints": {
+              "required": true,
+              "enum": [
+                "brak",
+                "szafka_otwarta",
+                "szafka_z_alarmem",
+                "szafka_na_kod",
+                "zamkniete_na_klucz",
+                "u_personelu",
+                "nieznane"
+              ]
+            }
+          },
+          {
+            "name": "instrukcja_dostepu",
+            "title": "Instrukcja dostępu",
+            "description": "Co zrobić, żeby otworzyć szafkę (np. „kod podaje dyspozytor 112”, „klucz w portierni”). Nie publikuj kodów!",
+            "type": "string",
+            "constraints": {}
+          },
+          {
+            "name": "elektrody_dzieciece",
+            "title": "Elektrody/tryb pediatryczny",
+            "description": "Czy AED posiada elektrody pediatryczne lub tryb dziecięcy.",
+            "type": "string",
+            "constraints": {
+              "enum": [
+                "TAK",
+                "NIE"
+              ]
+            }
+          },
+          {
+            "name": "dostepny_dla_wozkow",
+            "title": "Dostępny dla osób na wózkach",
+            "description": "Czy AED można zdjąć z poziomu wózka (wysokość uchwytu ≤ 120 cm, brak barier).",
+            "type": "string",
+            "constraints": {
+              "enum": [
+                "TAK",
+                "NIE"
+              ]
+            },
+            "x-osm-tag": "wheelchair"
+          },
+          {
+            "name": "stan",
+            "title": "Stan urządzenia",
+            "description": "Stan według ostatniej kontroli.",
+            "type": "string",
+            "constraints": {
+              "required": true,
+              "enum": [
+                "sprawny",
+                "niesprawny",
+                "w_serwisie",
+                "wycofany",
+                "nieznany"
+              ]
+            }
+          },
+          {
+            "name": "data_ostatniej_kontroli",
+            "title": "Data ostatniej kontroli",
+            "description": "Data ostatniej kontroli sprawności (RRRR-MM-DD, ISO 8601).",
+            "type": "date",
+            "format": "%Y-%m-%d",
+            "constraints": {
+              "required": true
+            },
+            "x-osm-tag": "check_date"
+          },
+          {
+            "name": "data_waznosci_elektrod",
+            "title": "Data ważności elektrod",
+            "description": "RRRR-MM-DD.",
+            "type": "date",
+            "format": "%Y-%m-%d",
+            "constraints": {}
+          },
+          {
+            "name": "data_waznosci_baterii",
+            "title": "Data ważności baterii",
+            "description": "RRRR-MM-DD.",
+            "type": "date",
+            "format": "%Y-%m-%d",
+            "constraints": {}
+          },
+          {
+            "name": "producent",
+            "title": "Producent",
+            "description": "Producent urządzenia.",
+            "type": "string",
+            "constraints": {},
+            "x-osm-tag": "manufacturer"
+          },
+          {
+            "name": "model",
+            "title": "Model",
+            "description": "Model urządzenia.",
+            "type": "string",
+            "constraints": {},
+            "x-osm-tag": "model"
+          },
+          {
+            "name": "dysponent",
+            "title": "Dysponent (właściciel/zarządca)",
+            "description": "Podmiot odpowiedzialny za urządzenie.",
+            "type": "string",
+            "constraints": {
+              "required": true
+            },
+            "x-osm-tag": "operator"
+          },
+          {
+            "name": "dysponent_regon",
+            "title": "REGON dysponenta",
+            "description": "REGON (9 lub 14 cyfr) — umożliwia jednoznaczne powiązanie z instytucją na dane.gov.pl.",
+            "type": "string",
+            "constraints": {
+              "pattern": "^(\\d{9}|\\d{14})$"
+            }
+          },
+          {
+            "name": "telefon_kontaktowy",
+            "title": "Telefon kontaktowy",
+            "description": "Telefon do obiektu (np. portiernia), format +48 NNN NNN NNN.",
+            "type": "string",
+            "constraints": {},
+            "x-osm-tag": "phone"
+          },
+          {
+            "name": "email_kontaktowy",
+            "title": "E-mail kontaktowy",
+            "description": "Adres do zgłaszania usterek.",
+            "type": "string",
+            "format": "email",
+            "constraints": {},
+            "x-osm-tag": "email"
+          },
+          {
+            "name": "zdjecie_url",
+            "title": "Zdjęcie (URL)",
+            "description": "Link do zdjęcia miejsca zawieszenia — bardzo pomaga w znalezieniu AED.",
+            "type": "string",
+            "format": "uri",
+            "constraints": {},
+            "x-osm-tag": "image"
+          },
+          {
+            "name": "data_aktualizacji",
+            "title": "Data aktualizacji rekordu",
+            "description": "Data ostatniej zmiany danych tego AED (RRRR-MM-DD).",
+            "type": "date",
+            "format": "%Y-%m-%d",
+            "constraints": {
+              "required": true
+            }
+          },
+          {
+            "name": "uwagi",
+            "title": "Uwagi",
+            "description": "Dodatkowe informacje.",
+            "type": "string",
+            "constraints": {},
+            "x-osm-tag": "note"
+          }
+        ]
+      }
+    }
+  ]
+}

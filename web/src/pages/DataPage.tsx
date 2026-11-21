@@ -1,0 +1,104 @@
+import { useEffect, useState } from 'react';
+import { FIELDS, SCHEMA_VERSION } from '@shared/schema.ts';
+import { loadStats } from '../data';
+import type { Stats } from '../data';
+
+const KIND: Record<string, string> = { dysponent: 'Dysponent (referencyjne)', rejestr: 'Rejestr publiczny', spolecznosc: 'Społeczność' };
+const pct = (a: number, b: number) => `${Math.round((a / b) * 100)}%`;
+
+export default function DataPage() {
+  const [s, setS] = useState<Stats | null>(null);
+  useEffect(() => { loadStats().then(setS); }, []);
+
+  return (
+    <div className="page">
+      <header className="page-head">
+        <p className="eyebrow">Otwarte dane · wersja standardu {SCHEMA_VERSION}</p>
+        <h1>Krajowy zbiór danych o AED</h1>
+        <p className="lead">Jeden zbiór zintegrowany z wielu rozproszonych źródeł. Każdy rekord ma wskazane źródło referencyjne, listę wszystkich źródeł, które go potwierdzają, oraz wskaźnik jakości. Dane są publikowane w formatach odczytywalnych maszynowo, zgodnie z zasadami portalu dane.gov.pl.</p>
+      </header>
+
+      {s && (
+        <>
+          <section className="kpis kpis-lg" aria-label="Statystyki zbioru">
+            <div className="kpi"><b>{s.liczba_aed.toLocaleString('pl-PL')}</b><span>AED w zbiorze</span></div>
+            <div className="kpi"><b>{s.zrodla.length}</b><span>zintegrowanych źródeł</span></div>
+            <div className="kpi"><b>{pct(s.calodobowe, s.liczba_aed)}</b><span>dostępnych 24/7</span></div>
+            <div className="kpi kpi-bad"><b>{pct(s.bez_godzin, s.liczba_aed)}</b><span>bez informacji o godzinach</span></div>
+            <div className="kpi kpi-bad"><b>{pct(s.liczba_aed - s.z_data_kontroli, s.liczba_aed)}</b><span>bez daty kontroli</span></div>
+            <div className="kpi"><b>{s.srednia_jakosc}/100</b><span>średnia jakość rekordu</span></div>
+          </section>
+          <p className="notice notice-info">Luki widoczne powyżej to powód, dla którego potrzebujemy danych od dysponentów. Dane społecznościowe mówią, <em>gdzie</em> jest AED, ale tylko dysponent wie, czy jest sprawny, kiedy był kontrolowany i czy szafka jest otwarta.</p>
+
+          <section className="card" aria-labelledby="dl">
+            <h2 id="dl">Pobierz zbiór</h2>
+            <p className="btn-row">
+              <a className="btn btn-primary" href="./data/aed.csv" download>CSV (UTF-8)</a>
+              <a className="btn" href="./data/aed.xlsx" download>XLSX</a>
+              <a className="btn" href="./data/aed.json" download>JSON</a>
+              <a className="btn" href="./data/aed.geojson" download>GeoJSON</a>
+              <a className="btn btn-ghost" href="./standard/datapackage.json" download>Table Schema (datapackage.json)</a>
+              <a className="btn btn-ghost" href="./standard/aed-wzorcowy-zakres-danych.xlsx" download>Wzorcowy zakres danych (XLSX)</a>
+            </p>
+            <p className="muted">Wygenerowano: {s.data_wygenerowania}. Licencje: dane dysponentów — zgodnie z licencją zbioru na dane.gov.pl; dane OpenStreetMap — ODbL 1.0 (© współtwórcy OpenStreetMap), co wymaga uznania autorstwa i udostępniania na tych samych warunkach.</p>
+          </section>
+
+          <section className="card" aria-labelledby="src">
+            <h2 id="src">Źródła i ich zakres referencyjny</h2>
+            <p>Przy scalaniu obowiązuje hierarchia: <b>dysponent</b> (dane referencyjne) → <b>rejestr publiczny</b> → <b>społeczność</b>. AED z różnych źródeł położone bliżej niż 35 m są łączone w jeden rekord, a brakujące pola uzupełniane są z kolejnych źródeł.</p>
+            <div className="table-wrap">
+              <table className="table">
+                <caption className="sr-only">Źródła danych</caption>
+                <thead><tr><th scope="col">Źródło</th><th scope="col">Typ</th><th scope="col">Format</th><th scope="col">Wiersze</th><th scope="col">Poprawne</th><th scope="col">Scalone z innymi</th><th scope="col">Nowe AED</th><th scope="col">Jakość</th></tr></thead>
+                <tbody>
+                  {s.zrodla.map((z) => (
+                    <tr key={z.id}>
+                      <th scope="row"><a href={z.url} target="_blank" rel="noopener">{z.title}</a><br /><small className="muted">{z.publisher} · {z.license}</small></th>
+                      <td>{KIND[z.kind]}</td><td>{z.format.toUpperCase().replace('GEOJSON-OSM', 'GeoJSON')}</td>
+                      <td>{z.rows.toLocaleString('pl-PL')}</td><td>{z.valid.toLocaleString('pl-PL')}</td>
+                      <td>{z.matchedExisting.toLocaleString('pl-PL')}</td><td>{z.newRecords.toLocaleString('pl-PL')}</td><td>{z.avgQuality}/100</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {s.zrodla.filter((z) => Object.keys(z.autoFixes).length || Object.keys(z.topIssues).length || z.rejectedExamples.length).map((z) => (
+              <details key={z.id}>
+                <summary>{z.title}: automatyczne poprawki i problemy</summary>
+                {Object.keys(z.autoFixes).length > 0 && <ul>{Object.entries(z.autoFixes).map(([k, n]) => <li key={k}>✔ {k} <span className="muted">({n}×)</span></li>)}</ul>}
+                {z.rejectedExamples.length > 0 && <ul>{z.rejectedExamples.map((k) => <li key={k}>✕ <b>Odrzucono:</b> {k}</li>)}</ul>}
+                <ul>{Object.entries(z.topIssues).map(([k, n]) => <li key={k}>⚠ {k} <span className="muted">({n}×)</span></li>)}</ul>
+              </details>
+            ))}
+          </section>
+        </>
+      )}
+
+      <section className="card" aria-labelledby="std">
+        <h2 id="std">Wzorcowy zakres danych ({FIELDS.length} pól)</h2>
+        <p><b>O</b> — obowiązkowe, <b>Z</b> — zalecane, <b>F</b> — fakultatywne. Nazwy kolumn bez polskich znaków, daty ISO 8601, współrzędne WGS84, adres zgodny z rejestrem TERYT, godziny w składni <code>opening_hours</code> (zgodność z OpenStreetMap).</p>
+        <div className="table-wrap">
+          <table className="table table-sm">
+            <caption className="sr-only">Pola standardu</caption>
+            <thead><tr><th scope="col">Kolumna</th><th scope="col">Opis</th><th scope="col">Typ</th><th scope="col">Wym.</th><th scope="col">Przykład</th></tr></thead>
+            <tbody>
+              {FIELDS.map((f) => (
+                <tr key={f.name}>
+                  <th scope="row"><code>{f.name}</code><br /><small>{f.label}</small></th>
+                  <td>{f.description}{f.enumValues && <><br /><small className="muted">Słownik: {f.enumValues.join(', ')}</small></>}</td>
+                  <td>{f.type}</td><td><span className={`req req-${f.req}`}>{f.req}</span></td><td><code>{f.example}</code></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="card" aria-labelledby="api">
+        <h2 id="api">Automatyczne zbieranie z dane.gov.pl</h2>
+        <p>Pipeline AEDostępni co noc odpytuje API portalu i dołącza każdy nowy zbiór oznaczony słowem kluczowym <b>AEDostępni</b> lub zawierający dane o defibrylatorach. Dysponent publikuje raz, a dane trafiają do mapy i do zbioru krajowego bez dodatkowej pracy.</p>
+        <pre className="code"><code>GET https://api.dane.gov.pl/1.4/search?q=defibrylator{'\n'}GET https://api.dane.gov.pl/1.4/datasets?keyword=AEDostępni{'\n'}GET https://api.dane.gov.pl/1.4/datasets/{'{id}'}/resources</code></pre>
+      </section>
+    </div>
+  );
+}

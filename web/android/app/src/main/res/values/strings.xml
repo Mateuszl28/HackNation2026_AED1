@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">AEDostępni</string>
+    <string name="title_activity_main">AEDostępni</string>
+    <string name="package_name">pl.aedostepni.app</string>
+    <string name="custom_url_scheme">pl.aedostepni.app</string>
+</resources>
