@@ -705,3 +705,19 @@ summary { cursor: pointer; font-weight: 700; padding: 6px 0; }
 .aed-steps { width: 100%; background: var(--green-50); border-radius: var(--r); padding: 12px 14px; margin-top: 8px; }
 .aed-steps ol { margin: 6px 0 0; padding-left: 20px; } .aed-steps li { margin-bottom: 4px; }
 .social-card { display: flex; flex-direction: column; gap: 12px; } .social-canvas { width: 100%; max-width: 480px; height: auto; border-radius: 16px; box-shadow: var(--sh-2); }
+
+/* ---------- quiz ---------- */
+.quiz h2 { font-size: 1.2rem; line-height: 1.35; margin: 4px 0 14px; }
+.quiz-progress { height: 6px; border-radius: 99px; background: var(--surface-2); overflow: hidden; margin-bottom: 10px; }
+.quiz-progress span { display: block; height: 100%; background: var(--green); transition: width .3s; }
+.quiz-answers { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+.quiz-a { display: flex; gap: 12px; align-items: center; text-align: left; min-height: 52px; padding: 10px 14px; border-radius: 14px; border: 2px solid var(--border); background: var(--surface); color: inherit; font: inherit; font-weight: 600; cursor: pointer; }
+.quiz-a span { flex: none; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--surface-2); font-weight: 800; }
+.quiz-a:hover:not([aria-disabled="true"]) { border-color: var(--green); }
+.quiz-a.ok { border-color: var(--green); background: var(--green-50); } .quiz-a.ok span { background: var(--green); color: #fff; }
+.quiz-a.bad { border-color: #d7262e; background: #fdecec; } .quiz-a.bad span { background: #d7262e; color: #fff; }
+.quiz-a.dim { opacity: .6; }
+.notice-ok { background: var(--green-50); border-left: 4px solid var(--green); }
+.quiz .notice { margin-bottom: 14px; }
+.quiz-link { display: flex; align-items: center; gap: 10px; padding: 10px 14px; margin: 8px 0 4px; border-radius: 14px; background: var(--green-50); color: inherit; text-decoration: none; font-size: .92rem; }
+.quiz-link .chev { margin-left: auto; font-size: 1.3rem; color: var(--green); }

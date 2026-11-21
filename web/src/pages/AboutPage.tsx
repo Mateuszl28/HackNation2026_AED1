@@ -9,6 +9,7 @@ export default function AboutPage() {
           <a className="btn btn-primary" href="#/dysponenci">Udostępnij dane swoich AED</a>
           {!isNativeApp() && <a className="btn btn-android" href={APK_URL}>Pobierz aplikację na Androida</a>}
           <a className="btn" href="#/kampania">Zestaw kampanii</a>
+          <a className="btn" href="#/quiz">Quiz: czy wiesz, jak użyć AED?</a>
           <a className="btn" href="./brand/ksiega-znaku.pdf" target="_blank" rel="noopener">Księga znaku (PDF)</a>
         </p>
       </header>

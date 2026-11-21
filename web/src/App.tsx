@@ -18,13 +18,14 @@ const StickersPage = lazy(() => import('./pages/StickersPage'));
 const CampaignPage = lazy(() => import('./pages/CampaignPage'));
 const ReportCountyPage = lazy(() => import('./pages/ReportCountyPage'));
 const EmbedPage = lazy(() => import('./pages/EmbedPage'));
+const QuizPage = lazy(() => import('./pages/QuizPage'));
 
 /** Po wyświetleniu mapy, w wolnej chwili, dociągamy pozostałe ekrany — trafiają do pamięci offline (service worker). */
 function prefetchPages() {
   if (window.location.hash.startsWith('#/widget')) return; // osadzony widżet nie pobiera reszty aplikacji
   const load = () => {
     for (const p of [() => import('./pages/DataPage'), () => import('./pages/ReportPage'), () => import('./pages/AboutPage'), () => import('./pages/RankingPage'),
-      () => import('./pages/DevPage'), () => import('./pages/LegalPage'), () => import('./pages/CampaignPage'), () => import('./pages/StickersPage'), () => import('./pages/ProvidersPage'), () => import('./pages/ReportCountyPage')]) p().catch(() => {});
+      () => import('./pages/DevPage'), () => import('./pages/LegalPage'), () => import('./pages/CampaignPage'), () => import('./pages/StickersPage'), () => import('./pages/ProvidersPage'), () => import('./pages/ReportCountyPage'), () => import('./pages/QuizPage')]) p().catch(() => {});
   };
   const w = window as unknown as { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => void };
   window.setTimeout(() => (w.requestIdleCallback ? w.requestIdleCallback(load, { timeout: 5000 }) : load()), 4000);
@@ -51,7 +52,7 @@ export default function App() {
     return () => { window.removeEventListener('online', on); window.removeEventListener('offline', off); };
   }, []);
   useEffect(() => {
-    const t = NAV.find((n) => n.to === loc.pathname)?.label ?? ({ '/ratunek': 'Tryb ratunkowy', '/ranking': 'Mapa luk w danych', '/naklejki': 'Naklejki QR', '/kampania': 'Zestaw kampanii', '/api': 'Dla deweloperów', '/raport': 'Raport dla samorządu', '/dostepnosc': 'Deklaracja dostępności', '/prywatnosc': 'Polityka prywatności' } as Record<string, string>)[loc.pathname] ?? (loc.pathname.startsWith('/aed/') ? 'Karta AED' : loc.pathname.startsWith('/raport/') ? `Raport: ${decodeURIComponent(loc.pathname.slice(8))}` : 'AEDostępni');
+    const t = NAV.find((n) => n.to === loc.pathname)?.label ?? ({ '/ratunek': 'Tryb ratunkowy', '/ranking': 'Mapa luk w danych', '/naklejki': 'Naklejki QR', '/kampania': 'Zestaw kampanii', '/api': 'Dla deweloperów', '/raport': 'Raport dla samorządu', '/quiz': 'Quiz: czy wiesz, jak użyć AED?', '/dostepnosc': 'Deklaracja dostępności', '/prywatnosc': 'Polityka prywatności' } as Record<string, string>)[loc.pathname] ?? (loc.pathname.startsWith('/aed/') ? 'Karta AED' : loc.pathname.startsWith('/raport/') ? `Raport: ${decodeURIComponent(loc.pathname.slice(8))}` : 'AEDostępni');
     document.title = `${t} — AEDostępni`;
     if (loc.pathname !== '/' && !loc.pathname.startsWith('/aed/')) main.current?.focus();
   }, [loc.pathname]);
@@ -103,6 +104,7 @@ export default function App() {
           <Route path="/api" element={<DevPage />} />
           <Route path="/raport" element={<ReportCountyPage />} />
           <Route path="/widget" element={<EmbedPage />} />
+          <Route path="/quiz" element={<QuizPage />} />
           <Route path="/raport/:county" element={<ReportCountyPage />} />
           <Route path="/dostepnosc" element={<LegalPage kind="dostepnosc" />} />
           <Route path="/prywatnosc" element={<LegalPage kind="prywatnosc" />} />

@@ -300,6 +300,7 @@ export default function MapPage() {
               <span><b>Ktoś nie oddycha?</b><small>Tryb ratunkowy: 112, najbliższy AED, metronom RKO</small></span>
               <span className="chev" aria-hidden="true">›</span>
             </Link>
+            <Link className="quiz-link" to="/quiz">🎓 <span><b>Czy wiesz, jak użyć AED?</b> Quiz — 60 sekund</span><span className="chev" aria-hidden="true">›</span></Link>
             <div className="sheet-title">
               <h2>{me ? 'Najbliżej Ciebie' : 'Najbliżej środka mapy'}</h2>
               <span>{filtered.length.toLocaleString('pl-PL')} AED{DATA_INFO.generated && <> · dane z {new Date(DATA_INFO.generated).toLocaleDateString('pl-PL')}</>}</span>

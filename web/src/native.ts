@@ -11,6 +11,7 @@ export function routeFromUrl(url: string): string | null {
       if (rest.startsWith('ratunek')) return '/ratunek';
       if (rest.startsWith('najblizszy')) return '/?locate=1';
       if (rest.startsWith('aed/')) return '/' + rest;
+      if (/^(quiz|dysponenci|dane|zglos|ranking|kampania|raport|akcja|naklejki|api)(\/|\?|$)/.test(rest)) return '/' + rest;
       return '/';
     }
     const u = new URL(url);
