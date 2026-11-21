@@ -72,7 +72,7 @@ export default function ReportPage() {
       <header className="page-head">
         <p className="eyebrow">Każdy może pomóc</p>
         <h1>Zgłoś AED lub błąd w danych</h1>
-        <p className="lead">Widzisz AED, którego nie ma na mapie? Szafka była zamknięta? Twoje zgłoszenie trafia do dysponenta urządzenia, który poprawia dane u źródła, czyli w swoim zbiorze na dane.gov.pl.</p>
+        <p className="lead">Brakuje AED na mapie albo szafka była zamknięta? Zgłoszenie trafi do dysponenta, który poprawi dane u źródła — w dane.gov.pl.</p>
       </header>
 
       <div className="segmented" role="radiogroup" aria-label="Rodzaj zgłoszenia">

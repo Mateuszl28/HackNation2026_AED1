@@ -60,9 +60,27 @@ export function distanceM(lat1: number, lon1: number, lat2: number, lon2: number
 export function walkMinutes(m: number): number { return Math.max(1, Math.round((m * 1.3) / 1.6 / 60)); }
 export function fmtDist(m: number): string { return m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1).replace('.', ',')} km`; }
 
+export function shortAddress(a: Aed): string {
+  return [a.nazwa_ulicy && `ul. ${a.nazwa_ulicy}${a.nr_budynku ? ' ' + a.nr_budynku : ''}`, a.miejscowosc].filter(Boolean).join(', ');
+}
 export function address(a: Aed): string {
-  const s = [a.nazwa_ulicy && `ul. ${a.nazwa_ulicy}${a.nr_budynku ? ' ' + a.nr_budynku : ''}`, a.miejscowosc].filter(Boolean).join(', ');
-  return s || `adres nieustalony (${a.lat.toFixed(5)}, ${a.lon.toFixed(5)})`;
+  return shortAddress(a) || `adres nieustalony (${a.lat.toFixed(5)}, ${a.lon.toFixed(5)})`;
+}
+
+/** Nazwa do wyświetlenia: unika ogólników typu „Defibrylator AED” i prefiksu „AED: …”. */
+export function displayName(a: Aed): string {
+  const n = (a.nazwa || '').replace(/^AED:\s*/, '');
+  if (n && !/^defibrylator( aed)?$/i.test(n)) return n.charAt(0).toUpperCase() + n.slice(1);
+  if (a.dysponent) return a.dysponent;
+  const addr = shortAddress(a);
+  return addr ? `AED — ${addr}` : 'Defibrylator AED';
+}
+
+/** Linia pomocnicza pod nazwą: opis miejsca, a gdy go brak — adres. Bez powtarzania nazwy. */
+export function subLine(a: Aed): string {
+  const name = displayName(a).toLowerCase();
+  const opis = a.opis_lokalizacji && !name.includes(a.opis_lokalizacji.toLowerCase()) ? a.opis_lokalizacji : '';
+  return opis || shortAddress(a) || 'brak opisu miejsca — pomóż uzupełnić';
 }
 
 export const ACCESS_LABEL: Record<string, string> = {

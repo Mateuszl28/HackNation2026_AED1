@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { loadAeds, availability, distanceM, walkMinutes, fmtDist, address, is247 } from '../data';
+import { loadAeds, availability, distanceM, walkMinutes, fmtDist, is247, displayName, subLine } from '../data';
 import type { Aed } from '../data';
 
 type Found = { a: Aed; d: number };
@@ -39,7 +39,7 @@ export default function RescuePage() {
   const navUrl = (a: Aed) => `https://www.google.com/maps/dir/?api=1&destination=${a.lat},${a.lon}&travelmode=walking`;
 
   async function sendRunner(a: Aed) {
-    const text = `PILNE! Przynieś AED: ${a.nazwa}. ${a.opis_lokalizacji ? `Gdzie: ${a.opis_lokalizacji}. ` : ''}Nawigacja: ${navUrl(a)}`;
+    const text = `PILNE! Przynieś AED: ${displayName(a)}. ${a.opis_lokalizacji ? `Gdzie: ${a.opis_lokalizacji}. ` : ''}Nawigacja: ${navUrl(a)}`;
     try {
       if (navigator.share) { await navigator.share({ title: 'Przynieś AED', text }); setShared('Wysłano.'); }
       else { await navigator.clipboard.writeText(text); setShared('Skopiowano treść — wklej w SMS lub komunikatorze.'); }
@@ -66,8 +66,8 @@ export default function RescuePage() {
         {best && (
           <div className="rescue-aed">
             <p className="rescue-dist"><b>{fmtDist(best.d)}</b> · tam i z powrotem ~{walkMinutes(best.d) * 2} min</p>
-            <p className="rescue-name">{best.a.nazwa}</p>
-            {!(best.a.opis_lokalizacji && best.a.nazwa.includes(best.a.opis_lokalizacji)) && <p className="rescue-where">{best.a.opis_lokalizacji || address(best.a)}</p>}
+            <p className="rescue-name">{displayName(best.a)}</p>
+            <p className="rescue-where">{subLine(best.a)}</p>
             <p className="muted">{is247(best.a.godziny_dostepnosci) ? 'Dostępny całodobowo' : availability(best.a) === 'open' ? 'Dostępny teraz' : 'Godziny nieznane — może być dostępny'}</p>
             <div className="btn-row">
               <button className="btn btn-primary btn-lg" onClick={() => sendRunner(best.a)}>Wyślij kogoś po AED</button>
@@ -77,7 +77,7 @@ export default function RescuePage() {
             {list.length > 1 && (
               <details>
                 <summary>Inne AED w pobliżu ({list.length - 1})</summary>
-                <ul className="issue-list">{list.slice(1).map(({ a, d }) => <li key={a.aed_uid}><b>{fmtDist(d)}</b> — {a.nazwa} <a href={navUrl(a)} target="_blank" rel="noopener">prowadź</a></li>)}</ul>
+                <ul className="issue-list">{list.slice(1).map(({ a, d }) => <li key={a.aed_uid}><b>{fmtDist(d)}</b> — {displayName(a)} <a href={navUrl(a)} target="_blank" rel="noopener">prowadź</a></li>)}</ul>
               </details>
             )}
           </div>

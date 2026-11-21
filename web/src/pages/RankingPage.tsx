@@ -72,7 +72,7 @@ export default function RankingPage() {
       <header className="page-head">
         <p className="eyebrow">Mapa luk w danych</p>
         <h1>Gdzie brakuje danych o AED?</h1>
-        <p className="lead">Każde województwo ma tysiące AED na mapach społecznościowych, ale prawie żadnych danych od dysponentów: kto jest właścicielem, czy urządzenie jest sprawne, kiedy jest dostępne. Ta mapa pokazuje, gdzie akcja AEDostępni jest najbardziej potrzebna.</p>
+        <p className="lead">AED są na mapach społecznościowych, ale prawie nikt nie publikuje danych o ich sprawności i dostępności. Zobacz, gdzie akcja AEDostępni jest najbardziej potrzebna.</p>
       </header>
 
       {rows.length > 0 && (

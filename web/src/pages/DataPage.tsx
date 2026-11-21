@@ -15,7 +15,7 @@ export default function DataPage() {
       <header className="page-head">
         <p className="eyebrow">Otwarte dane · wersja standardu {SCHEMA_VERSION}</p>
         <h1>Krajowy zbiór danych o AED</h1>
-        <p className="lead">Jeden zbiór zintegrowany z wielu rozproszonych źródeł. Każdy rekord ma wskazane źródło referencyjne, listę wszystkich źródeł, które go potwierdzają, oraz wskaźnik jakości. Dane są publikowane w formatach odczytywalnych maszynowo, zgodnie z zasadami portalu dane.gov.pl.</p>
+        <p className="lead">Jeden zbiór z wielu rozproszonych źródeł. Każdy rekord ma wskazane źródło i ocenę jakości. Formaty odczytywalne maszynowo, zgodnie z zasadami dane.gov.pl.</p>
       </header>
 
       {s && (

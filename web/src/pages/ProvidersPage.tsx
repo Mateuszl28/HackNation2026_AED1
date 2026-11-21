@@ -126,7 +126,7 @@ export default function ProvidersPage() {
       <header className="page-head">
         <p className="eyebrow">Dla gmin, szpitali, firm, uczelni i innych dysponentów AED</p>
         <h1>Opublikuj dane o swoich AED w 5 minut</h1>
-        <p className="lead">Wgraj plik w dowolnej postaci (CSV, XLSX, JSON, GeoJSON). Automatycznie dopasujemy kolumny do wzorcowego zakresu danych, naprawimy typowe błędy i przygotujemy pliki gotowe do publikacji w portalu <a href="https://dane.gov.pl" target="_blank" rel="noopener">dane.gov.pl</a>. Wszystko dzieje się w Twojej przeglądarce — plik nigdzie nie jest wysyłany.</p>
+        <p className="lead">Wgraj plik w dowolnej postaci. Dopasujemy kolumny do standardu, naprawimy typowe błędy i przygotujemy pliki do publikacji w <a href="https://dane.gov.pl" target="_blank" rel="noopener">dane.gov.pl</a>. Plik nie opuszcza Twojej przeglądarki.</p>
       </header>
 
       <ol className="steps" aria-label="Kroki">
