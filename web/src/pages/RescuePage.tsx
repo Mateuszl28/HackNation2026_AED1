@@ -122,7 +122,7 @@ export default function RescuePage() {
           <div className="rescue-aed">
             <p className="rescue-dist"><b>{fmtDist(best.d)}</b> · {t.roundTrip} ~{walkMinutes(best.d) * 2} min</p>
             <p className="rescue-name">{displayName(best.a)}</p>
-            <p className="rescue-where">{subLine(best.a)}</p>
+            {subLine(best.a) && <p className="rescue-where">{subLine(best.a)}</p>}
             <p className="muted">{is247(best.a.godziny_dostepnosci) ? t.h247 : availability(best.a) === 'open' ? t.open : t.unknown}</p>
             <div className="btn-row">
               <button className="btn btn-primary btn-lg" onClick={() => sendRunner(best.a)}>{t.send}</button>

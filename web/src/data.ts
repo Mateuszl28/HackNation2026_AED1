@@ -79,8 +79,10 @@ export function displayName(a: Aed): string {
 /** Linia pomocnicza pod nazwą: opis miejsca, a gdy go brak — adres. Bez powtarzania nazwy. */
 export function subLine(a: Aed): string {
   const name = displayName(a).toLowerCase();
-  const opis = a.opis_lokalizacji && !name.includes(a.opis_lokalizacji.toLowerCase()) ? a.opis_lokalizacji : '';
-  return opis || shortAddress(a) || 'brak opisu miejsca — pomóż uzupełnić';
+  const opisInName = !!a.opis_lokalizacji && name.includes(a.opis_lokalizacji.toLowerCase());
+  const opis = a.opis_lokalizacji && !opisInName ? a.opis_lokalizacji : '';
+  // gdy opis miejsca jest już nazwą — nie dopisujemy „brak opisu”
+  return opis || shortAddress(a) || (opisInName ? '' : 'brak opisu miejsca — pomóż uzupełnić');
 }
 
 export const ACCESS_LABEL: Record<string, string> = {
