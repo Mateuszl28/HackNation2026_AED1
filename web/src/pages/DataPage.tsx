@@ -6,6 +6,16 @@ import type { Stats } from '../data';
 const KIND: Record<string, string> = { dysponent: 'Dysponent (referencyjne)', rejestr: 'Rejestr publiczny', spolecznosc: 'Społeczność' };
 const pct = (a: number, b: number) => `${Math.round((a / b) * 100)}%`;
 
+// Przegląd źródeł (stan zastany podczas hackathonu) — ok: true = zintegrowane, false = niedostępne maszynowo, null = częściowo
+const LANDSCAPE: { name: string; url?: string; who: string; form: string; status: string; ok: boolean | null }[] = [
+  { name: 'dane.gov.pl — zbiory gmin (Krosno, Przemyśl, Marki, Legionowo)', url: 'https://dane.gov.pl/pl/search?q=defibrylator', who: 'urzędy miast', form: 'CSV / JSON / XML / XLSX, każdy w innym układzie', status: 'zintegrowane automatycznie', ok: true },
+  { name: 'dane.gov.pl — Warszawa', url: 'https://dane.gov.pl/pl/dataset/39512', who: 'Urząd m.st. Warszawy', form: 'link do strony katalogu zamiast pliku', status: 'niepobieralne maszynowo', ok: false },
+  { name: 'OpenStreetMap (eksport OpenAEDMap)', url: 'https://openaedmap.org/pl/', who: 'społeczność OSM', form: 'GeoJSON, tagi emergency=defibrillator', status: 'zintegrowane (ODbL)', ok: true },
+  { name: 'Geoportal krajowy — warstwa „Defibrylatory”', url: 'https://www.geoportal.gov.pl/aktualnosci/swiatowy-dzien-pierwszej-pomocy/', who: 'GUGiK (na bazie danych OSM Polska)', form: 'warstwa w przeglądarce mapowej', status: 'podgląd na mapie, bez otwartego zbioru', ok: null },
+  { name: 'Miejskie mapy AED (np. Warszawa, Wrocław)', who: 'urzędy miast', form: 'mapy na stronach WWW', status: 'brak eksportu danych', ok: false },
+  { name: 'Sieci firmowe (np. placówki pocztowe, galerie, przewoźnicy)', who: 'dysponenci prywatni', form: 'wewnętrzne rejestry', status: 'nieopublikowane — cel akcji AEDostępni', ok: false },
+];
+
 export default function DataPage() {
   const [s, setS] = useState<Stats | null>(null);
   useEffect(() => { loadStats().then(setS); }, []);
@@ -84,6 +94,27 @@ export default function DataPage() {
           )}
         </>
       )}
+
+      <section className="card" aria-labelledby="landscape">
+        <h2 id="landscape">Przegląd źródeł danych o AED w Polsce</h2>
+        <p>Stan rozproszenia danych, który zastaliśmy (listopad 2026). Zbiór krajowy AEDostępni łączy wszystkie źródła, które da się pobrać maszynowo. Pozostałe pokazują, gdzie dane istnieją, ale nie są otwarte.</p>
+        <div className="table-wrap">
+          <table className="table stack">
+            <caption className="sr-only">Źródła danych o AED w Polsce i ich status</caption>
+            <thead><tr><th scope="col">Źródło</th><th scope="col">Kto prowadzi</th><th scope="col">Postać danych</th><th scope="col">Status</th></tr></thead>
+            <tbody>
+              {LANDSCAPE.map((r) => (
+                <tr key={r.name}>
+                  <th scope="row">{r.url ? <a href={r.url} target="_blank" rel="noopener">{r.name}</a> : r.name}</th>
+                  <td data-label="Kto prowadzi">{r.who}</td>
+                  <td data-label="Postać danych">{r.form}</td>
+                  <td data-label="Status"><span className={`badge ${r.ok === true ? 'badge-open' : r.ok === false ? 'badge-closed' : 'badge-unknown'}`}>{r.status}</span></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
       <section className="card" aria-labelledby="std">
         <h2 id="std">Wzorcowy zakres danych ({FIELDS.length} pól)</h2>

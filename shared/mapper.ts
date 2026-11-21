@@ -3,6 +3,7 @@
 // Ten sam kod działa w pipeline (Node) i w walidatorze w przeglądarce.
 
 import { FIELDS, FIELD_BY_NAME, REQUIRED_FIELDS, ACCESS_VALUES, SECURITY_VALUES, STATUS_VALUES } from './schema.ts';
+import { isOpenAt } from './hours.ts';
 import type { AedRecord, FieldDef } from './schema.ts';
 
 export type Row = Record<string, unknown>;
@@ -279,6 +280,9 @@ export function validateRecord(rec: AedRecord): Issue[] {
       issues.push({ field: d, level: 'error', message: `Termin ważności minął (${rec[d]}) — urządzenie może nie zadziałać.` });
   }
   if (rec.zabezpieczenie === 'zamkniete_na_klucz') issues.push({ field: 'zabezpieczenie', level: 'warning', message: 'AED zamknięty na klucz — rozważ szafkę z alarmem; świadek zdarzenia może nie zdążyć.' });
+  if (rec.godziny_dostepnosci && isOpenAt(rec.godziny_dostepnosci) === null) {
+    issues.push({ field: 'godziny_dostepnosci', level: 'warning', message: `Godziny „${rec.godziny_dostepnosci}” zapisano opisowo — aplikacja nie ustali, czy AED jest dostępny TERAZ. Użyj zapisu typu „Mo-Fr 07:30-15:30; Sa 08:00-12:00” albo „24/7”.` });
+  }
   return issues;
 }
 
