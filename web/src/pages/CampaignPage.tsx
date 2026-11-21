@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import QRCode from 'qrcode';
 import { PUBLIC_URL } from '../config';
+import { loadAeds, COUNTIES } from '../data';
 
 const POSTS = [
   {
@@ -72,6 +73,8 @@ export default function CampaignPage() {
         </div>
       </section>
 
+      <EmbedGenerator copy={copy} copied={copied} />
+
       <section className="card">
         <h2>Gotowe posty do mediów społecznościowych</h2>
         <div className="posts">
@@ -103,5 +106,29 @@ export default function CampaignPage() {
         <p className="btn-row"><a className="btn btn-primary" href="./brand/ksiega-znaku.pdf" target="_blank" rel="noopener">Księga znaku (PDF)</a> <a className="btn" href="#/naklejki">Naklejki QR dla AED</a> <a className="btn" href="#/raport">Raport dla samorządu</a></p>
       </section>
     </div>
+  );
+}
+
+/** Generator kodu widżetu mapy AED do osadzenia na stronie gminy, szkoły lub firmy. */
+function EmbedGenerator({ copy, copied }: { copy: (k: string, t: string) => void; copied: string }) {
+  const [counties, setCounties] = useState<string[]>([]);
+  const [county, setCounty] = useState('');
+  useEffect(() => { loadAeds().then(() => setCounties([...COUNTIES])); }, []);
+  const src = `${PUBLIC_URL}#/widget${county ? `?powiat=${encodeURIComponent(county)}` : ''}`;
+  const code = `<iframe src="${src}" width="100%" height="440" style="border:0;border-radius:12px" title="Mapa defibrylatorów AED${county ? ` — ${county}` : ''}" loading="lazy"></iframe>`;
+  return (
+    <section className="card">
+      <h2>Mapa AED na Twoją stronę</h2>
+      <p className="muted">Wklej kod na stronę urzędu, szkoły lub firmy — mieszkańcy zobaczą AED w okolicy i ich dostępność teraz. Mapa aktualizuje się sama, co noc.</p>
+      <label className="field">Obszar
+        <select value={county} onChange={(e) => setCounty(e.target.value)}>
+          <option value="">— cała Polska —</option>
+          {counties.map((c) => <option key={c} value={c}>{c}</option>)}
+        </select>
+      </label>
+      <iframe className="embed-preview" src={`./#/widget${county ? `?powiat=${encodeURIComponent(county)}` : ''}`} title="Podgląd widżetu mapy AED" loading="lazy" />
+      <pre className="mail" tabIndex={0} aria-label="Kod do wklejenia">{code}</pre>
+      <button className="btn btn-primary" onClick={() => copy('embed', code)}>{copied === 'embed' ? 'Skopiowano ✓' : 'Kopiuj kod'}</button>
+    </section>
   );
 }

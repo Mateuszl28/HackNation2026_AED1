@@ -17,9 +17,11 @@ const LegalPage = lazy(() => import('./pages/LegalPage'));
 const StickersPage = lazy(() => import('./pages/StickersPage'));
 const CampaignPage = lazy(() => import('./pages/CampaignPage'));
 const ReportCountyPage = lazy(() => import('./pages/ReportCountyPage'));
+const EmbedPage = lazy(() => import('./pages/EmbedPage'));
 
 /** Po wyświetleniu mapy, w wolnej chwili, dociągamy pozostałe ekrany — trafiają do pamięci offline (service worker). */
 function prefetchPages() {
+  if (window.location.hash.startsWith('#/widget')) return; // osadzony widżet nie pobiera reszty aplikacji
   const load = () => {
     for (const p of [() => import('./pages/DataPage'), () => import('./pages/ReportPage'), () => import('./pages/AboutPage'), () => import('./pages/RankingPage'),
       () => import('./pages/DevPage'), () => import('./pages/LegalPage'), () => import('./pages/CampaignPage'), () => import('./pages/StickersPage'), () => import('./pages/ProvidersPage'), () => import('./pages/ReportCountyPage')]) p().catch(() => {});
@@ -55,7 +57,7 @@ export default function App() {
   }, [loc.pathname]);
 
   return (
-    <div className={`app ${loc.pathname === '/' || loc.pathname.startsWith('/aed/') ? 'is-map' : ''} ${loc.pathname === '/ratunek' ? 'is-rescue' : ''} ${loc.pathname === '/naklejki' || loc.pathname.startsWith('/raport') ? 'is-print' : ''}`}>
+    <div className={`app ${loc.pathname === '/' || loc.pathname.startsWith('/aed/') ? 'is-map' : ''} ${loc.pathname === '/ratunek' ? 'is-rescue' : ''} ${loc.pathname === '/naklejki' || loc.pathname.startsWith('/raport') ? 'is-print' : ''} ${loc.pathname === '/widget' ? 'is-embed' : ''}`}>
       <header className="topbar">
         <NavLink to="/" className="brand" aria-label="AEDostępni — strona główna">
           <Symbol size={34} />
@@ -100,6 +102,7 @@ export default function App() {
           <Route path="/kampania" element={<CampaignPage />} />
           <Route path="/api" element={<DevPage />} />
           <Route path="/raport" element={<ReportCountyPage />} />
+          <Route path="/widget" element={<EmbedPage />} />
           <Route path="/raport/:county" element={<ReportCountyPage />} />
           <Route path="/dostepnosc" element={<LegalPage kind="dostepnosc" />} />
           <Route path="/prywatnosc" element={<LegalPage kind="prywatnosc" />} />
