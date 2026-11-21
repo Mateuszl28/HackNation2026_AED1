@@ -13,7 +13,7 @@ import { parseCsv, parseJson, autoMap, mapRow, osmToRecord, qualityScore, flatte
 import type { Issue } from '../shared/mapper.ts';
 import { SOURCES, KIND_PRIORITY } from './sources.ts';
 import { dcatXml, MEDIA } from '../shared/dcat.ts';
-import { loadRegions, regionOf, regionStats } from './regions.ts';
+import { loadRegions, regionOf, regionStats, countyStats, interiorPoint } from './regions.ts';
 import type { SourceDef } from './sources.ts';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -271,6 +271,17 @@ async function main() {
   writeFileSync(join(APP_OUT, 'regiony.json'), JSON.stringify({ data_wygenerowania: today, regiony }));
   writeFileSync(join(APP_OUT, 'wojewodztwa.geojson'), JSON.stringify(wojGeo));
   console.log(`  poza granicami województw: ${final.filter((r) => !r.wojewodztwo).length} rekordów`);
+
+  // Mapa luk na poziomie powiatów (380 jednostek; klucz = id, bo nazwy powiatów się powtarzają)
+  const { regions: counties, geojson: powGeo } = loadRegions(join(ROOT, 'pipeline', 'ref', 'powiaty.geojson'), 'id');
+  const countyNames: Record<string, string> = Object.fromEntries(powGeo.features.map((f: any) => [String(f.properties.id), String(f.properties.nazwa)]));
+  const countyVoiv: Record<string, string> = Object.fromEntries(counties.map((c) => { const [x, y] = interiorPoint(c); return [c.name, regionOf(regions, x, y)]; }));
+  const withCounty = final.map((r) => ({ rec: r, county: regionOf(counties, Number(r.dlugosc_geograficzna), Number(r.szerokosc_geograficzna)) }));
+  const powiaty = countyStats(withCounty, counties, countyNames, countyVoiv);
+  writeFileSync(join(OUT, 'powiaty.json'), JSON.stringify({ data_wygenerowania: today, powiaty }, null, 2));
+  writeFileSync(join(APP_OUT, 'powiaty.json'), JSON.stringify({ data_wygenerowania: today, powiaty }));
+  writeFileSync(join(APP_OUT, 'powiaty.geojson'), JSON.stringify(powGeo));
+  console.log(`  powiaty: ${powiaty.length}, bez żadnego AED: ${powiaty.filter((p) => !p.aed).length}, z danymi dysponentów: ${powiaty.filter((p) => p.od_dysponentow_pct > 0).length}`);
   for (const f of ['aed.csv', 'aed.json', 'aed.geojson', 'aed.xlsx']) writeFileSync(join(APP_OUT, f), readFileSync(join(OUT, f)));
 
   console.log(`\n= Zbiór krajowy: ${final.length} AED (${stats.z_wieloma_zrodlami} potwierdzonych w ≥2 źródłach), średnia jakość ${stats.srednia_jakosc}/100`);

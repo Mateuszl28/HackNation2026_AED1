@@ -18,16 +18,50 @@ export const WOJ: Record<string, { terc: string; ludnosc_tys: number }> = {
 type Ring = [number, number][];
 interface Region { name: string; polys: Ring[][]; bbox: [number, number, number, number]; }
 
-export function loadRegions(path: string): { regions: Region[]; geojson: any } {
+/** Wczytuje granice; `key` = nazwa (województwa) albo id (powiaty — nazwy powiatów się powtarzają). */
+export function loadRegions(path: string, key: 'nazwa' | 'id' = 'nazwa'): { regions: Region[]; geojson: any } {
   const gj = JSON.parse(readFileSync(path, 'utf8'));
   const regions: Region[] = gj.features.map((f: any) => {
     const polys: Ring[][] = f.geometry.type === 'Polygon' ? [f.geometry.coordinates] : f.geometry.coordinates;
-    const all = polys.flat(2) as unknown as number[];
     const xs = polys.flatMap((p) => p[0].map((c) => c[0])), ys = polys.flatMap((p) => p[0].map((c) => c[1]));
-    void all;
-    return { name: String(f.properties.nazwa).toLowerCase(), polys, bbox: [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)] };
+    const name = key === 'id' ? String(f.properties.id) : String(f.properties.nazwa).toLowerCase();
+    return { name, polys, bbox: [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)] };
   });
   return { regions, geojson: gj };
+}
+
+/** Punkt wewnętrzny wielokąta (środek bboxu, a gdy wypada poza — pierwszy wierzchołek przesunięty do środka). */
+export function interiorPoint(r: Region): [number, number] {
+  const cx = (r.bbox[0] + r.bbox[2]) / 2, cy = (r.bbox[1] + r.bbox[3]) / 2;
+  if (r.polys.some((p) => inRing(cx, cy, p[0]))) return [cx, cy];
+  const ring = r.polys[0][0];
+  const sx = ring.reduce((s, c) => s + c[0], 0) / ring.length, sy = ring.reduce((s, c) => s + c[1], 0) / ring.length;
+  return [sx, sy];
+}
+
+export interface CountyStats {
+  id: string; powiat: string; wojewodztwo: string; aed: number; z_godzinami_pct: number; z_opisem_pct: number;
+  z_kontrola_pct: number; od_dysponentow_pct: number; indeks_gotowosci: number;
+}
+
+/** Statystyki per powiat — te same wskaźniki co dla województw (bez ludności: brak danych w prototypie). */
+export function countyStats(records: { rec: Record<string, string>; county: string }[], counties: Region[], names: Record<string, string>, voivOf: Record<string, string>): CountyStats[] {
+  const by = new Map<string, Record<string, string>[]>();
+  for (const { rec, county } of records) { if (!county) continue; if (!by.has(county)) by.set(county, []); by.get(county)!.push(rec); }
+  const pct = (n: number, d: number) => (d ? Math.round((n / d) * 100) : 0);
+  return counties.map((c) => {
+    const rs = by.get(c.name) || [];
+    const n = rs.length;
+    const godz = pct(rs.filter((r) => r.godziny_dostepnosci).length, n);
+    const opis = pct(rs.filter((r) => r.opis_lokalizacji).length, n);
+    const kontr = pct(rs.filter((r) => r.data_ostatniej_kontroli).length, n);
+    const dysp = pct(rs.filter((r) => /(^|\|)dgp-/.test(r.zrodla)).length, n);
+    return {
+      id: c.name, powiat: names[c.name] || c.name, wojewodztwo: voivOf[c.name] || '', aed: n,
+      z_godzinami_pct: godz, z_opisem_pct: opis, z_kontrola_pct: kontr, od_dysponentow_pct: dysp,
+      indeks_gotowosci: n ? Math.round(0.3 * godz + 0.3 * opis + 0.2 * kontr + 0.2 * dysp) : 0,
+    };
+  }).sort((a, b) => b.indeks_gotowosci - a.indeks_gotowosci || b.aed - a.aed);
 }
 
 function inRing(x: number, y: number, ring: Ring): boolean {

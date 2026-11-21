@@ -1,5 +1,5 @@
 import { NavLink, Route, Routes, useLocation } from 'react-router-dom';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Symbol, Wordmark } from './Logo';
 import MapPage from './pages/MapPage';
 import DataPage from './pages/DataPage';
@@ -24,6 +24,12 @@ const NAV = [
 export default function App() {
   const loc = useLocation();
   const main = useRef<HTMLElement>(null);
+  const [offline, setOffline] = useState(typeof navigator !== 'undefined' && navigator.onLine === false);
+  useEffect(() => {
+    const on = () => setOffline(false), off = () => setOffline(true);
+    window.addEventListener('online', on); window.addEventListener('offline', off);
+    return () => { window.removeEventListener('online', on); window.removeEventListener('offline', off); };
+  }, []);
   useEffect(() => {
     const t = NAV.find((n) => n.to === loc.pathname)?.label ?? ({ '/ratunek': 'Tryb ratunkowy', '/ranking': 'Mapa luk w danych', '/naklejki': 'Naklejki QR', '/kampania': 'Zestaw kampanii' } as Record<string, string>)[loc.pathname] ?? 'AEDostępni';
     document.title = `${t} — AEDostępni`;
@@ -47,6 +53,12 @@ export default function App() {
           112
         </a>
       </header>
+
+      {offline && (
+        <div className="offline-bar" role="status">
+          <b>Jesteś offline.</b> Pokazujemy zapisane dane AED; mapa może być niepełna. Numer <a href="tel:112">112</a> działa bez internetu.
+        </div>
+      )}
 
       <main id="main" ref={main} tabIndex={-1}>
         <Routes>
