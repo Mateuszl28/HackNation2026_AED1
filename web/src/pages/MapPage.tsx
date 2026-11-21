@@ -105,9 +105,13 @@ export default function MapPage() {
     }).addTo(map);
     // Czujnik podkładu mapy: przy „Wi-Fi bez internetu” przeglądarka twierdzi, że jest online, a kafelki wiszą.
     // Jeśli widoczne kafelki nie wczytają się w 10 s — mówimy o tym wprost (dane AED działają bez sieci).
-    let tileTimer: number | undefined;
-    tiles.on('loading', () => { window.clearTimeout(tileTimer); tileTimer = window.setTimeout(() => setTilesDown(true), 10000); });
-    tiles.on('load', () => { window.clearTimeout(tileTimer); setTilesDown(false); });
+    // Uwaga: Leaflet zgłasza „load” także gdy kafelki się NIE wczytały, więc sprawdzamy rzeczywiście wczytane obrazy.
+    const loadedTiles = () => Array.from(mapEl.current?.querySelectorAll<HTMLImageElement>('img.leaflet-tile') || []).filter((img) => img.complete && img.naturalWidth > 0).length;
+    const check = () => setTilesDown(loadedTiles() === 0);
+    const tileTimer = window.setInterval(check, 5000);
+    window.setTimeout(check, 10000);
+    tiles.on('tileload', () => setTilesDown(false));
+    map.on('remove', () => window.clearInterval(tileTimer));
     map.on('moveend', () => { const c = map.getCenter(); setCenter([c.lat, c.lng]); });
     mapRef.current = map;
     return () => { map.remove(); mapRef.current = null; };
@@ -205,8 +209,8 @@ export default function MapPage() {
     const mobile = window.innerWidth <= 900;
     const b = L.latLngBounds(pts);
     map.fitBounds(b, mobile
-      ? { paddingTopLeft: [40, 90], paddingBottomRight: [40, Math.round(window.innerHeight * 0.52) + 30], maxZoom: 18 }
-      : { padding: [60, 60], maxZoom: 18 });
+      ? { paddingTopLeft: [40, 90], paddingBottomRight: [40, Math.round(window.innerHeight * 0.52) + 30], maxZoom: 17 }
+      : { padding: [60, 60], maxZoom: 17 });
   }
 
   function focus(a: Aed) {
@@ -225,7 +229,8 @@ export default function MapPage() {
         </div>
         <div className="map-search" role="search">
           <label className="sr-only" htmlFor="aed-q">Szukaj AED: miasto, obiekt, ulica lub dysponent</label>
-          <input id="aed-q" type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Szukaj: miasto, obiekt, ulica, dysponent…" autoComplete="off"
+          <svg className="map-search-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.8l-.3-.3A6.5 6.5 0 1 0 14 15.5l.3.3v.8l5 5 1.5-1.5-5-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z" /></svg>
+          <input id="aed-q" type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Szukaj AED, miejsca, ulicy…" autoComplete="off"
             role="combobox" aria-autocomplete="list" aria-controls="aed-q-list" aria-expanded={hits.length > 0} onKeyDown={(e) => { if (e.key === 'Enter' && hits[0]) { focus(hits[0]); setQ(''); } if (e.key === 'Escape') setQ(''); }} />
           {hits.length > 0 && (
             <ul id="aed-q-list" className="map-search-list">
@@ -252,6 +257,12 @@ export default function MapPage() {
         </div>
         {geoMsg && <p className="geo-msg" role="status">{geoMsg}</p>}
         {tilesDown && <p className="geo-msg tiles-down" role="status"><b>Brak połączenia z serwerem map.</b> Podkład mapy może się nie wyświetlać, ale lista najbliższych AED, nawigacja i tryb ratunkowy działają bez internetu.</p>}
+      </div>
+
+      {/* pływające przyciski na telefonie (pod kciukiem, nad panelem) */}
+      <div className="fabs">
+        <Link className="fab fab-sos" to="/ratunek" aria-label="SOS: tryb ratunkowy — 112, najbliższy AED, metronom RKO">SOS</Link>
+        <button className="fab fab-locate" onClick={locate} aria-label="Pokaż najbliższy AED"><IconLocate /><span>Najbliższy AED</span></button>
       </div>
 
       <section className={`sheet ${sheet}`} aria-label="Panel informacji o AED">

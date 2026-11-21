@@ -540,3 +540,63 @@ summary { cursor: pointer; font-weight: 700; padding: 6px 0; }
 @media (prefers-color-scheme: dark) { .topbar-apk { color: #7fe0aa; } }
 @media (max-width: 380px) { .topbar-apk span { display: none; } }
 .btn-android { border-color: var(--green); color: var(--green-700); }
+
+/* =========================================================
+   Redesign mobilny v2 — wygląd aplikacji mapowej
+   ========================================================= */
+.map-search { position: relative; }
+.map-search-ico { position: absolute; left: 14px; top: 12px; color: var(--muted); pointer-events: none; z-index: 1; }
+.map-search input { padding-left: 44px; }
+.fabs { display: none; }
+
+@media (max-width: 900px) {
+  /* mapa: na górze tylko wyszukiwarka i filtry */
+  .map-toolbar { top: 12px; left: 12px; right: 12px; gap: 10px; }
+  .toolbar-row { display: none; }
+  .map-search input { min-height: 50px; border-radius: 999px; border: 0; box-shadow: 0 6px 20px rgba(11, 42, 60, .18); font-size: 1rem; padding-left: 46px; }
+  .map-search-ico { top: 15px; left: 16px; }
+  .map-search-list { border-radius: 18px; border: 0; }
+  .chips .chip { border: 0; box-shadow: 0 2px 10px rgba(11, 42, 60, .14); min-height: 36px; }
+  .leaflet-control-zoom { display: none; }
+
+  /* pływające przyciski nad panelem */
+  .fabs { display: flex; position: absolute; right: 14px; bottom: calc(236px + 16px); z-index: 1000; flex-direction: column; align-items: flex-end; gap: 12px; transition: opacity .2s, transform .2s; }
+  .sheet-up .fabs { opacity: 0; pointer-events: none; transform: translateY(24px); }
+  .fab { border: 0; font-family: inherit; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; box-shadow: 0 10px 26px rgba(11, 42, 60, .30); -webkit-tap-highlight-color: transparent; }
+  .fab:active { transform: scale(.96); }
+  .fab-sos { width: 62px; height: 62px; border-radius: 50%; background: var(--red); color: #fff !important; font-size: 1.05rem; letter-spacing: .05em; border: 3px solid #fff; }
+  .fab-locate { height: 56px; padding: 0 22px 0 16px; border-radius: 28px; background: var(--green); color: #fff; font-size: 1rem; }
+  .fab-locate svg { width: 22px; height: 22px; }
+
+  /* panel: miękki, wyraźnie zaokrąglony */
+  .sheet { border-radius: 26px 26px 0 0; box-shadow: 0 -10px 30px rgba(11, 42, 60, .18); }
+  .sheet-handle::before { width: 44px; background: #c9d2d7; }
+  .near-item { border: 0; box-shadow: 0 1px 6px rgba(11, 42, 60, .10); }
+  .sos { border: 0; box-shadow: 0 1px 6px rgba(215, 38, 46, .15); }
+}
+
+@media (max-width: 760px) {
+  :root { --bg: #eef3f1; }
+  /* nagłówki stron: kolor marki, biały tytuł, zaokrąglony dół */
+  .page-head:not(.hero) {
+    margin: 0 -14px 8px; padding: 18px 18px 26px; color: #fff;
+    background: linear-gradient(155deg, #00904f 0%, #007a3d 45%, #005c2e 100%);
+    border-radius: 0 0 26px 26px; box-shadow: 0 8px 24px rgba(0, 92, 46, .25);
+  }
+  .page-head:not(.hero) h1 { color: #fff; }
+  .page-head:not(.hero) .lead { color: rgba(255, 255, 255, .9); }
+  .page-head:not(.hero) .lead a { color: #fff; }
+  .page-head:not(.hero) .eyebrow { background: rgba(255, 255, 255, .18); color: #fff; }
+  .page-head:not(.hero) + * { position: relative; margin-top: -18px; }
+  /* karty bez ramek, miękki cień */
+  .card, .kpi, .steps, .rescue-step { border: 0; box-shadow: 0 2px 14px rgba(11, 42, 60, .08); }
+  .card { border-radius: 20px; }
+  .kpi { border-radius: 16px; }
+  .notice { border: 0; }
+  .table.stack tr { border: 0; box-shadow: 0 1px 6px rgba(11, 42, 60, .08); }
+  .tabbar { border-top: 0; box-shadow: 0 -4px 18px rgba(11, 42, 60, .08); }
+  .topbar { border-bottom: 0; box-shadow: 0 2px 12px rgba(11, 42, 60, .06); }
+}
+@media (max-width: 760px) and (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) { --bg: #0b161d; }
+}
