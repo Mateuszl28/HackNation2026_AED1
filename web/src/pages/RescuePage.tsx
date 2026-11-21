@@ -63,6 +63,18 @@ export default function RescuePage() {
   function chooseLang(l: Lang) { setLang(l); try { localStorage.setItem('aedostepni-lang', l); } catch { /* ignoruj */ } }
   useEffect(() => { document.documentElement.lang = lang; return () => { document.documentElement.lang = 'pl'; }; }, [lang]);
 
+  // Ekran nie gaśnie w trybie ratunkowym (Screen Wake Lock); po powrocie do aplikacji blokada jest odnawiana.
+  useEffect(() => {
+    type WL = { release: () => Promise<void> };
+    const nav = navigator as Navigator & { wakeLock?: { request: (t: 'screen') => Promise<WL> } };
+    let lock: WL | null = null;
+    const req = () => { nav.wakeLock?.request('screen').then((l) => { lock = l; }).catch(() => { /* brak wsparcia */ }); };
+    const onVis = () => { if (document.visibilityState === 'visible') req(); };
+    req();
+    document.addEventListener('visibilitychange', onVis);
+    return () => { document.removeEventListener('visibilitychange', onVis); lock?.release().catch(() => {}); };
+  }, []);
+
   useEffect(() => {
     if (!navigator.geolocation) { setErr('noGeo'); return; }
     const id = navigator.geolocation.watchPosition(

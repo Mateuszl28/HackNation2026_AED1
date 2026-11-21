@@ -145,9 +145,9 @@ export default function ProvidersPage() {
       </header>
 
       <ol className="steps" aria-label="Kroki">
-        <li className={parsed ? 'done' : 'current'}><span>1</span>Wgraj plik</li>
-        <li className={parsed ? (ok ? 'done' : 'current') : ''}><span>2</span>Sprawdź mapowanie i błędy</li>
-        <li className={ok ? 'current' : ''}><span>3</span>Pobierz i opublikuj</li>
+        <li className={parsed ? 'done' : 'current'} aria-current={!parsed ? 'step' : undefined}><span>{parsed ? '✓' : '1'}</span>Wgraj plik</li>
+        <li className={parsed ? (ok ? 'done' : 'current') : ''} aria-current={parsed && !ok ? 'step' : undefined}><span>{ok ? '✓' : '2'}</span>Sprawdź dane</li>
+        <li className={ok ? 'current' : ''} aria-current={ok ? 'step' : undefined}><span>3</span>Opublikuj</li>
       </ol>
 
       <section className="card" aria-labelledby="s1">
@@ -160,8 +160,8 @@ export default function ProvidersPage() {
               onDrop={(e) => { e.preventDefault(); setDrag(false); onFile(e.dataTransfer.files[0]); }}
             >
               <input type="file" accept=".csv,.txt,.json,.geojson,.xlsx,.xls,.ods" onChange={(e) => onFile(e.target.files?.[0])} />
-              <strong>Wybierz plik</strong> albo upuść go tutaj
-              <small>CSV, XLSX, ODS, JSON, GeoJSON</small>
+              <span className="dz-text"><strong>Wybierz plik</strong> albo upuść go tutaj
+                <small>CSV, XLSX, ODS, JSON, GeoJSON</small></span>
             </label>
             {err && <p className="error" role="alert">{err}</p>}
           </div>

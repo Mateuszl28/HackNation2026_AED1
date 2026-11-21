@@ -64,7 +64,7 @@ export function shortAddress(a: Aed): string {
   return [a.nazwa_ulicy && `ul. ${a.nazwa_ulicy}${a.nr_budynku ? ' ' + a.nr_budynku : ''}`, a.miejscowosc].filter(Boolean).join(', ');
 }
 export function address(a: Aed): string {
-  return shortAddress(a) || `adres nieustalony (${a.lat.toFixed(5)}, ${a.lon.toFixed(5)})`;
+  return shortAddress(a) || 'adres nieznany';
 }
 
 /** Nazwa do wyświetlenia: unika ogólników typu „Defibrylator AED” i prefiksu „AED: …”. */

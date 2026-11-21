@@ -40,6 +40,8 @@ export default function MapPage() {
   const mapRef = useRef<L.Map | null>(null);
   const clusterRef = useRef<L.MarkerClusterGroup | null>(null);
   const meRef = useRef<L.CircleMarker | null>(null);
+  const accRef = useRef<L.Circle | null>(null);
+  const [accuracy, setAccuracy] = useState<number | null>(null);
   const [aeds, setAeds] = useState<Aed[]>([]);
   const [me, setMe] = useState<[number, number] | null>(null);
   const [center, setCenter] = useState<[number, number]>(BYDGOSZCZ);
@@ -48,7 +50,7 @@ export default function MapPage() {
   const [onlyOpen, setOnlyOpen] = useState(false);
   const [only247, setOnly247] = useState(false);
   const [onlyPublic, setOnlyPublic] = useState(false);
-  const [sheet, setSheet] = useState(false);
+  const [sheet, setSheet] = useState<'peek' | 'mid' | 'full'>('peek');
   const now = useMemo(() => new Date(), [aeds]);
 
   useEffect(() => { loadAeds().then(setAeds); }, []);
@@ -65,7 +67,7 @@ export default function MapPage() {
       if (best && best.d < 60) target = best.a;
       else { mapRef.current.setView([lat, lon], 18); setGeoMsg('Tego AED nie ma jeszcze w zbiorze krajowym — pokazujemy wskazane miejsce.'); }
     } else target = aeds.find((a) => a.aed_uid === uid);
-    if (target) { setSel(target); setSheet(true); mapRef.current.setView([target.lat, target.lon], 18); }
+    if (target) { setSel(target); setSheet('mid'); showOnMap([[target.lat, target.lon]]); }
   }, [uid, aeds]);
 
   const filtered = useMemo(() => aeds.filter((a) =>
@@ -92,7 +94,7 @@ export default function MapPage() {
     cluster.addLayers(filtered.map((a) => {
       const av = availability(a, now);
       const m = L.marker([a.lat, a.lon], { icon: markerIcon(av), title: displayName(a), alt: `${displayName(a)} — ${AV_LABEL[av]}`, keyboard: true });
-      m.on('click', () => { setSel(a); setSheet(true); });
+      m.on('click', () => { setSel(a); setSheet('mid'); });
       return m;
     }));
     cluster.addTo(map);
@@ -123,10 +125,15 @@ export default function MapPage() {
       setMe(pos); setGeoMsg('');
       const map = mapRef.current!;
       meRef.current?.remove();
-      meRef.current = L.circleMarker(pos, { radius: 9, color: '#fff', weight: 3, fillColor: '#1565c0', fillOpacity: 1 }).addTo(map).bindTooltip('Tu jesteś');
+      accRef.current?.remove();
+      const acc = Math.round(p.coords.accuracy || 0);
+      // okrąg dokładności: użytkownik widzi, na ile pewna jest jego pozycja (sieć ±100 m vs GPS ±5 m)
+      if (acc > 15) accRef.current = L.circle(pos, { radius: acc, color: '#1565c0', weight: 1, fillColor: '#1565c0', fillOpacity: 0.12, interactive: false }).addTo(map);
+      meRef.current = L.circleMarker(pos, { radius: 9, color: '#fff', weight: 3, fillColor: '#1565c0', fillOpacity: 1 }).addTo(map).bindTooltip(`Tu jesteś (±${acc} m)`);
+      setAccuracy(acc);
       const n = filtered.map((a) => ({ a, d: distanceM(pos[0], pos[1], a.lat, a.lon) })).sort((x, y) => x.d - y.d)[0];
-      if (n) { setSel(n.a); map.fitBounds(L.latLngBounds([pos, [n.a.lat, n.a.lon]]).pad(0.5)); } else map.setView(pos, 16);
-      setSheet(true);
+      if (n) { setSel(n.a); showOnMap([pos, [n.a.lat, n.a.lon]]); } else map.setView(pos, 16);
+      setSheet('mid');
     }, (e) => setGeoMsg(e.code === 1 ? 'Brak zgody na lokalizację. Przesuń mapę albo wybierz miasto.' : 'Nie udało się ustalić lokalizacji.'),
     { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 });
   }
@@ -150,13 +157,23 @@ export default function MapPage() {
     return scored.sort((x, y) => y.s - x.s || x.d - y.d).slice(0, 6).map((x) => x.a);
   }, [q, index]);
 
+  // Pokazuje punkty w WIDOCZNEJ części mapy: na telefonie nad panelem (zajmuje dolną połowę ekranu)
+  function showOnMap(pts: [number, number][]) {
+    const map = mapRef.current; if (!map) return;
+    const mobile = window.innerWidth <= 900;
+    const b = L.latLngBounds(pts);
+    map.fitBounds(b, mobile
+      ? { paddingTopLeft: [40, 90], paddingBottomRight: [40, Math.round(window.innerHeight * 0.52) + 30], maxZoom: 18 }
+      : { padding: [60, 60], maxZoom: 18 });
+  }
+
   function focus(a: Aed) {
-    setSel(a); setSheet(true);
-    mapRef.current?.setView([a.lat, a.lon], Math.max(mapRef.current.getZoom(), 17));
+    setSel(a); setSheet('mid');
+    showOnMap([[a.lat, a.lon]]);
   }
 
   return (
-    <div className="map-layout">
+    <div className={`map-layout ${sheet !== 'peek' ? 'sheet-up' : ''}`}>
       <div ref={mapEl} className="map" role="application" aria-label="Mapa defibrylatorów AED. Lista najbliższych AED znajduje się w panelu." />
 
       <div className="map-toolbar">
@@ -194,11 +211,11 @@ export default function MapPage() {
         {geoMsg && <p className="geo-msg" role="status">{geoMsg}</p>}
       </div>
 
-      <section className={`sheet ${sheet ? 'open' : ''}`} aria-label="Panel informacji o AED">
-        <button className="sheet-handle" onClick={() => setSheet(!sheet)} aria-expanded={sheet}>
-          <span className="sr-only">{sheet ? 'Zwiń panel' : 'Rozwiń panel'}</span>
+      <section className={`sheet ${sheet}`} aria-label="Panel informacji o AED">
+        <button className="sheet-handle" onClick={() => setSheet(sheet === 'peek' ? 'mid' : sheet === 'mid' ? 'full' : 'peek')} aria-expanded={sheet !== 'peek'}>
+          <span className="sr-only">{sheet === 'full' ? 'Zwiń panel' : 'Rozwiń panel'}</span>
         </button>
-        {sel ? <Details a={sel} me={me} now={now} onClose={() => setSel(null)} /> : (
+        {sel ? <Details a={sel} me={me} now={now} accuracy={accuracy} onClose={() => { setSel(null); setSheet('peek'); }} /> : (
           <div className="sheet-body">
             <Link className="sos" to="/ratunek">
               <span className="sos-icon"><IconHeart /></span>
@@ -235,7 +252,7 @@ export default function MapPage() {
   );
 }
 
-function Details({ a, me, now, onClose }: { a: Aed; me: [number, number] | null; now: Date; onClose: () => void }) {
+function Details({ a, me, now, onClose, accuracy }: { a: Aed; me: [number, number] | null; now: Date; onClose: () => void; accuracy: number | null }) {
   const av = availability(a, now);
   const d = me ? distanceM(me[0], me[1], a.lat, a.lon) : null;
   const nav = `https://www.google.com/maps/dir/?api=1&destination=${a.lat},${a.lon}&travelmode=walking`;
@@ -260,7 +277,7 @@ function Details({ a, me, now, onClose }: { a: Aed; me: [number, number] | null;
         </div>
         <button className="icon-btn" onClick={onClose} aria-label="Zamknij szczegóły i wróć do listy najbliższych">✕</button>
       </div>
-      {d !== null && <p className="dist-line"><b>{fmtDist(d)}</b> · szybkim marszem ~{walkMinutes(d)} min w jedną stronę</p>}
+      {d !== null && <p className="dist-line"><b>{fmtDist(d)}</b> · szybkim marszem ~{walkMinutes(d)} min w jedną stronę{accuracy && accuracy > 50 ? <span className="muted"> (Twoja lokalizacja ±{accuracy} m)</span> : null}</p>}
       <div className="actions">
         <a className="btn btn-primary" href={nav} target="_blank" rel="noopener">Prowadź pieszo</a>
         {a.telefon_kontaktowy && <a className="btn" href={`tel:${a.telefon_kontaktowy.replace(/\s/g, '')}`}>Zadzwoń</a>}
