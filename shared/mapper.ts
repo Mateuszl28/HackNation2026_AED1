@@ -108,7 +108,7 @@ export function flattenRow(r: Row): Row {
 // ---------- auto-mapowanie kolumn ----------
 export interface ColumnMapping { [sourceColumn: string]: string | '' }
 
-const IDENTIFYING = new Set(['nazwa', 'id', 'opis_lokalizacji', 'szerokosc_geograficzna', 'dlugosc_geograficzna']);
+const IDENTIFYING = new Set(['nazwa', 'id', 'opis_lokalizacji']); // współrzędne mogą się powtarzać (kilka AED w jednym budynku)
 
 export function autoMap(headers: string[], rows: Row[] = []): ColumnMapping {
   const map: ColumnMapping = {};

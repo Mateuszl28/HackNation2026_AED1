@@ -13,6 +13,8 @@ jobs:
           node-version: 24
       - name: Zależności pipeline
         run: npm ci
+      - name: Testy silnika danych (godziny, mapowanie, walidacja, DCAT-AP)
+        run: npm test
       - name: Standard danych (XLSX, CSV, datapackage.json)
         run: npm run standard
       - name: Integracja danych z kopii lokalnych

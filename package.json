@@ -7,7 +7,8 @@
   "scripts": {
     "data": "node pipeline/build.ts",
     "data:fetch": "node pipeline/build.ts --fetch",
-    "standard": "node standard/build-standard.ts"
+    "standard": "node standard/build-standard.ts",
+    "test": "node --test tests/*.test.ts"
   },
   "dependencies": {
     "exceljs": "^4.4.0"

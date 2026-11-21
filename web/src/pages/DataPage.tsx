@@ -49,6 +49,7 @@ export default function DataPage() {
               <a className="btn" href="./data/aed.geojson" download>GeoJSON</a>
               <a className="btn btn-ghost" href="./standard/datapackage.json" download>Table Schema (datapackage.json)</a>
               <a className="btn btn-ghost" href="./data/dcat.xml" download>Metadane DCAT-AP (XML)</a>
+              <a className="btn btn-ghost" href="#/api">Dla deweloperów: adresy i przykłady →</a>
               <a className="btn btn-ghost" href="./standard/aed-wzorcowy-zakres-danych.xlsx" download>Wzorcowy zakres danych (XLSX)</a>
             </p>
             <p className="muted">Wygenerowano: {s.data_wygenerowania}. Licencje: dane dysponentów — zgodnie z licencją zbioru na dane.gov.pl; dane OpenStreetMap — ODbL 1.0 (© współtwórcy OpenStreetMap), co wymaga uznania autorstwa i udostępniania na tych samych warunkach.</p>
