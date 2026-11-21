@@ -65,14 +65,16 @@ function Privacy() {
       </header>
       <section className="card">
         <h2>Lokalizacja</h2>
-        <p>Lokalizacja jest pobierana <b>tylko wtedy, gdy o to poprosisz</b> (przyciski „Najbliższy AED”, „SOS”, „Użyj mojej lokalizacji”) i używana wyłącznie na Twoim urządzeniu do obliczenia odległości do defibrylatorów. Nie zapisujemy jej i nie wysyłamy na żaden serwer.</p>
+        <p>Lokalizacja jest pobierana <b>tylko wtedy, gdy o to poprosisz</b> (przyciski „Najbliższy AED”, „SOS”, „Użyj mojej lokalizacji”) i służy do znalezienia najbliższych defibrylatorów. Projekt nie ma własnego serwera, więc nie gromadzimy jej. Aby pokazać przybliżony adres („Jesteś tu”) i wyznaczyć trasę pieszą do AED, przybliżone współrzędne są przekazywane usługom OpenStreetMap opisanym niżej. Lokalizację wskazaną ręcznie („Nie tutaj?”) pamiętamy na urządzeniu przez 30 minut.</p>
       </section>
       <section className="card">
         <h2>Dane zapisywane na urządzeniu</h2>
         <ul>
           <li>ustawienia (np. wybrany język trybu ratunkowego, informacja, że widziałeś ekran powitalny);</li>
           <li>historia Twoich zgłoszeń i potwierdzeń stanu AED;</li>
-          <li>przybliżone adresy AED pobrane wcześniej (pamięć podręczna).</li>
+          <li>przybliżone adresy pobrane wcześniej (pamięć podręczna);</li>
+          <li>lokalizacja wskazana ręcznie na mapie (przez 30 minut);</li>
+          <li>szkic formularza AED dla dysponentów (do czasu wyczyszczenia danych).</li>
         </ul>
         <p>Dane te pozostają w pamięci przeglądarki lub aplikacji i możesz je usunąć, czyszcząc dane przeglądarki lub aplikacji.</p>
       </section>
@@ -80,7 +82,8 @@ function Privacy() {
         <h2>Usługi zewnętrzne</h2>
         <ul>
           <li><b>Mapa (OpenStreetMap):</b> pobieranie fragmentów mapy ujawnia serwerom OpenStreetMap adres IP urządzenia i oglądany obszar (<a href="https://osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener">polityka prywatności OSMF</a>).</li>
-          <li><b>Przybliżony adres (Nominatim):</b> przy otwarciu karty AED bez adresu wysyłamy do Nominatim współrzędne <i>tego AED</i> — nie Twoje położenie.</li>
+          <li><b>Przybliżony adres (Nominatim, OpenStreetMap):</b> wysyłamy współrzędne AED bez adresu, a przy pasku „Jesteś tu” i w trybie ratunkowym — Twoje położenie, aby pokazać adres, który można podać dyspozytorowi 112. W formularzu dysponenta — miejsce AED wskazane na mapie. Serwer poznaje też adres IP (<a href="https://osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener">polityka prywatności OSMF</a>).</li>
+          <li><b>Trasa piesza (OSRM, serwer FOSSGIS routing.openstreetmap.de):</b> po wybraniu AED wysyłamy Twoje położenie i położenie AED, aby wyznaczyć trasę i rzeczywisty dystans. Bez internetu aplikacja pokazuje szacunek.</li>
           <li><b>Zgłoszenia do OpenStreetMap:</b> tylko gdy zaznaczysz tę opcję; notatka jest publiczna i anonimowa (zawiera położenie AED i treść zgłoszenia). Nie wpisuj w niej danych osobowych.</li>
           <li><b>Hosting (GitHub Pages)</b> może przetwarzać adres IP w dziennikach serwera.</li>
           <li><b>Udostępnianie i nawigacja</b> przekazują link do wybranej przez Ciebie aplikacji (np. SMS, Mapy Google).</li>

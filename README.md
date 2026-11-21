@@ -38,7 +38,7 @@ Przy nagłym zatrzymaniu krążenia każda minuta bez defibrylacji zmniejsza sza
 - **Raport dla samorządu** (do druku/PDF): stan danych AED w powiecie, miejsce w rankingu, lista AED do uzupełnienia.
 
 ### Dla każdego — aplikacja web i Android
-- Mapa 18 tys. AED, **„Najbliższy AED”** dostępny teraz z czasem dojścia tam i z powrotem, filtry (dostępne teraz / 24/7 / publiczne), wyszukiwarka, klastry pokazujące dostępność.
+- Mapa 18 tys. AED, **„Najbliższy AED”** dostępny teraz z **trasą pieszą** i rzeczywistym czasem dojścia, filtry (dostępne teraz / 24/7 / publiczne), wyszukiwarka, klastry pokazujące dostępność.
 - **Tryb ratunkowy (SOS)** w językach **PL / EN / UA**: 112, najbliższy dostępny AED z przybliżonym adresem, **„Wyślij kogoś po AED”** (SMS/komunikator), **metronom RKO 110/min** z wibracją, ekran nie gaśnie.
 - **Aktualna lokalizacja**: natywny GPS w aplikacji, odrzucanie zapamiętanych odczytów, okrąg dokładności.
 - **Działa bez internetu** (dane w aplikacji; w wersji web — service worker).
@@ -103,7 +103,7 @@ npx cap sync android && cd android && ./gradlew assembleDebug   # APK
 - **dane.gov.pl:** formaty odczytywalne maszynowo (CSV UTF-8, XLSX, JSON, GeoJSON), metadane DCAT-AP, licencje, kategoria „Zdrowie”, automatyczne wykrywanie przez API portalu.
 - **WCAG 2.2 AA:** audyt axe-core na 12 ekranach — 0 naruszeń poza jednym ostrzeżeniem o nakładających się pinezkach (wyjątek kryterium 2.5.8; ta sama funkcja dostępna z listy). [Deklaracja dostępności](https://mateuszl28.github.io/HackNation2026_AED1/#/dostepnosc).
 - **Testy:** 15 testów jednostkowych (godziny, CSV/GeoJSON, mapowanie, naprawy, walidacja, kontrole zbioru, DCAT-AP, kalendarz) uruchamianych w CI.
-- **Prywatność:** brak kont, cookies i analityki; lokalizacja tylko na urządzeniu. [Polityka prywatności](https://mateuszl28.github.io/HackNation2026_AED1/#/prywatnosc).
+- **Prywatność:** brak kont, cookies, analityki i własnego serwera; lokalizacja nie jest gromadzona — do pokazania adresu i trasy pieszej przekazywana usługom OpenStreetMap (Nominatim, OSRM). [Polityka prywatności](https://mateuszl28.github.io/HackNation2026_AED1/#/prywatnosc).
 - **Wydajność:** podział kodu (główna paczka 410 KB), pozostałe ekrany dociągane w tle do pamięci offline.
 
 ## Ograniczenia
@@ -111,7 +111,8 @@ npx cap sync android && cd android && ./gradlew assembleDebug   # APK
 - Kolejka weryfikacji zgłoszeń po stronie dysponenta wymaga backendu; dziś zgłoszenia trafiają do OpenStreetMap (notatki) i do zbioru dysponenta w dane.gov.pl (odnośnik).
 - Część zbioru pochodząca z OpenStreetMap jest na licencji ODbL i musi ją zachować.
 - Ok. 1% wpisów godzin to opisy słowne niemożliwe do interpretacji maszynowej (status „godziny nieznane”).
-- Czas dojścia jest szacunkowy (linia prosta × 1,3); przybliżony adres pochodzi z geokodowania OSM.
+- Trasa piesza pochodzi z publicznego serwera OSRM (FOSSGIS) — bez internetu czas dojścia jest szacunkowy (linia prosta × 1,3); przybliżony adres pochodzi z geokodowania OSM.
+- W budynku telefon często nie ma GPS, a pozycja z Wi-Fi bywa błędna (nawet inne miasto) — dlatego aplikacja pokazuje „Jesteś tu: adres” i pozwala wskazać miejsce ręcznie.
 - Mapa (podkład OSM) wymaga internetu; dane AED, lista, nawigacja i tryb ratunkowy działają offline.
 
 ## Wykorzystanie AI

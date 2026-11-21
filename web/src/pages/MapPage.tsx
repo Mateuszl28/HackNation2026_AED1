@@ -4,6 +4,8 @@ import { BACK_EVENT } from '../native';
 import { aedLink } from '../config';
 import { shareText } from '../share';
 import { reverseAddress } from '../geocode';
+import { walkRoute } from '../route';
+import type { WalkRoute } from '../route';
 import VerifyAed from '../components/VerifyAed';
 import { watchFresh, setManualFix, getManualFix, clearManualFix } from '../geo';
 import type { Fix, GeoErr } from '../geo';
@@ -59,6 +61,8 @@ export default function MapPage() {
   const pickingRef = useRef(false);
   useEffect(() => { pickingRef.current = picking; }, [picking]);
   const [myAddr, setMyAddr] = useState('');
+  const [route, setRoute] = useState<WalkRoute | null>(null);
+  const routeRef = useRef<L.Polyline | null>(null);
   const [onlyOpen, setOnlyOpen] = useState(false);
   const [only247, setOnly247] = useState(false);
   const [onlyPublic, setOnlyPublic] = useState(false);
@@ -214,6 +218,20 @@ export default function MapPage() {
     return () => { alive = false; };
   }, [meKey]);
 
+  // trasa piesza do wybranego AED (do 5 km) — rysowana na mapie, z rzeczywistym dystansem
+  const selKey = sel?.aed_uid || '';
+  useEffect(() => {
+    routeRef.current?.remove(); routeRef.current = null; setRoute(null);
+    if (!sel || !me || distanceM(me[0], me[1], sel.lat, sel.lon) > 5000) return;
+    let alive = true;
+    walkRoute(me, [sel.lat, sel.lon]).then((r) => {
+      if (!alive || !r || !mapRef.current) return;
+      setRoute(r);
+      routeRef.current = L.polyline(r.coords, { color: '#1565c0', weight: 5, opacity: 0.85, dashArray: '2 9', lineCap: 'round', interactive: false }).addTo(mapRef.current);
+    });
+    return () => { alive = false; };
+  }, [selKey, meKey]);
+
   function locate(useGps = false) {
     // pozycja wskazana ręcznie (ostatnie 30 min) ma pierwszeństwo — chyba że użytkownik prosi o GPS
     const m = useGps ? null : getManualFix();
@@ -338,7 +356,7 @@ export default function MapPage() {
         <button className="sheet-handle" onClick={() => setSheet(sheet === 'peek' ? 'mid' : sheet === 'mid' ? 'full' : 'peek')} aria-expanded={sheet !== 'peek'}>
           <span className="sr-only">{sheet === 'full' ? 'Zwiń panel' : 'Rozwiń panel'}</span>
         </button>
-        {sel ? <Details a={sel} me={me} now={now} accuracy={accuracy} onClose={() => { setSel(null); setSheet('peek'); }} /> : (
+        {sel ? <Details a={sel} me={me} now={now} accuracy={accuracy} route={route} onClose={() => { setSel(null); setSheet('peek'); }} /> : (
           <div className="sheet-body">
             <Link className="sos" to="/ratunek">
               <span className="sos-icon"><IconHeart /></span>
@@ -376,7 +394,7 @@ export default function MapPage() {
   );
 }
 
-function Details({ a, me, now, onClose, accuracy }: { a: Aed; me: [number, number] | null; now: Date; onClose: () => void; accuracy: number | null }) {
+function Details({ a, me, now, onClose, accuracy, route }: { a: Aed; me: [number, number] | null; now: Date; onClose: () => void; accuracy: number | null; route: WalkRoute | null }) {
   const av = availability(a, now);
   const d = me ? distanceM(me[0], me[1], a.lat, a.lon) : null;
   const nav = `https://www.google.com/maps/dir/?api=1&destination=${a.lat},${a.lon}&travelmode=walking`;
@@ -408,7 +426,9 @@ function Details({ a, me, now, onClose, accuracy }: { a: Aed; me: [number, numbe
         </div>
         <button className="icon-btn" onClick={onClose} aria-label="Zamknij szczegóły i wróć do listy najbliższych">✕</button>
       </div>
-      {d !== null && <p className="dist-line"><b>{fmtDist(d)}</b> · szybkim marszem ~{walkMinutes(d)} min w jedną stronę{accuracy && accuracy > 50 ? <span className="muted"> (Twoja lokalizacja ±{accuracy} m)</span> : null}</p>}
+      {d !== null && (route
+        ? <p className="dist-line"><b>{fmtDist(route.distance)}</b> trasą pieszą · szybkim marszem ~{Math.max(1, Math.round(route.distance / 1.6 / 60))} min w jedną stronę{accuracy && accuracy > 50 ? <span className="muted"> (Twoja lokalizacja ±{accuracy} m)</span> : null}<small className="muted route-src">trasa: OSRM / © współtwórcy OpenStreetMap</small></p>
+        : <p className="dist-line"><b>{fmtDist(d)}</b> · szybkim marszem ~{walkMinutes(d)} min w jedną stronę <span className="muted">(szacunek)</span>{accuracy && accuracy > 50 ? <span className="muted"> (Twoja lokalizacja ±{accuracy} m)</span> : null}</p>)}
       <div className="actions">
         <a className="btn btn-primary" href={nav} target="_blank" rel="noopener">Prowadź pieszo</a>
         {a.telefon_kontaktowy && <a className="btn" href={`tel:${a.telefon_kontaktowy.replace(/\s/g, '')}`}>Zadzwoń</a>}

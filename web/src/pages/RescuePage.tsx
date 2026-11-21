@@ -6,6 +6,7 @@ import { shareText } from '../share';
 import { watchFresh, getManualFix } from '../geo';
 import { say, stopSpeech } from '../speech';
 import { reverseAddress } from '../geocode';
+import { walkRoute } from '../route';
 
 type Found = { a: Aed; d: number };
 type Lang = 'pl' | 'en' | 'uk';
@@ -127,6 +128,16 @@ export default function RescuePage() {
   const best = list[0];
   // przybliżony adres najbliższego AED — trafia też do wiadomości „Przynieś AED”
   const [approx, setApprox] = useState('');
+  // rzeczywisty dystans pieszy do najbliższego AED (OSRM); bez sieci — szacunek z linii prostej
+  const [routeM, setRouteM] = useState<number | null>(null);
+  const bestKey = best && pos ? `${best.a.aed_uid}@${pos[0].toFixed(4)},${pos[1].toFixed(4)}` : '';
+  useEffect(() => {
+    setRouteM(null);
+    if (!best || !pos) return;
+    let alive = true;
+    walkRoute(pos, [best.a.lat, best.a.lon]).then((r) => { if (alive && r) setRouteM(r.distance); });
+    return () => { alive = false; };
+  }, [bestKey]);
   useEffect(() => {
     setApprox('');
     if (!best || shortAddress(best.a)) return;
@@ -172,7 +183,7 @@ export default function RescuePage() {
         {pos && list.length === 0 && <p>{t.none}</p>}
         {best && (
           <div className="rescue-aed">
-            <p className="rescue-dist"><b>{fmtDist(best.d)}</b> · {t.roundTrip} ~{walkMinutes(best.d) * 2} min</p>
+            <p className="rescue-dist"><b>{fmtDist(routeM ?? best.d)}</b> · {t.roundTrip} ~{routeM ? Math.max(1, Math.round(routeM / 1.6 / 60)) * 2 : walkMinutes(best.d) * 2} min</p>
             <p className="rescue-name">{displayName(best.a)}</p>
             {subLine(best.a) && <p className="rescue-where">{subLine(best.a)}</p>}
             {!shortAddress(best.a) && approx && <p className="muted">ok. {approx}</p>}

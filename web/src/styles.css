@@ -760,3 +760,4 @@ summary { cursor: pointer; font-weight: 700; padding: 6px 0; }
 .af-rule input[type=time] { min-height: 40px; border-radius: 10px; border: 1px solid var(--border); padding: 0 8px; font: inherit; }
 .af-list { margin: 10px 0 0; padding-left: 18px; } .af-list li { margin-bottom: 4px; }
 @media (max-width: 600px) { .af-days button { min-width: 36px; padding: 0; } }
+.route-src { display: block; font-size: .72rem; margin-top: 2px; }
