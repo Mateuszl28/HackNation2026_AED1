@@ -5,7 +5,7 @@ import { aedLink } from '../config';
 import { shareText } from '../share';
 import { reverseAddress } from '../geocode';
 import VerifyAed from '../components/VerifyAed';
-import { watchFresh } from '../geo';
+import { watchFresh, setManualFix, getManualFix, clearManualFix } from '../geo';
 import type { Fix, GeoErr } from '../geo';
 import L from 'leaflet';
 import 'leaflet.markercluster';
@@ -54,6 +54,11 @@ export default function MapPage() {
   const [center, setCenter] = useState<[number, number]>(BYDGOSZCZ);
   const [sel, setSel] = useState<Aed | null>(null);
   const [geoMsg, setGeoMsg] = useState('');
+  const [manual, setManual] = useState(false);
+  const [picking, setPicking] = useState(false);
+  const pickingRef = useRef(false);
+  useEffect(() => { pickingRef.current = picking; }, [picking]);
+  const [myAddr, setMyAddr] = useState('');
   const [onlyOpen, setOnlyOpen] = useState(false);
   const [only247, setOnly247] = useState(false);
   const [onlyPublic, setOnlyPublic] = useState(false);
@@ -80,7 +85,9 @@ export default function MapPage() {
   // Skrót „Najbliższy AED” z ikony aplikacji (#/?locate=1): od razu ustalamy lokalizację
   const [search, setSearch] = useSearchParams();
   useEffect(() => {
-    if (search.get('locate') !== '1' || !aeds.length || !mapRef.current) return;
+    if (!aeds.length || !mapRef.current) return;
+    if (search.get('pick') === '1') { setSearch({}, { replace: true }); startPick(); return; }
+    if (search.get('locate') !== '1') return;
     setSearch({}, { replace: true });
     locate();
   }, [search, aeds]);
@@ -116,6 +123,7 @@ export default function MapPage() {
     tiles.on('tileload', () => setTilesDown(false));
     map.on('remove', () => window.clearInterval(tileTimer));
     map.on('moveend', () => { const c = map.getCenter(); setCenter([c.lat, c.lng]); });
+    map.on('click', (e: L.LeafletMouseEvent) => { if (pickingRef.current) pickRef.current?.(e.latlng.lat, e.latlng.lng); });
     mapRef.current = map;
     return () => { map.remove(); mapRef.current = null; };
   }, []);
@@ -172,7 +180,45 @@ export default function MapPage() {
   const stopRef = useRef<(() => void) | null>(null);
   useEffect(() => () => stopRef.current?.(), []);
 
-  function locate() {
+  /** Rysuje „Tu jesteś” (z okręgiem dokładności) i pokazuje najbliższy AED. */
+  function placeMe(pos: [number, number], acc: number, isManual: boolean, openSheet = true) {
+    setMe(pos); setAccuracy(acc); setManual(isManual);
+    const map = mapRef.current!;
+    meRef.current?.remove();
+    accRef.current?.remove();
+    // okrąg dokładności: użytkownik widzi, na ile pewna jest jego pozycja (sieć ±100 m vs GPS ±5 m)
+    if (acc > 15) accRef.current = L.circle(pos, { radius: acc, color: '#1565c0', weight: 1, fillColor: '#1565c0', fillOpacity: 0.12, interactive: false }).addTo(map);
+    meRef.current = L.circleMarker(pos, { radius: 9, color: '#fff', weight: 3, fillColor: '#1565c0', fillOpacity: 1 }).addTo(map)
+      .bindTooltip(isManual ? 'Tu jesteś (wskazane ręcznie)' : `Tu jesteś (±${acc} m)`);
+    // najbliższy, który NIE jest teraz zamknięty (jak w trybie ratunkowym); gdy takiego brak — po prostu najbliższy
+    const sorted = filtered.map((a) => ({ a, d: distanceM(pos[0], pos[1], a.lat, a.lon) })).sort((x, y) => x.d - y.d);
+    const n = sorted.slice(0, 50).find((x) => availability(x.a, new Date()) !== 'closed') || sorted[0];
+    if (n) { setSel(n.a); showOnMap([pos, [n.a.lat, n.a.lon]]); } else map.setView(pos, 16);
+    if (openSheet) setSheet('mid');
+  }
+
+  // „Nie tutaj?” — telefon w budynku bywa bez GPS, a pozycja z Wi-Fi potrafi wskazać inne miasto.
+  function startPick() {
+    stopRef.current?.(); stopRef.current = null;
+    setGeoMsg(''); setSel(null); setSheet('peek'); setPicking(true);
+  }
+  const pickRef = useRef<((lat: number, lon: number) => void) | null>(null);
+  pickRef.current = (lat, lon) => { setPicking(false); setManualFix(lat, lon); placeMe([lat, lon], 0, true); };
+
+  // przybliżony adres „Tu jesteś” — także po to, by podać go dyspozytorowi 112
+  const meKey = me ? `${me[0].toFixed(3)},${me[1].toFixed(3)}` : '';
+  useEffect(() => {
+    if (!me) { setMyAddr(''); return; }
+    let alive = true;
+    reverseAddress(me[0], me[1]).then((s) => { if (alive) setMyAddr(s); }).catch(() => {});
+    return () => { alive = false; };
+  }, [meKey]);
+
+  function locate(useGps = false) {
+    // pozycja wskazana ręcznie (ostatnie 30 min) ma pierwszeństwo — chyba że użytkownik prosi o GPS
+    const m = useGps ? null : getManualFix();
+    if (m) { setGeoMsg(''); placeMe([m.lat, m.lon], 0, true); return; }
+    clearManualFix(); setManual(false);
     setGeoMsg('Ustalam aktualną lokalizację (GPS)…');
     stopRef.current?.();
     let best = Infinity;
@@ -183,18 +229,9 @@ export default function MapPage() {
       const acc = f.acc;
       if (acc >= best) return; // przyjmujemy tylko dokładniejsze odczyty
       best = acc;
-      const pos: [number, number] = [f.lat, f.lon];
-      setMe(pos); setAccuracy(acc);
       setGeoMsg(acc > 25 ? `Doprecyzowuję lokalizację GPS… (teraz ±${acc} m)` : '');
-      const map = mapRef.current!;
-      meRef.current?.remove();
-      accRef.current?.remove();
-      // okrąg dokładności: użytkownik widzi, na ile pewna jest jego pozycja (sieć ±100 m vs GPS ±5 m)
-      if (acc > 15) accRef.current = L.circle(pos, { radius: acc, color: '#1565c0', weight: 1, fillColor: '#1565c0', fillOpacity: 0.12, interactive: false }).addTo(map);
-      meRef.current = L.circleMarker(pos, { radius: 9, color: '#fff', weight: 3, fillColor: '#1565c0', fillOpacity: 1 }).addTo(map).bindTooltip(`Tu jesteś (±${acc} m)`);
-      const n = filtered.map((a) => ({ a, d: distanceM(pos[0], pos[1], a.lat, a.lon) })).sort((x, y) => x.d - y.d)[0];
-      if (n) { setSel(n.a); showOnMap([pos, [n.a.lat, n.a.lon]]); } else map.setView(pos, 16);
-      if (first) { setSheet('mid'); first = false; }
+      placeMe([f.lat, f.lon], acc, false, first);
+      first = false;
       if (acc <= 25) { stop(); setGeoMsg(''); }
     };
     const fail = (e: GeoErr) => {
@@ -244,11 +281,11 @@ export default function MapPage() {
 
   return (
     <div className={`map-layout ${sheet !== 'peek' ? 'sheet-up' : ''}`}>
-      <div ref={mapEl} className="map" role="application" aria-label="Mapa defibrylatorów AED. Lista najbliższych AED znajduje się w panelu." />
+      <div ref={mapEl} className={`map ${picking ? "is-picking" : ""}`} role="application" aria-label="Mapa defibrylatorów AED. Lista najbliższych AED znajduje się w panelu." />
 
       <div className="map-toolbar">
         <div className="toolbar-row">
-          <button className="btn btn-primary btn-lg" onClick={locate}><IconLocate /> Najbliższy AED</button>
+          <button className="btn btn-primary btn-lg" onClick={() => locate()}><IconLocate /> Najbliższy AED</button>
           <Link className="btn btn-lg btn-rescue" to="/ratunek" aria-label="Tryb ratunkowy: najbliższy dostępny AED i metronom RKO">SOS</Link>
         </div>
         <div className="map-search" role="search">
@@ -280,13 +317,21 @@ export default function MapPage() {
           </label>
         </div>
         {geoMsg && <p className="geo-msg" role="status">{geoMsg}</p>}
+        {picking ? (
+          <p className="loc-bar picking" role="status"><span><b>Dotknij mapy tam, gdzie jesteś.</b> Przesuń i przybliż mapę, jeśli trzeba.</span>
+            <button className="loc-bar-btn" onClick={() => setPicking(false)}>Anuluj</button></p>
+        ) : me && (
+          <p className="loc-bar" role="status"><span>📍 Jesteś tu: <b>{myAddr || `${me[0].toFixed(4)}, ${me[1].toFixed(4)}`}</b> <small>{manual ? '(wskazane ręcznie)' : accuracy ? `(±${accuracy} m)` : ''}</small></span>
+            {manual && <button className="loc-bar-btn" onClick={() => locate(true)}>Użyj GPS</button>}
+            <button className="loc-bar-btn" onClick={startPick}>{manual ? 'Zmień' : 'Nie tutaj?'}</button></p>
+        )}
         {tilesDown && <p className="geo-msg tiles-down" role="status"><b>Brak połączenia z serwerem map.</b> Podkład mapy może się nie wyświetlać, ale lista najbliższych AED, nawigacja i tryb ratunkowy działają bez internetu.</p>}
       </div>
 
       {/* pływające przyciski na telefonie (pod kciukiem, nad panelem) */}
       <div className="fabs">
         <Link className="fab fab-sos" to="/ratunek" aria-label="SOS: tryb ratunkowy — 112, najbliższy AED, metronom RKO">SOS</Link>
-        <button className="fab fab-locate" onClick={locate} aria-label="Pokaż najbliższy AED"><IconLocate /><span>Najbliższy AED</span></button>
+        <button className="fab fab-locate" onClick={() => locate()} aria-label="Pokaż najbliższy AED"><IconLocate /><span>Najbliższy AED</span></button>
       </div>
 
       <section className={`sheet ${sheet}`} aria-label="Panel informacji o AED">

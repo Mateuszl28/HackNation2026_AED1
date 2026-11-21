@@ -49,3 +49,19 @@ export function watchFresh(onFix: (f: Fix) => void, onErr: (e: GeoErr) => void):
   );
   return () => navigator.geolocation.clearWatch(wid);
 }
+
+// Lokalizacja wskazana ręcznie („Nie tutaj?”) — gdy telefon w budynku nie ma GPS, a pozycja z sieci Wi-Fi
+// jest błędna (np. router przewieziony z innego miasta). Ważna 30 min, wspólna dla mapy i trybu ratunkowego.
+const MANUAL_KEY = 'aedostepni-lokalizacja-reczna';
+const MANUAL_TTL = 30 * 60_000;
+export function setManualFix(lat: number, lon: number) {
+  try { localStorage.setItem(MANUAL_KEY, JSON.stringify({ lat, lon, ts: Date.now() })); } catch { /* ignoruj */ }
+}
+export function getManualFix(): Fix | null {
+  try {
+    const v = JSON.parse(localStorage.getItem(MANUAL_KEY) || 'null') as { lat: number; lon: number; ts: number } | null;
+    if (v && Date.now() - v.ts < MANUAL_TTL) return { lat: v.lat, lon: v.lon, acc: 0, ts: v.ts };
+  } catch { /* ignoruj */ }
+  return null;
+}
+export function clearManualFix() { try { localStorage.removeItem(MANUAL_KEY); } catch { /* ignoruj */ } }

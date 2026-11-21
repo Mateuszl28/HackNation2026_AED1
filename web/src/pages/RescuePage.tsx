@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { loadAeds, availability, distanceM, walkMinutes, fmtDist, is247, displayName, subLine, shortAddress } from '../data';
 import type { Aed } from '../data';
 import { shareText } from '../share';
-import { watchFresh } from '../geo';
+import { watchFresh, getManualFix } from '../geo';
 import { say, stopSpeech } from '../speech';
 import { reverseAddress } from '../geocode';
 
@@ -14,6 +14,7 @@ const BPM = 110;
 // Tryb ratunkowy w 3 językach — dla turystów i osób z Ukrainy (najliczniejsza grupa cudzoziemców w Polsce).
 const T = {
   pl: {
+    youAt: 'Jesteś tu', manualLoc: 'wskazane ręcznie', notHere: 'Nie tutaj?', tell112: 'Jeśli adres się zgadza, podaj go dyspozytorowi 112.',
     title: 'Tryb ratunkowy', exit: 'Wyjdź z trybu ratunkowego', call: 'Zadzwoń', callHint: 'Włącz głośnik. Dyspozytor poprowadzi Cię krok po kroku.',
     nearest: 'Najbliższy AED', locating: 'Szukam Twojej lokalizacji…', openMap: 'Otwórz mapę', noGeo: 'To urządzenie nie udostępnia lokalizacji.',
     denied: 'Brak zgody na lokalizację — włącz ją albo użyj zwykłej mapy.', geoFail: 'Nie udało się ustalić lokalizacji. Spróbuj na zewnątrz budynku.',
@@ -28,6 +29,7 @@ const T = {
     aedSteps: ['Włącz AED (przycisk lub otwarcie pokrywy).', 'Odsłoń klatkę piersiową, naklej elektrody jak na rysunku.', 'Podczas analizy i wyładowania NIKT nie dotyka poszkodowanego.', 'Po wyładowaniu lub komunikacie „nie zaleca się” — od razu wróć do uciśnięć.'],
   },
   en: {
+    youAt: 'You are here', manualLoc: 'set manually', notHere: 'Not here?', tell112: 'If the address is correct, tell it to the 112 dispatcher.',
     title: 'Emergency mode', exit: 'Exit emergency mode', call: 'Call', callHint: 'Turn on the speaker. The dispatcher will guide you step by step.',
     nearest: 'Nearest AED', locating: 'Finding your location…', openMap: 'Open the map', noGeo: 'This device does not share its location.',
     denied: 'Location permission denied — enable it or use the regular map.', geoFail: 'Could not get your location. Try outside the building.',
@@ -42,6 +44,7 @@ const T = {
     aedSteps: ['Switch the AED on (button or open the lid).', 'Bare the chest and attach the pads as shown in the picture.', 'During analysis and shock NOBODY touches the patient.', 'After the shock or “no shock advised” — resume compressions immediately.'],
   },
   uk: {
+    youAt: 'Ви тут', manualLoc: 'вказано вручну', notHere: 'Не тут?', tell112: 'Якщо адреса правильна, повідомте її диспетчеру 112.',
     title: 'Екстрений режим', exit: 'Вийти з екстреного режиму', call: 'Телефонуйте', callHint: 'Увімкніть гучний зв’язок. Диспетчер підкаже, що робити.',
     nearest: 'Найближчий AED', locating: 'Визначаю ваше місцезнаходження…', openMap: 'Відкрити мапу', noGeo: 'Цей пристрій не надає геолокацію.',
     denied: 'Немає дозволу на геолокацію — увімкніть її або скористайтеся мапою.', geoFail: 'Не вдалося визначити місцезнаходження. Спробуйте надворі.',
@@ -69,6 +72,15 @@ export default function RescuePage() {
   const [lang, setLang] = useState<Lang>(initialLang);
   const t = T[lang];
   const [pos, setPos] = useState<[number, number] | null>(null);
+  const [manual, setManual] = useState(false);
+  const [myAddr, setMyAddr] = useState('');
+  const posKey = pos ? `${pos[0].toFixed(3)},${pos[1].toFixed(3)}` : '';
+  useEffect(() => {
+    if (!pos) return;
+    let alive = true;
+    reverseAddress(pos[0], pos[1]).then((x) => { if (alive) setMyAddr(x); }).catch(() => {});
+    return () => { alive = false; };
+  }, [posKey]);
   const [err, setErr] = useState<'' | 'noGeo' | 'denied' | 'geoFail'>('');
   const [list, setList] = useState<Found[]>([]);
   const [shared, setShared] = useState<'' | 'sent' | 'copied'>('');
@@ -90,6 +102,8 @@ export default function RescuePage() {
 
   // Tylko aktualna pozycja (geo.ts): natywny GPS w aplikacji, bez zapamiętanych odczytów; śledzimy ruch.
   useEffect(() => {
+    const m = getManualFix();
+    if (m) { setManual(true); setPos([m.lat, m.lon]); return; }
     let got = false;
     const stop = watchFresh(
       (f) => { got = true; setErr(''); setPos([f.lat, f.lon]); },
@@ -150,6 +164,10 @@ export default function RescuePage() {
       <section className="rescue-step" aria-labelledby="r2">
         <h2 id="r2"><span className="big">2</span> {t.nearest}</h2>
         {!pos && !err && <p role="status" className="pulse-text">{t.locating}</p>}
+        {pos && (
+          <p className="rescue-me">📍 {t.youAt}: <b>{myAddr || `${pos[0].toFixed(5)}, ${pos[1].toFixed(5)}`}</b>{manual && <small> ({t.manualLoc})</small>} <Link to="/?pick=1">{t.notHere}</Link>
+            <small className="muted"> {t.tell112}</small></p>
+        )}
         {err && <p className="error" role="alert">{t[err]} <Link to="/">{t.openMap}</Link></p>}
         {pos && list.length === 0 && <p>{t.none}</p>}
         {best && (
