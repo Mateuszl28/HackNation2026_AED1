@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import { aedLink } from '../config';
 import L from 'leaflet';
 import 'leaflet.markercluster';
 import { describeHours } from '@shared/hours.ts';
@@ -50,6 +51,21 @@ export default function MapPage() {
   const now = useMemo(() => new Date(), [aeds]);
 
   useEffect(() => { loadAeds().then(setAeds); }, []);
+
+  // Link bezpośredni: #/aed/<aed_uid> albo #/aed/@lat,lon (np. z kodu QR na naklejce)
+  const { uid } = useParams();
+  useEffect(() => {
+    if (!uid || !aeds.length || !mapRef.current) return;
+    let target: Aed | undefined;
+    const at = uid.match(/^@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)$/);
+    if (at) {
+      const [lat, lon] = [Number(at[1]), Number(at[2])];
+      const best = aeds.map((a) => ({ a, d: distanceM(lat, lon, a.lat, a.lon) })).sort((x, y) => x.d - y.d)[0];
+      if (best && best.d < 60) target = best.a;
+      else { mapRef.current.setView([lat, lon], 18); setGeoMsg('Tego AED nie ma jeszcze w zbiorze krajowym — pokazujemy wskazane miejsce.'); }
+    } else target = aeds.find((a) => a.aed_uid === uid);
+    if (target) { setSel(target); setSheet(true); mapRef.current.setView([target.lat, target.lon], 18); }
+  }, [uid, aeds]);
 
   const filtered = useMemo(() => aeds.filter((a) =>
     (!onlyOpen || availability(a, now) === 'open') && (!only247 || is247(a.godziny_dostepnosci)) && (!onlyPublic || a.dostep === 'publiczny')),
@@ -186,6 +202,16 @@ function Details({ a, me, now, onClose }: { a: Aed; me: [number, number] | null;
   const d = me ? distanceM(me[0], me[1], a.lat, a.lon) : null;
   const nav = `https://www.google.com/maps/dir/?api=1&destination=${a.lat},${a.lon}&travelmode=walking`;
   const q = Number(a.jakosc);
+  const [shared, setShared] = useState('');
+  useEffect(() => setShared(''), [a.aed_uid]);
+  async function share(x: Aed) {
+    const url = aedLink(x.aed_uid);
+    const text = `AED: ${displayName(x)}${x.opis_lokalizacji ? ` — ${x.opis_lokalizacji}` : ''}`;
+    try {
+      if (navigator.share) await navigator.share({ title: 'AEDostępni', text, url });
+      else { await navigator.clipboard.writeText(`${text}\n${url}`); setShared('Skopiowano link ✓'); }
+    } catch { /* anulowano */ }
+  }
   return (
     <div className="sheet-body details">
       <div className="details-head">
@@ -200,6 +226,7 @@ function Details({ a, me, now, onClose }: { a: Aed; me: [number, number] | null;
       <div className="actions">
         <a className="btn btn-primary" href={nav} target="_blank" rel="noopener">Prowadź pieszo</a>
         {a.telefon_kontaktowy && <a className="btn" href={`tel:${a.telefon_kontaktowy.replace(/\s/g, '')}`}>Zadzwoń</a>}
+        <button className="btn" onClick={() => share(a)}>{shared || 'Udostępnij'}</button>
       </div>
       <div className="where-box">
         <span className="label">Gdzie dokładnie</span>

@@ -216,6 +216,7 @@ main { flex: 1; overflow: auto; outline: none; }
 .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 14px 0; }
 .actions .btn { width: 100%; }
 .actions .btn:only-child { grid-column: 1 / -1; }
+.actions .btn-primary { grid-column: 1 / -1; }
 .where-box { background: var(--green-50); border-radius: var(--r); padding: 12px 14px; margin-bottom: 14px; }
 .where-box .label { font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--green-700); }
 @media (prefers-color-scheme: dark) { .where-box .label { color: #7fe0aa; } }
@@ -368,3 +369,87 @@ summary { cursor: pointer; font-weight: 700; padding: 6px 0; }
 .near-list > li { min-width: 0; }
 .near-item { max-width: 100%; min-width: 0; }
 .sos > span:nth-child(2) { min-width: 0; }
+
+/* ---------- naklejki QR ---------- */
+.sticker-sheets { display: grid; gap: 24px; }
+.sticker-sheet { background: #fff; color: #0b2a3c; border-radius: var(--r); box-shadow: var(--sh-2); padding: 10mm; display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; width: 100%; max-width: 210mm; margin: 0 auto; }
+.sticker { border: 2px solid #007a3d; border-radius: 6mm; overflow: hidden; display: flex; flex-direction: column; break-inside: avoid; aspect-ratio: 1 / 1; }
+.sticker-head { background: #007a3d; color: #fff; display: flex; gap: 8px; align-items: center; padding: 3mm 4mm; }
+.sticker-head b { display: block; font-family: var(--font-head); font-size: 1.25rem; line-height: 1.1; }
+.sticker-head small { font-size: .7rem; opacity: .95; }
+.sticker-body { flex: 1; display: flex; gap: 3mm; padding: 3mm 4mm; align-items: center; }
+.sticker-qr { width: 42%; aspect-ratio: 1; flex: none; border-radius: 2mm; background: #f3f6f5; }
+.sticker-text { min-width: 0; }
+.sticker-name { font-weight: 800; font-size: .9rem; margin: 0 0 2px; line-height: 1.25; overflow-wrap: anywhere; }
+.sticker-where { font-size: .74rem; margin: 0 0 4px; color: #51606b; line-height: 1.3; overflow-wrap: anywhere; }
+.sticker-cta { font-size: .68rem; font-weight: 700; color: #007a3d; margin: 0; }
+.sticker-foot { display: flex; justify-content: space-between; padding: 2mm 4mm; background: #e6f4ec; font-size: .7rem; font-weight: 700; }
+.sticker-foot b { color: #d7262e; }
+@media (max-width: 600px) { .sticker-sheet { grid-template-columns: 1fr; padding: 12px; } }
+@media print {
+  @page { size: A4; margin: 0; }
+  .topbar, .tabbar, .no-print, .skip-link { display: none !important; }
+  html, body, #root, .app, main { height: auto !important; overflow: visible !important; background: #fff !important; }
+  .page { padding: 0 !important; max-width: none !important; }
+  .sticker-sheets { gap: 0; }
+  .sticker-sheet { box-shadow: none; border-radius: 0; width: 210mm; height: 297mm; max-width: none; grid-template-columns: 1fr 1fr; grid-auto-rows: 88mm; page-break-after: always; }
+  .sticker { aspect-ratio: auto; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+/* ---------- kampania ---------- */
+.campaign-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 24px; align-items: start; }
+@media (max-width: 760px) { .campaign-grid { grid-template-columns: 1fr; } }
+.poster { background: #fff; color: #0b2a3c; border-radius: 12px; box-shadow: var(--sh-2); aspect-ratio: 210 / 297; padding: 8% 8% 6%; display: flex; flex-direction: column; gap: 4%; border-top: 10px solid #007a3d; }
+.poster-logo { width: 60%; margin: 0 auto; }
+.poster-q { font-family: var(--font-head); font-weight: 800; font-size: clamp(1.1rem, 2.6vw, 1.6rem); line-height: 1.15; margin: 0; text-align: center; }
+.poster-a { font-size: clamp(.78rem, 1.5vw, .95rem); margin: 0; text-align: center; color: #51606b; }
+.poster-qr-row { display: flex; gap: 4%; align-items: center; background: #e6f4ec; border-radius: 12px; padding: 4%; margin-top: auto; }
+.poster-qr-row img { width: 34%; border-radius: 6px; }
+.poster-qr-row b { display: block; font-size: clamp(.85rem, 1.7vw, 1.05rem); }
+.poster-qr-row span { font-size: clamp(.72rem, 1.3vw, .85rem); color: #51606b; }
+.poster-foot { margin: 0; text-align: center; font-weight: 700; font-size: clamp(.75rem, 1.4vw, .9rem); }
+.poster-foot b { color: #d7262e; }
+.posts { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.post { border: 1px solid var(--border); border-radius: var(--r); padding: 14px; display: flex; flex-direction: column; gap: 8px; background: var(--surface-2); }
+.post h3 { margin: 0; font-size: .95rem; }
+.post p { margin: 0; white-space: pre-line; font-size: .9rem; flex: 1; }
+.post .btn { align-self: flex-start; }
+.mail { white-space: pre-wrap; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 14px; font-family: var(--font-body); font-size: .88rem; max-height: 320px; overflow: auto; }
+.brand-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-bottom: 12px; }
+.brand-tile { display: flex; flex-direction: column; gap: 8px; align-items: center; justify-content: center; text-decoration: none; color: var(--text); font-weight: 700; font-size: .82rem; border: 1px solid var(--border); border-radius: var(--r); padding: 16px 12px; background: #fff; }
+.brand-tile img { height: 56px; max-width: 100%; }
+.brand-tile span { color: #0b2a3c; }
+.brand-tile.dark { background: #0b2a3c; } .brand-tile.dark span { color: #fff; }
+@media print {
+  body.print-poster .page > *:not(.campaign-grid), body.print-poster .campaign-grid > div:first-child { display: none !important; }
+  body.print-poster .campaign-grid { display: block; border: 0; box-shadow: none; padding: 0; margin: 0; }
+  body.print-poster .poster { width: 210mm; height: 297mm; box-shadow: none; border-radius: 0; aspect-ratio: auto; }
+  body.print-poster .poster-q { font-size: 30pt; } body.print-poster .poster-a { font-size: 14pt; }
+  body.print-poster .poster-qr-row b { font-size: 16pt; } body.print-poster .poster-qr-row span, body.print-poster .poster-foot { font-size: 12pt; }
+}
+.lang-switch { margin-left: auto; display: inline-flex; background: var(--surface-2); border: 1px solid var(--border); border-radius: 999px; padding: 3px; gap: 2px; }
+.lang-switch button { border: 0; background: transparent; color: var(--muted); font-family: inherit; font-weight: 800; font-size: .8rem; min-width: 40px; min-height: 34px; border-radius: 999px; cursor: pointer; }
+.lang-switch button.on { background: var(--navy); color: #fff; }
+
+/* ---------- tabele na telefonie: wiersz = karta ---------- */
+@media (max-width: 760px) {
+  .table-wrap:has(.stack) { border: 0; overflow: visible; border-radius: 0; }
+  .table.stack, .table.stack tbody, .table.stack tr, .table.stack th, .table.stack td { display: block; width: 100%; }
+  .table.stack thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .table.stack caption { display: none; }
+  .table.stack tbody { display: grid; gap: 8px; }
+  .table.stack tr { border: 1px solid var(--border); border-radius: var(--r-sm); padding: 10px 12px; background: var(--surface); display: flex; flex-wrap: wrap; gap: 2px 14px; }
+  .table.stack tr:hover { background: var(--surface); }
+  .table.stack th, .table.stack td { border: 0 !important; padding: 2px 0; width: auto; max-width: 100%; }
+  .table.stack th[scope="row"], .table.stack td.full { flex-basis: 100%; }
+  .table.stack th[scope="row"] { font-size: .95rem; }
+  .table.stack td[data-label]::before { content: attr(data-label) ': '; color: var(--muted); font-weight: 600; font-size: .8em; }
+  .table.stack td.trunc { white-space: normal; overflow-wrap: anywhere; flex-basis: 100%; }
+  .table.stack td.full select { width: 100%; }
+  .table.stack code { overflow-wrap: anywhere; white-space: normal; }
+}
+/* długie słowa i linki nie rozpychają stron */
+.page, .card { overflow-wrap: break-word; }
+.card { min-width: 0; }
+.page a { overflow-wrap: anywhere; }

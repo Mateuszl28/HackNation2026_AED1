@@ -1,4 +1,8 @@
 import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { aedLink } from '../config';
+import { STICKERS_KEY } from './StickersPage';
+import type { StickerItem } from './StickersPage';
 import * as XLSX from 'xlsx';
 import { FIELDS, FIELD_BY_NAME, SCHEMA_VERSION } from '@shared/schema.ts';
 import { dcatXml, MEDIA } from '@shared/dcat.ts';
@@ -46,6 +50,17 @@ export default function ProvidersPage() {
   const [defaults, setDefaults] = useState({ dysponent: '', miejscowosc: '' });
   const [err, setErr] = useState('');
   const [drag, setDrag] = useState(false);
+  const navigate = useNavigate();
+  function makeStickers() {
+    const items: StickerItem[] = result.filter((r) => r.record.szerokosc_geograficzna && r.record.dlugosc_geograficzna).map((r, i) => {
+      const rec = r.record;
+      const lat = Number(rec.szerokosc_geograficzna), lon = Number(rec.dlugosc_geograficzna);
+      const where = rec.opis_lokalizacji || [rec.nazwa_ulicy && `ul. ${rec.nazwa_ulicy} ${rec.nr_budynku || ''}`.trim(), rec.miejscowosc].filter(Boolean).join(', ');
+      return { key: `${rec.id || i}-${i}`, name: rec.nazwa || 'Defibrylator AED', where, link: aedLink({ lat, lon }) };
+    });
+    try { sessionStorage.setItem(STICKERS_KEY, JSON.stringify(items)); } catch { /* ignoruj */ }
+    navigate('/naklejki');
+  }
 
   function load(p: Parsed) {
     setParsed(p); setMapping(autoMap(p.headers, p.rows)); setErr('');
@@ -175,15 +190,15 @@ export default function ProvidersPage() {
               </label>
             </div>
             <div className="table-wrap">
-              <table className="table">
+              <table className="table stack">
                 <caption className="sr-only">Mapowanie kolumn pliku na pola standardu</caption>
                 <thead><tr><th scope="col">Kolumna w Twoim pliku</th><th scope="col">Przykładowa wartość</th><th scope="col">Pole standardu</th></tr></thead>
                 <tbody>
                   {parsed.headers.map((h) => (
                     <tr key={h}>
                       <th scope="row"><code>{h}</code></th>
-                      <td className="trunc">{String(parsed.rows[0]?.[h] ?? '').slice(0, 60)}</td>
-                      <td>
+                      <td className="trunc" data-label="Przykład">{String(parsed.rows[0]?.[h] ?? '').slice(0, 60)}</td>
+                      <td className="full">
                         <select aria-label={`Pole standardu dla kolumny ${h}`} value={mapping[h] || ''} onChange={(e) => setMapping({ ...mapping, [h]: e.target.value })}>
                           <option value="">— pomiń —</option>
                           <option value="__adres">Adres w jednym polu (rozbij automatycznie)</option>
@@ -235,9 +250,9 @@ export default function ProvidersPage() {
             <details>
               <summary>Podgląd danych po konwersji (pierwsze 10 rekordów)</summary>
               <div className="table-wrap">
-                <table className="table table-sm">
+                <table className="table table-sm stack">
                   <thead><tr>{['id', 'nazwa', 'szerokosc_geograficzna', 'dlugosc_geograficzna', 'nazwa_ulicy', 'nr_budynku', 'kod_pocztowy', 'miejscowosc', 'opis_lokalizacji'].map((c) => <th key={c} scope="col">{c}</th>)}</tr></thead>
-                  <tbody>{result.slice(0, 10).map((r, i) => <tr key={i}>{['id', 'nazwa', 'szerokosc_geograficzna', 'dlugosc_geograficzna', 'nazwa_ulicy', 'nr_budynku', 'kod_pocztowy', 'miejscowosc', 'opis_lokalizacji'].map((c) => <td key={c}>{r.record[c] || <span className="missing">—</span>}</td>)}</tr>)}</tbody>
+                  <tbody>{result.slice(0, 10).map((r, i) => <tr key={i}>{['id', 'nazwa', 'szerokosc_geograficzna', 'dlugosc_geograficzna', 'nazwa_ulicy', 'nr_budynku', 'kod_pocztowy', 'miejscowosc', 'opis_lokalizacji'].map((c) => <td key={c} data-label={c}>{r.record[c] || <span className="missing">—</span>}</td>)}</tr>)}</tbody>
                 </table>
               </div>
             </details>
@@ -252,6 +267,10 @@ export default function ProvidersPage() {
               <button className="btn btn-ghost" onClick={() => download('metadane-dane-gov-pl.json', JSON.stringify(meta, null, 2), 'application/json')}>Metadane (JSON)</button>
               <button className="btn btn-ghost" onClick={exportDcat}>Metadane DCAT-AP (XML do harvestera)</button>
             </p>
+            <div className="notice notice-info">
+              <strong>Oznacz swoje AED naklejką z kodem QR.</strong> Mieszkańcy zeskanują ją, sprawdzą dostępność i zgłoszą usterkę — a Ty dostaniesz sygnał, że dane trzeba poprawić.
+              <p className="btn-row" style={{ marginTop: 8 }}><button className="btn btn-primary btn-sm" onClick={makeStickers}>Wygeneruj naklejki QR ({result.filter((r) => r.record.szerokosc_geograficzna).length})</button></p>
+            </div>
             <h3>Gotowy opis zbioru do skopiowania</h3>
             <dl className="facts meta">
               {Object.entries(meta).flatMap(([k, v]) => [<dt key={k}>{k.replace(/_/g, ' ')}</dt>, <dd key={k + 'v'}>{Array.isArray(v) ? v.join(', ') : v}</dd>])}

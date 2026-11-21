@@ -48,16 +48,16 @@ export default function DataPage() {
             <h2 id="src">Źródła i ich zakres referencyjny</h2>
             <p>Przy scalaniu obowiązuje hierarchia: <b>dysponent</b> (dane referencyjne) → <b>rejestr publiczny</b> → <b>społeczność</b>. AED z różnych źródeł położone bliżej niż 35 m są łączone w jeden rekord, a brakujące pola uzupełniane są z kolejnych źródeł.</p>
             <div className="table-wrap">
-              <table className="table">
+              <table className="table stack">
                 <caption className="sr-only">Źródła danych</caption>
                 <thead><tr><th scope="col">Źródło</th><th scope="col">Typ</th><th scope="col">Format</th><th scope="col">Wiersze</th><th scope="col">Poprawne</th><th scope="col">Scalone z innymi</th><th scope="col">Nowe AED</th><th scope="col">Jakość</th></tr></thead>
                 <tbody>
                   {s.zrodla.map((z) => (
                     <tr key={z.id}>
                       <th scope="row"><a href={z.url} target="_blank" rel="noopener">{z.title}</a><br /><small className="muted">{z.publisher} · {z.license}</small></th>
-                      <td>{KIND[z.kind]}</td><td>{z.format.toUpperCase().replace('GEOJSON-OSM', 'GeoJSON')}</td>
-                      <td>{z.rows.toLocaleString('pl-PL')}</td><td>{z.valid.toLocaleString('pl-PL')}</td>
-                      <td>{z.matchedExisting.toLocaleString('pl-PL')}</td><td>{z.newRecords.toLocaleString('pl-PL')}</td><td>{z.avgQuality}/100</td>
+                      <td data-label="Typ">{KIND[z.kind]}</td><td data-label="Format">{z.format.toUpperCase().replace('GEOJSON-OSM', 'GeoJSON')}</td>
+                      <td data-label="Wiersze">{z.rows.toLocaleString('pl-PL')}</td><td data-label="Poprawne">{z.valid.toLocaleString('pl-PL')}</td>
+                      <td data-label="Scalone">{z.matchedExisting.toLocaleString('pl-PL')}</td><td data-label="Nowe AED">{z.newRecords.toLocaleString('pl-PL')}</td><td data-label="Jakość">{z.avgQuality}/100</td>
                     </tr>
                   ))}
                 </tbody>
@@ -89,15 +89,15 @@ export default function DataPage() {
         <h2 id="std">Wzorcowy zakres danych ({FIELDS.length} pól)</h2>
         <p><b>O</b> — obowiązkowe, <b>Z</b> — zalecane, <b>F</b> — fakultatywne. Nazwy kolumn bez polskich znaków, daty ISO 8601, współrzędne WGS84, adres zgodny z rejestrem TERYT, godziny w składni <code>opening_hours</code> (zgodność z OpenStreetMap).</p>
         <div className="table-wrap">
-          <table className="table table-sm">
+          <table className="table table-sm stack">
             <caption className="sr-only">Pola standardu</caption>
             <thead><tr><th scope="col">Kolumna</th><th scope="col">Opis</th><th scope="col">Typ</th><th scope="col">Wym.</th><th scope="col">Przykład</th></tr></thead>
             <tbody>
               {FIELDS.map((f) => (
                 <tr key={f.name}>
                   <th scope="row"><code>{f.name}</code><br /><small>{f.label}</small></th>
-                  <td>{f.description}{f.enumValues && <><br /><small className="muted">Słownik: {f.enumValues.join(', ')}</small></>}</td>
-                  <td>{f.type}</td><td><span className={`req req-${f.req}`}>{f.req}</span></td><td><code>{f.example}</code></td>
+                  <td className="full">{f.description}{f.enumValues && <><br /><small className="muted">Słownik: {f.enumValues.join(', ')}</small></>}</td>
+                  <td data-label="Typ">{f.type}</td><td data-label="Wymagalność"><span className={`req req-${f.req}`}>{f.req}</span></td><td data-label="Przykład"><code>{f.example}</code></td>
                 </tr>
               ))}
             </tbody>

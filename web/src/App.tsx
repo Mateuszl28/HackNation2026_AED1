@@ -8,12 +8,15 @@ import ReportPage from './pages/ReportPage';
 import AboutPage from './pages/AboutPage';
 import RescuePage from './pages/RescuePage';
 import RankingPage from './pages/RankingPage';
+import StickersPage from './pages/StickersPage';
+import CampaignPage from './pages/CampaignPage';
 
 const NAV = [
   { to: '/', label: 'Mapa AED', icon: 'M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z' },
   { to: '/dysponenci', label: 'Dla dysponentów', short: 'Dysponenci', icon: 'M4 4h16v4H4zM4 10h10v4H4zM4 16h16v4H4z' },
   { to: '/dane', label: 'Otwarte dane', short: 'Dane', icon: 'M4 19h16v2H4zM6 10h3v7H6zM11 6h3v11h-3zM16 13h3v4h-3z' },
   { to: '/ranking', label: 'Mapa luk', hideTab: true, icon: '' },
+  { to: '/kampania', label: 'Kampania', hideTab: true, icon: '' },
   { to: '/zglos', label: 'Zgłoś', icon: 'M12 2 1 21h22L12 2zm1 15h-2v-2h2v2zm0-4h-2V9h2v4z' },
   { to: '/akcja', label: 'O akcji', icon: 'M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6-8 11-8 11z' },
 ];
@@ -22,13 +25,13 @@ export default function App() {
   const loc = useLocation();
   const main = useRef<HTMLElement>(null);
   useEffect(() => {
-    const t = NAV.find((n) => n.to === loc.pathname)?.label ?? ({ '/ratunek': 'Tryb ratunkowy', '/ranking': 'Mapa luk w danych' } as Record<string, string>)[loc.pathname] ?? 'AEDostępni';
+    const t = NAV.find((n) => n.to === loc.pathname)?.label ?? ({ '/ratunek': 'Tryb ratunkowy', '/ranking': 'Mapa luk w danych', '/naklejki': 'Naklejki QR', '/kampania': 'Zestaw kampanii' } as Record<string, string>)[loc.pathname] ?? 'AEDostępni';
     document.title = `${t} — AEDostępni`;
-    if (loc.pathname !== '/') main.current?.focus();
+    if (loc.pathname !== '/' && !loc.pathname.startsWith('/aed/')) main.current?.focus();
   }, [loc.pathname]);
 
   return (
-    <div className={`app ${loc.pathname === '/' ? 'is-map' : ''} ${loc.pathname === '/ratunek' ? 'is-rescue' : ''}`}>
+    <div className={`app ${loc.pathname === '/' || loc.pathname.startsWith('/aed/') ? 'is-map' : ''} ${loc.pathname === '/ratunek' ? 'is-rescue' : ''} ${loc.pathname === '/naklejki' ? 'is-print' : ''}`}>
       <header className="topbar">
         <NavLink to="/" className="brand" aria-label="AEDostępni — strona główna">
           <Symbol size={34} />
@@ -54,6 +57,9 @@ export default function App() {
           <Route path="/akcja" element={<AboutPage />} />
           <Route path="/ratunek" element={<RescuePage />} />
           <Route path="/ranking" element={<RankingPage />} />
+          <Route path="/aed/:uid" element={<MapPage />} />
+          <Route path="/naklejki" element={<StickersPage />} />
+          <Route path="/kampania" element={<CampaignPage />} />
         </Routes>
       </main>
 
