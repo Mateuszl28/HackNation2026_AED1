@@ -1,19 +1,31 @@
 import { NavLink, Route, Routes, useLocation } from 'react-router-dom';
-import { useEffect, useRef, useState } from 'react';
+import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import { Symbol, Wordmark } from './Logo';
+// Mapa i tryb ratunkowy w głównej paczce (muszą działać natychmiast i offline);
+// pozostałe ekrany ładowane na żądanie — m.in. obsługa XLSX i generator QR nie spowalniają startu.
 import MapPage from './pages/MapPage';
-import DataPage from './pages/DataPage';
-import ProvidersPage from './pages/ProvidersPage';
-import ReportPage from './pages/ReportPage';
-import AboutPage from './pages/AboutPage';
 import RescuePage from './pages/RescuePage';
-import RankingPage from './pages/RankingPage';
 import Onboarding from './components/Onboarding';
-import DevPage from './pages/DevPage';
-import LegalPage from './pages/LegalPage';
 import { APK_URL, isNativeApp } from './config';
-import StickersPage from './pages/StickersPage';
-import CampaignPage from './pages/CampaignPage';
+const DataPage = lazy(() => import('./pages/DataPage'));
+const ProvidersPage = lazy(() => import('./pages/ProvidersPage'));
+const ReportPage = lazy(() => import('./pages/ReportPage'));
+const AboutPage = lazy(() => import('./pages/AboutPage'));
+const RankingPage = lazy(() => import('./pages/RankingPage'));
+const DevPage = lazy(() => import('./pages/DevPage'));
+const LegalPage = lazy(() => import('./pages/LegalPage'));
+const StickersPage = lazy(() => import('./pages/StickersPage'));
+const CampaignPage = lazy(() => import('./pages/CampaignPage'));
+
+/** Po wyświetleniu mapy, w wolnej chwili, dociągamy pozostałe ekrany — trafiają do pamięci offline (service worker). */
+function prefetchPages() {
+  const load = () => {
+    for (const p of [() => import('./pages/DataPage'), () => import('./pages/ReportPage'), () => import('./pages/AboutPage'), () => import('./pages/RankingPage'),
+      () => import('./pages/DevPage'), () => import('./pages/LegalPage'), () => import('./pages/CampaignPage'), () => import('./pages/StickersPage'), () => import('./pages/ProvidersPage')]) p().catch(() => {});
+  };
+  const w = window as unknown as { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => void };
+  window.setTimeout(() => (w.requestIdleCallback ? w.requestIdleCallback(load, { timeout: 5000 }) : load()), 4000);
+}
 
 const NAV = [
   { to: '/', label: 'Mapa AED', icon: 'M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z' },
@@ -29,6 +41,7 @@ export default function App() {
   const loc = useLocation();
   const main = useRef<HTMLElement>(null);
   const [offline, setOffline] = useState(typeof navigator !== 'undefined' && navigator.onLine === false);
+  useEffect(() => { prefetchPages(); }, []);
   useEffect(() => {
     const on = () => setOffline(false), off = () => setOffline(true);
     window.addEventListener('online', on); window.addEventListener('offline', off);
@@ -72,6 +85,7 @@ export default function App() {
 
       <Onboarding />
       <main id="main" ref={main} tabIndex={-1}>
+        <Suspense fallback={<p className="page-loading" role="status">Wczytywanie…</p>}>
         <Routes>
           <Route path="/" element={<MapPage />} />
           <Route path="/dysponenci" element={<ProvidersPage />} />
@@ -87,6 +101,7 @@ export default function App() {
           <Route path="/dostepnosc" element={<LegalPage kind="dostepnosc" />} />
           <Route path="/prywatnosc" element={<LegalPage kind="prywatnosc" />} />
         </Routes>
+        </Suspense>
       </main>
 
       <nav className="tabbar" aria-label="Nawigacja dolna">
