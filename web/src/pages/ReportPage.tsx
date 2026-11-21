@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import L from 'leaflet';
 import { loadAeds, BYDGOSZCZ, sourceList, displayName } from '../data';
 import { createOsmNote } from '../osmNotes';
+import { watchFresh } from '../geo';
 import type { OsmNote } from '../osmNotes';
 import type { Aed } from '../data';
 import { ACCESS_VALUES, SECURITY_VALUES } from '@shared/schema.ts';
@@ -51,7 +52,15 @@ export default function ReportPage() {
   }, [pos]);
 
   function myLocation() {
-    navigator.geolocation?.getCurrentPosition((p) => { const c: [number, number] = [p.coords.latitude, p.coords.longitude]; setPos(c); mapRef.current?.setView(c, 18); });
+    // aktualna pozycja (natywny GPS w aplikacji); bierzemy pierwszy świeży odczyt z dokładnością ≤ 50 m albo najlepszy po 20 s
+    let best = Infinity;
+    const stop = watchFresh((f) => {
+      if (f.acc >= best) return;
+      best = f.acc;
+      const c: [number, number] = [f.lat, f.lon]; setPos(c); mapRef.current?.setView(c, 18);
+      if (f.acc <= 50) stop();
+    }, () => stop());
+    window.setTimeout(stop, 20000);
   }
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {

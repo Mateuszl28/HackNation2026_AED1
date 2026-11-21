@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { loadAeds, availability, distanceM, walkMinutes, fmtDist, is247, displayName, subLine, shortAddress } from '../data';
 import type { Aed } from '../data';
 import { shareText } from '../share';
+import { watchFresh } from '../geo';
 import { reverseAddress } from '../geocode';
 
 type Found = { a: Aed; d: number };
@@ -77,14 +78,14 @@ export default function RescuePage() {
     return () => { document.removeEventListener('visibilitychange', onVis); lock?.release().catch(() => {}); };
   }, []);
 
+  // Tylko aktualna pozycja (geo.ts): natywny GPS w aplikacji, bez zapamiętanych odczytów; śledzimy ruch.
   useEffect(() => {
-    if (!navigator.geolocation) { setErr('noGeo'); return; }
-    const id = navigator.geolocation.watchPosition(
-      (p) => setPos([p.coords.latitude, p.coords.longitude]),
-      (e) => setErr(e.code === 1 ? 'denied' : 'geoFail'),
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+    let got = false;
+    const stop = watchFresh(
+      (f) => { got = true; setErr(''); setPos([f.lat, f.lon]); },
+      (e) => { if (!got) setErr(e === 'denied' ? 'denied' : 'geoFail'); },
     );
-    return () => navigator.geolocation.clearWatch(id);
+    return stop;
   }, []);
 
   useEffect(() => {

@@ -4,6 +4,9 @@ import { BACK_EVENT } from '../native';
 import { aedLink } from '../config';
 import { shareText } from '../share';
 import { reverseAddress } from '../geocode';
+import VerifyAed from '../components/VerifyAed';
+import { watchFresh } from '../geo';
+import type { Fix, GeoErr } from '../geo';
 import L from 'leaflet';
 import 'leaflet.markercluster';
 import { describeHours } from '@shared/hours.ts';
@@ -148,25 +151,25 @@ export default function MapPage() {
     .map((a) => ({ a, d: distanceM(ref[0], ref[1], a.lat, a.lon) }))
     .sort((x, y) => x.d - y.d).slice(0, 8), [filtered, ref[0], ref[1]]);
 
-  // Lokalizacja doprecyzowywana: pierwszy odczyt (często z sieci, ±100–500 m) pokazujemy od razu,
-  // a przez kolejne sekundy przyjmujemy lepsze odczyty z GPS, aż dokładność spadnie poniżej 30 m.
-  const watchRef = useRef<number | null>(null);
-  useEffect(() => () => { if (watchRef.current !== null) navigator.geolocation?.clearWatch(watchRef.current); }, []);
+  // Lokalizacja AKTUALNA (geo.ts): natywny GPS w aplikacji, odrzucanie zapamiętanych odczytów.
+  // Pierwszy świeży odczyt pokazujemy od razu, potem przyjmujemy dokładniejsze, aż do ±25 m (najwyżej 30 s).
+  const stopRef = useRef<(() => void) | null>(null);
+  useEffect(() => () => stopRef.current?.(), []);
 
   function locate() {
-    setGeoMsg('Ustalam Twoją lokalizację…');
-    if (!navigator.geolocation) { setGeoMsg('Twoje urządzenie nie udostępnia lokalizacji.'); return; }
-    if (watchRef.current !== null) navigator.geolocation.clearWatch(watchRef.current);
+    setGeoMsg('Ustalam aktualną lokalizację (GPS)…');
+    stopRef.current?.();
     let best = Infinity;
     let first = true;
-    const stop = () => { if (watchRef.current !== null) { navigator.geolocation.clearWatch(watchRef.current); watchRef.current = null; } };
-    const apply = (p: GeolocationPosition) => {
-      const acc = Math.round(p.coords.accuracy || 9999);
+    let timer = 0;
+    const stop = () => { stopRef.current?.(); stopRef.current = null; window.clearTimeout(timer); };
+    const apply = (f: Fix) => {
+      const acc = f.acc;
       if (acc >= best) return; // przyjmujemy tylko dokładniejsze odczyty
       best = acc;
-      const pos: [number, number] = [p.coords.latitude, p.coords.longitude];
+      const pos: [number, number] = [f.lat, f.lon];
       setMe(pos); setAccuracy(acc);
-      setGeoMsg(acc > 30 ? `Doprecyzowuję lokalizację… (±${acc} m)` : '');
+      setGeoMsg(acc > 25 ? `Doprecyzowuję lokalizację GPS… (teraz ±${acc} m)` : '');
       const map = mapRef.current!;
       meRef.current?.remove();
       accRef.current?.remove();
@@ -176,12 +179,17 @@ export default function MapPage() {
       const n = filtered.map((a) => ({ a, d: distanceM(pos[0], pos[1], a.lat, a.lon) })).sort((x, y) => x.d - y.d)[0];
       if (n) { setSel(n.a); showOnMap([pos, [n.a.lat, n.a.lon]]); } else map.setView(pos, 16);
       if (first) { setSheet('mid'); first = false; }
-      if (acc <= 30) stop();
+      if (acc <= 25) { stop(); setGeoMsg(''); }
     };
-    watchRef.current = navigator.geolocation.watchPosition(apply,
-      (e) => { if (first) setGeoMsg(e.code === 1 ? 'Brak zgody na lokalizację. Przesuń mapę albo wybierz miasto.' : 'Nie udało się ustalić lokalizacji.'); stop(); },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 });
-    window.setTimeout(() => { stop(); setGeoMsg(''); }, 15000);
+    const fail = (e: GeoErr) => {
+      if (!first) return; // mamy już aktualną pozycję — ignorujemy późniejsze błędy
+      setGeoMsg(e === 'denied'
+        ? 'Brak zgody na lokalizację. Włącz ją w ustawieniach aplikacji albo przesuń mapę ręcznie.'
+        : 'Nie udało się ustalić aktualnej lokalizacji. Sprawdź, czy lokalizacja (GPS) jest włączona, i podejdź bliżej okna.');
+      stop();
+    };
+    stopRef.current = watchFresh(apply, fail);
+    timer = window.setTimeout(() => { if (first) fail('timeout'); else { stop(); setGeoMsg(''); } }, 30000);
   }
 
   // wyszukiwarka (bez polskich znaków) w nazwie, opisie, adresie i dysponencie. Wygrywają AED pasujące do
@@ -360,6 +368,7 @@ function Details({ a, me, now, onClose, accuracy }: { a: Aed; me: [number, numbe
         <dd><ul className="src-list">{sourceList(a).map((s) => <li key={s.id + s.ref}><a href={s.url} target="_blank" rel="noopener">{s.name}</a></li>)}</ul></dd>
       </dl>
       {a.zdjecie_url && <img className="aed-photo" src={a.zdjecie_url} alt={`Zdjęcie miejsca zawieszenia AED: ${displayName(a)}`} loading="lazy" />}
+      <VerifyAed key={a.aed_uid} a={a} />
       <Link className="btn btn-ghost" style={{ width: '100%' }} to={`/zglos?aed=${encodeURIComponent(a.aed_uid)}`}>Zgłoś problem lub popraw dane</Link>
     </div>
   );
