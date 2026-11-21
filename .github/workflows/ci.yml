@@ -1,0 +1,25 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Zależności pipeline
+        run: npm ci
+      - name: Standard danych (XLSX, CSV, datapackage.json)
+        run: npm run standard
+      - name: Integracja danych z kopii lokalnych
+        run: npm run data
+      - name: Aplikacja web — typy i build
+        working-directory: web
+        run: |
+          npm ci
+          npx tsc -p .
+          npx vite build
