@@ -22,6 +22,25 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
+            <!-- Własny schemat: aedostepni://ratunek, aedostepni://aed/<id> (skróty, powiadomienia) -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="aedostepni" />
+            </intent-filter>
+
+            <!-- Linki do wersji web (kody QR z naklejek, SMS „Wyślij kogoś po AED”) mogą otworzyć aplikację -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="mateuszl28.github.io" android:pathPrefix="/HackNation2026_AED1" />
+            </intent-filter>
+
+            <!-- Skrót „SOS” po przytrzymaniu ikony aplikacji -->
+            <meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts" />
+
         </activity>
 
         <provider

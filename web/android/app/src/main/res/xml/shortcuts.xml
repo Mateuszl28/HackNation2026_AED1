@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="sos"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher_round"
+        android:shortcutShortLabel="@string/shortcut_sos_short"
+        android:shortcutLongLabel="@string/shortcut_sos_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="pl.aedostepni.app"
+            android:targetClass="pl.aedostepni.app.MainActivity"
+            android:data="aedostepni://ratunek" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="nearest"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher_round"
+        android:shortcutShortLabel="@string/shortcut_near_short"
+        android:shortcutLongLabel="@string/shortcut_near_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="pl.aedostepni.app"
+            android:targetClass="pl.aedostepni.app.MainActivity"
+            android:data="aedostepni://najblizszy" />
+    </shortcut>
+</shortcuts>

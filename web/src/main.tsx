@@ -5,6 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import './styles.css';
 import App from './App';
+import { initNative } from './native';
 
 // Tryb offline (PWA) — tylko w przeglądarce; aplikacja Android ma dane wbudowane w paczkę.
 const isNative = !!(window as unknown as { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor?.isNativePlatform?.();
@@ -19,3 +20,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     </HashRouter>
   </React.StrictMode>,
 );
+
+// Android: skróty, linki do aplikacji, przycisk „wstecz”, pasek statusu
+initNative();

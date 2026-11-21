@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { BACK_EVENT } from '../native';
 import { aedLink } from '../config';
 import { shareText } from '../share';
 import L from 'leaflet';
@@ -71,6 +72,24 @@ export default function MapPage() {
     } else target = aeds.find((a) => a.aed_uid === uid);
     if (target) { setSel(target); setSheet('mid'); showOnMap([[target.lat, target.lon]]); }
   }, [uid, aeds]);
+
+  // Skrót „Najbliższy AED” z ikony aplikacji (#/?locate=1): od razu ustalamy lokalizację
+  const [search, setSearch] = useSearchParams();
+  useEffect(() => {
+    if (search.get('locate') !== '1' || !aeds.length || !mapRef.current) return;
+    setSearch({}, { replace: true });
+    locate();
+  }, [search, aeds]);
+
+  // Przycisk „wstecz” na Androidzie: najpierw zamyka kartę AED / zwija panel
+  useEffect(() => {
+    const onBack = (e: Event) => {
+      if (sel) { e.preventDefault(); setSel(null); setSheet('peek'); }
+      else if (sheet !== 'peek') { e.preventDefault(); setSheet('peek'); }
+    };
+    window.addEventListener(BACK_EVENT, onBack);
+    return () => window.removeEventListener(BACK_EVENT, onBack);
+  }, [sel, sheet]);
 
   const filtered = useMemo(() => aeds.filter((a) =>
     (!onlyOpen || availability(a, now) === 'open') && (!only247 || is247(a.godziny_dostepnosci)) && (!onlyPublic || a.dostep === 'publiczny')),

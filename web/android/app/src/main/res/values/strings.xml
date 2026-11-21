@@ -4,4 +4,8 @@
     <string name="title_activity_main">AEDostępni</string>
     <string name="package_name">pl.aedostepni.app</string>
     <string name="custom_url_scheme">pl.aedostepni.app</string>
+    <string name="shortcut_sos_short">SOS</string>
+    <string name="shortcut_sos_long">Tryb ratunkowy: 112 i najbliższy AED</string>
+    <string name="shortcut_near_short">Najbliższy AED</string>
+    <string name="shortcut_near_long">Pokaż najbliższy defibrylator</string>
 </resources>
