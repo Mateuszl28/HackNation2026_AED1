@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-21T14:20:12.116Z",
+  "wygenerowano": "2026-11-21T19:27:31.166Z",
   "zrodla": [
     {
       "id": "dgp-54632",
@@ -72,7 +72,7 @@
       "title": "Lokalizacja defibrylatorów (AED)",
       "publisher": "Urząd m.st. Warszawy",
       "url": "https://dane.gov.pl/pl/dataset/39512",
-      "reason": "Zasób opisany jako dane, ale link prowadzi do strony WWW, a nie do pliku z danymi."
+      "reason": "Nie udało się pobrać zasobu (fetch failed)."
     }
   ]
 }

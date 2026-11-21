@@ -926,6 +926,17 @@
       "indeks_gotowosci": 49
     },
     {
+      "id": "285",
+      "powiat": "powiat płocki",
+      "wojewodztwo": "mazowieckie",
+      "aed": 27,
+      "z_godzinami_pct": 22,
+      "z_opisem_pct": 100,
+      "z_kontrola_pct": 63,
+      "od_dysponentow_pct": 0,
+      "indeks_gotowosci": 49
+    },
+    {
       "id": "133",
       "powiat": "powiat krośnieński",
       "wojewodztwo": "lubuskie",
@@ -1030,7 +1041,7 @@
       "wojewodztwo": "podlaskie",
       "aed": 83,
       "z_godzinami_pct": 66,
-      "z_opisem_pct": 84,
+      "z_opisem_pct": 86,
       "z_kontrola_pct": 14,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 48
@@ -1164,17 +1175,6 @@
       "z_godzinami_pct": 41,
       "z_opisem_pct": 96,
       "z_kontrola_pct": 33,
-      "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 48
-    },
-    {
-      "id": "285",
-      "powiat": "powiat płocki",
-      "wojewodztwo": "mazowieckie",
-      "aed": 27,
-      "z_godzinami_pct": 22,
-      "z_opisem_pct": 100,
-      "z_kontrola_pct": 59,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 48
     },
@@ -3742,6 +3742,17 @@
       "indeks_gotowosci": 37
     },
     {
+      "id": "177",
+      "powiat": "powiat oleski",
+      "wojewodztwo": "opolskie",
+      "aed": 41,
+      "z_godzinami_pct": 10,
+      "z_opisem_pct": 95,
+      "z_kontrola_pct": 27,
+      "od_dysponentow_pct": 0,
+      "indeks_gotowosci": 37
+    },
+    {
       "id": "99",
       "powiat": "powiat bartoszycki",
       "wojewodztwo": "warmińsko-mazurskie",
@@ -3749,17 +3760,6 @@
       "z_godzinami_pct": 45,
       "z_opisem_pct": 73,
       "z_kontrola_pct": 8,
-      "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 37
-    },
-    {
-      "id": "177",
-      "powiat": "powiat oleski",
-      "wojewodztwo": "opolskie",
-      "aed": 40,
-      "z_godzinami_pct": 10,
-      "z_opisem_pct": 95,
-      "z_kontrola_pct": 25,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 37
     },
@@ -3998,7 +3998,7 @@
       "id": "143",
       "powiat": "powiat nowomiejski",
       "wojewodztwo": "warmińsko-mazurskie",
-      "aed": 30,
+      "aed": 31,
       "z_godzinami_pct": 13,
       "z_opisem_pct": 97,
       "z_kontrola_pct": 10,

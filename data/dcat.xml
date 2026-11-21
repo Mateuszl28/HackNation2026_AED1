@@ -13,7 +13,7 @@
       <dcat:Dataset rdf:about="urn:aedostepni:aedostepni-krajowy-zbior-aed">
         <dct:identifier>aedostepni-krajowy-zbior-aed</dct:identifier>
         <dct:title xml:lang="pl">Krajowy zbiór danych o defibrylatorach AED (AEDostępni)</dct:title>
-        <dct:description xml:lang="pl">Zintegrowany zbiór 18318 lokalizacji defibrylatorów AED w Polsce, zbudowany automatycznie z 5 źródeł (zbiory dysponentów z dane.gov.pl oraz OpenStreetMap). Każdy rekord wskazuje źródło referencyjne i wskaźnik jakości. Zakres danych zgodny ze standardem AEDostępni v1.0.0. Część danych pochodzących z OpenStreetMap jest na licencji ODbL.</dct:description>
+        <dct:description xml:lang="pl">Zintegrowany zbiór 18320 lokalizacji defibrylatorów AED w Polsce, zbudowany automatycznie z 5 źródeł (zbiory dysponentów z dane.gov.pl oraz OpenStreetMap). Każdy rekord wskazuje źródło referencyjne i wskaźnik jakości. Zakres danych zgodny ze standardem AEDostępni v1.0.0. Część danych pochodzących z OpenStreetMap jest na licencji ODbL.</dct:description>
         <dcat:keyword xml:lang="pl">AED</dcat:keyword>
         <dcat:keyword xml:lang="pl">defibrylator</dcat:keyword>
         <dcat:keyword xml:lang="pl">AEDostępni</dcat:keyword>

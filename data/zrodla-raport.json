@@ -1,13 +1,13 @@
 {
   "data_wygenerowania": "2026-11-21",
   "wersja_standardu": "1.0.0",
-  "liczba_aed": 18318,
+  "liczba_aed": 18320,
   "z_wieloma_zrodlami": 52,
-  "calodobowe": 4136,
-  "bez_godzin": 11541,
-  "bez_opisu_lokalizacji": 1415,
-  "publiczne": 7938,
-  "z_data_kontroli": 5981,
+  "calodobowe": 4137,
+  "bez_godzin": 11542,
+  "bez_opisu_lokalizacji": 1413,
+  "publiczne": 7940,
+  "z_data_kontroli": 5983,
   "srednia_jakosc": 46,
   "zrodla": [
     {
@@ -172,12 +172,12 @@
       "license": "ODbL 1.0 (© współtwórcy OpenStreetMap)",
       "url": "https://openaedmap.org/pl/",
       "format": "geojson-osm",
-      "rows": 18297,
-      "valid": 18297,
+      "rows": 18299,
+      "valid": 18299,
       "rejected": 0,
       "rejectedExamples": [],
       "matchedExisting": 52,
-      "newRecords": 18245,
+      "newRecords": 18247,
       "autoFixes": {},
       "topIssues": {},
       "mapping": {
@@ -192,7 +192,7 @@
       "title": "Lokalizacja defibrylatorów (AED)",
       "publisher": "Urząd m.st. Warszawy",
       "url": "https://dane.gov.pl/pl/dataset/39512",
-      "reason": "Zasób opisany jako dane, ale link prowadzi do strony WWW, a nie do pliku z danymi."
+      "reason": "Nie udało się pobrać zasobu (fetch failed)."
     }
   ]
 }
