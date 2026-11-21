@@ -31,7 +31,7 @@ export default function App() {
     return () => { window.removeEventListener('online', on); window.removeEventListener('offline', off); };
   }, []);
   useEffect(() => {
-    const t = NAV.find((n) => n.to === loc.pathname)?.label ?? ({ '/ratunek': 'Tryb ratunkowy', '/ranking': 'Mapa luk w danych', '/naklejki': 'Naklejki QR', '/kampania': 'Zestaw kampanii' } as Record<string, string>)[loc.pathname] ?? 'AEDostępni';
+    const t = NAV.find((n) => n.to === loc.pathname)?.label ?? ({ '/ratunek': 'Tryb ratunkowy', '/ranking': 'Mapa luk w danych', '/naklejki': 'Naklejki QR', '/kampania': 'Zestaw kampanii' } as Record<string, string>)[loc.pathname] ?? (loc.pathname.startsWith('/aed/') ? 'Karta AED' : 'AEDostępni');
     document.title = `${t} — AEDostępni`;
     if (loc.pathname !== '/' && !loc.pathname.startsWith('/aed/')) main.current?.focus();
   }, [loc.pathname]);

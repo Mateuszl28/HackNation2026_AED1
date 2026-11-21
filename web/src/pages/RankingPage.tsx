@@ -118,7 +118,7 @@ export default function RankingPage() {
         </div>
         <p className="muted small">{m.help}</p>
         <div className="grid-map">
-          <div ref={mapEl} className="choropleth" role="img" aria-label={`Kartogram (${level === 'woj' ? 'województwa' : 'powiaty'}): ${m.label}. Te same dane w tabeli obok.`} />
+          <div ref={mapEl} className="choropleth" role="region" aria-label={`Kartogram (${level === 'woj' ? 'województwa' : 'powiaty'}): ${m.label}. Te same dane w tabeli obok.`} />
           <div>
             <div className="legend" aria-hidden="true">
               <span>{min}{m.unit}</span>

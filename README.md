@@ -71,9 +71,21 @@ Ten sam silnik walidacji działa w pipeline i w przeglądarce dysponenta. Plik d
 - Standard opisany maszynowo (Frictionless Table Schema) i w XLSX dla ludzi.
 - WCAG 2.2 AA: kontrast, nawigacja klawiaturą, skip-link, etykiety ARIA, status nie tylko kolorem (✓ ✕ ?), tryb ciemny, `prefers-reduced-motion`; responsywność od 320 px.
 
+## Audyt dostępności (WCAG 2.2 AA)
+
+Automatyczny audyt axe-core 4.10 (reguły WCAG 2.0/2.1/2.2 A i AA) na 9 ekranach: mapa (również z otwartymi wynikami wyszukiwania i kartą AED), dla dysponentów, otwarte dane, mapa luk, tryb ratunkowy, zgłoszenia, o akcji, kampania, naklejki.
+
+- 0 naruszeń na 8 ekranach.
+- Mapa: jedno ostrzeżenie `target-size` dla nakładających się pinezek przy dużym zagęszczeniu AED. Mieści się w wyjątku kryterium 2.5.8 (ta sama funkcja jest dostępna przez listę „Najbliższe AED” i wyszukiwarkę, z celami ≥ 44 px).
+- Naprawione w trakcie audytu: rola pola wyszukiwania (combobox), rola kartogramu (region), fokus klawiatury dla przewijanego pola, ukrycie dekoracyjnej pinezki zaznaczenia przed czytnikami ekranu.
+
+## Zgłoszenia bez własnego serwera
+
+Zgłoszenie problemu lub nowego AED może zostać opublikowane (za zgodą użytkownika, anonimowo) jako **notatka w OpenStreetMap** w miejscu AED — wolontariusze-maperzy weryfikują ją i poprawiają mapę, a poprawka wraca do zbioru krajowego przy nocnej synchronizacji. Dla AED z danych dysponenta aplikacja kieruje dodatkowo do jego zbioru w dane.gov.pl. Tryb testowy (`#/zglos?osmdev=1`) wysyła notatki do piaskownicy OSM.
+
 ## Ograniczenia
 
-- Zgłoszenia obywateli są w prototypie zapisywane lokalnie na urządzeniu; produkcyjnie potrzebny jest backend z kolejką weryfikacji dla dysponentów.
+- Zgłoszenia trafiają do OpenStreetMap (notatki) i do zbioru dysponenta w dane.gov.pl (odnośnik); dedykowana kolejka weryfikacji dla dysponentów wymaga backendu.
 - Dane OSM są na licencji ODbL. Część zbioru pochodząca z OSM musi zachować tę licencję.
 - Interpreter godzin obsługuje najczęstsze reguły `opening_hours`; reguły nietypowe dają status „godziny nieznane”.
 - Czas dojścia jest szacunkowy (odległość w linii prostej × 1,3, szybki marsz).

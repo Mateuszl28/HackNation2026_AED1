@@ -88,7 +88,7 @@ export default function CampaignPage() {
       <section className="card">
         <h2>Pismo do dysponentów AED</h2>
         <p className="muted">Dla gmin i urzędów, które chcą zebrać dane od szkół, jednostek i firm na swoim terenie.</p>
-        <pre className="mail">{MAIL}</pre>
+        <pre className="mail" tabIndex={0} aria-label="Treść pisma do dysponentów">{MAIL}</pre>
         <button className="btn" onClick={() => copy('mail', MAIL)}>{copied === 'mail' ? 'Skopiowano ✓' : 'Kopiuj treść pisma'}</button>
       </section>
 

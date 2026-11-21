@@ -5,13 +5,14 @@ import L from 'leaflet';
 import 'leaflet.markercluster';
 import { describeHours } from '@shared/hours.ts';
 import {
-  loadAeds, availability, distanceM, walkMinutes, fmtDist, address, is247, sourceList, displayName, subLine,
+  loadAeds, availability, distanceM, walkMinutes, fmtDist, address, is247, sourceList, displayName, subLine, shortAddress,
   ACCESS_LABEL, SECURITY_LABEL, BYDGOSZCZ,
 } from '../data';
 import type { Aed, Availability } from '../data';
 
 const AV_LABEL: Record<Availability, string> = { open: 'Dostępny teraz', closed: 'Teraz niedostępny', unknown: 'Godziny nieznane' };
 const AV_GLYPH: Record<Availability, string> = { open: '✓', closed: '✕', unknown: '?' };
+const fold = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ł/g, 'l');
 const CITIES: { name: string; c: [number, number]; z: number }[] = [
   { name: 'Bydgoszcz', c: BYDGOSZCZ, z: 13 }, { name: 'Warszawa', c: [52.2297, 21.0122], z: 13 },
   { name: 'Kraków', c: [50.0614, 19.9366], z: 13 }, { name: 'Gdańsk', c: [54.352, 18.6466], z: 13 },
@@ -102,7 +103,10 @@ export default function MapPage() {
   useEffect(() => {
     selMarker.current?.remove();
     if (sel && mapRef.current) {
-      selMarker.current = L.marker([sel.lat, sel.lon], { icon: markerIcon(availability(sel, now), true), zIndexOffset: 1000, interactive: false }).addTo(mapRef.current);
+      selMarker.current = L.marker([sel.lat, sel.lon], { icon: markerIcon(availability(sel, now), true), zIndexOffset: 1000, interactive: false, keyboard: false }).addTo(mapRef.current);
+      // pinezka zaznaczenia jest tylko wizualna (AED ma już swój znacznik i kartę szczegółów) — ukryta przed czytnikami ekranu
+      const el = selMarker.current.getElement();
+      el?.removeAttribute('role'); el?.removeAttribute('tabindex'); el?.setAttribute('aria-hidden', 'true');
     }
   }, [sel, now]);
 
@@ -127,6 +131,25 @@ export default function MapPage() {
     { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 });
   }
 
+  // wyszukiwarka (bez polskich znaków) w nazwie, opisie, adresie i dysponencie. Wygrywają AED pasujące do
+  // największej liczby słów (wiele AED z OSM nie ma nazwy miasta w danych), posortowane wg odległości od środka mapy.
+  const [q, setQ] = useState('');
+  const index = useMemo(() => aeds.map((a) => [fold(`${a.nazwa} ${a.opis_lokalizacji} ${a.nazwa_ulicy} ${a.nr_budynku} ${a.miejscowosc} ${a.dysponent}`), a] as const), [aeds]);
+  const hits = useMemo(() => {
+    const words = fold(q).split(/\s+/).filter((w) => w.length >= 2);
+    if (!words.length || q.trim().length < 3) return [];
+    const ref0 = me ?? center;
+    // waga słowa = jego rzadkość (IDF): „focus” znaczy więcej niż częste „bydgoszcz”
+    const idf = words.map((w) => { let df = 0; for (const [t] of index) if (t.includes(w)) df++; return df ? Math.log(index.length / df) : 0; });
+    const scored: { a: Aed; s: number; d: number }[] = [];
+    for (const [t, a] of index) {
+      let s = 0;
+      words.forEach((w, i) => { if (t.includes(w)) s += idf[i]; });
+      if (s > 0) scored.push({ a, s, d: distanceM(ref0[0], ref0[1], a.lat, a.lon) });
+    }
+    return scored.sort((x, y) => y.s - x.s || x.d - y.d).slice(0, 6).map((x) => x.a);
+  }, [q, index]);
+
   function focus(a: Aed) {
     setSel(a); setSheet(true);
     mapRef.current?.setView([a.lat, a.lon], Math.max(mapRef.current.getZoom(), 17));
@@ -140,6 +163,21 @@ export default function MapPage() {
         <div className="toolbar-row">
           <button className="btn btn-primary btn-lg" onClick={locate}><IconLocate /> Najbliższy AED</button>
           <Link className="btn btn-lg btn-rescue" to="/ratunek" aria-label="Tryb ratunkowy: najbliższy dostępny AED i metronom RKO">SOS</Link>
+        </div>
+        <div className="map-search" role="search">
+          <label className="sr-only" htmlFor="aed-q">Szukaj AED: miasto, obiekt, ulica lub dysponent</label>
+          <input id="aed-q" type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Szukaj: miasto, obiekt, ulica, dysponent…" autoComplete="off"
+            role="combobox" aria-autocomplete="list" aria-controls="aed-q-list" aria-expanded={hits.length > 0} onKeyDown={(e) => { if (e.key === 'Enter' && hits[0]) { focus(hits[0]); setQ(''); } if (e.key === 'Escape') setQ(''); }} />
+          {hits.length > 0 && (
+            <ul id="aed-q-list" className="map-search-list">
+              {hits.map((a) => (
+                <li key={a.aed_uid}><button type="button" onClick={() => { focus(a); setQ(''); }}>
+                  <b>{displayName(a)}</b><span>{[a.opis_lokalizacji, shortAddress(a)].filter(Boolean).join(' · ') || 'brak opisu'}</span>
+                </button></li>
+              ))}
+            </ul>
+          )}
+          {q.trim().length >= 3 && hits.length === 0 && <p className="map-search-empty" role="status">Brak AED pasujących do „{q}”.</p>}
         </div>
         <div className="chips" role="group" aria-label="Filtry mapy">
           <label className="chip"><input type="checkbox" checked={onlyOpen} onChange={(e) => setOnlyOpen(e.target.checked)} /> Dostępne teraz</label>
