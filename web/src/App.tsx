@@ -9,8 +9,8 @@ import AboutPage from './pages/AboutPage';
 
 const NAV = [
   { to: '/', label: 'Mapa AED', icon: 'M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z' },
-  { to: '/dysponenci', label: 'Dla dysponentów', icon: 'M4 4h16v4H4zM4 10h10v4H4zM4 16h16v4H4z' },
-  { to: '/dane', label: 'Otwarte dane', icon: 'M4 19h16v2H4zM6 10h3v7H6zM11 6h3v11h-3zM16 13h3v4h-3z' },
+  { to: '/dysponenci', label: 'Dla dysponentów', short: 'Dysponenci', icon: 'M4 4h16v4H4zM4 10h10v4H4zM4 16h16v4H4z' },
+  { to: '/dane', label: 'Otwarte dane', short: 'Dane', icon: 'M4 19h16v2H4zM6 10h3v7H6zM11 6h3v11h-3zM16 13h3v4h-3z' },
   { to: '/zglos', label: 'Zgłoś', icon: 'M12 2 1 21h22L12 2zm1 15h-2v-2h2v2zm0-4h-2V9h2v4z' },
   { to: '/akcja', label: 'O akcji', icon: 'M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6-8 11-8 11z' },
 ];
@@ -56,7 +56,7 @@ export default function App() {
         {NAV.map((n) => (
           <NavLink key={n.to} to={n.to} end className={({ isActive }) => (isActive ? 'active' : '')}>
             <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d={n.icon} /></svg>
-            <span>{n.label}</span>
+            <span>{(n as { short?: string }).short ?? n.label}</span>
           </NavLink>
         ))}
       </nav>
