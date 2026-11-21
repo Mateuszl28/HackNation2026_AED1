@@ -1,0 +1,106 @@
+{
+ "opis": "Dziennik zmian zbioru AED (porównanie kolejnych aktualizacji po aed_uid)",
+ "historia": [
+  {
+   "data": "2026-11-21T19:27:38Z",
+   "poprzednio": 18318,
+   "teraz": 18320,
+   "dodane": 2,
+   "usuniete": 0,
+   "zmienione": 8,
+   "zmiany_pol": {
+    "opis_lokalizacji": 4,
+    "zdjecie_url": 3,
+    "data_ostatniej_kontroli": 3,
+    "wewnatrz_budynku": 2,
+    "dlugosc_geograficzna": 1,
+    "szerokosc_geograficzna": 1,
+    "dostep": 1,
+    "godziny_dostepnosci": 1,
+    "nazwa": 1
+   },
+   "przyklady": {
+    "dodane": [
+     {
+      "aed_uid": "PL-AED-osm-node-14403018301",
+      "nazwa": "AED: Kino Harmonia",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14403499701",
+      "nazwa": "AED: Stół przy wejsciu",
+      "miejscowosc": ""
+     }
+    ],
+    "usuniete": [],
+    "zmienione": [
+     {
+      "aed_uid": "PL-AED-osm-node-13628887701",
+      "nazwa": "AED: Na ścianie budynku szkoły, przy zatoczce autobusowej",
+      "pola": [
+       "zdjecie_url"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-13895469402",
+      "nazwa": "AED: Przy wejściu na Halę Sportową wewnątrz budynku",
+      "pola": [
+       "dlugosc_geograficzna",
+       "szerokosc_geograficzna"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14133247578",
+      "nazwa": "AED: prawie na kocu molo po prawej stronie pod schodami",
+      "pola": [
+       "dostep",
+       "godziny_dostepnosci",
+       "nazwa",
+       "opis_lokalizacji",
+       "zdjecie_url"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14312485690",
+      "nazwa": "OSP Drobin",
+      "pola": [
+       "data_ostatniej_kontroli",
+       "opis_lokalizacji"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14387968601",
+      "nazwa": "AED: Na ścianie budynku OSP w Kalnej",
+      "pola": [
+       "data_ostatniej_kontroli",
+       "wewnatrz_budynku"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14387969401",
+      "nazwa": "Defibrylator AED",
+      "pola": [
+       "data_ostatniej_kontroli",
+       "wewnatrz_budynku"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14402134914",
+      "nazwa": "Defibrylator AED",
+      "pola": [
+       "opis_lokalizacji"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-5078786542",
+      "nazwa": "MOSiR Sopot",
+      "pola": [
+       "opis_lokalizacji",
+       "zdjecie_url"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

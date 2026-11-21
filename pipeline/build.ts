@@ -3,6 +3,8 @@
 //   --fetch  wykrywa zbiory w API dane.gov.pl (discover.ts) i pobiera świeży eksport OpenAEDMap przed budową.
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
+import { diffDatasets, appendHistory } from './changes.ts';
+import type { ChangeEntry } from './changes.ts';
 import { execFileSync } from 'node:child_process';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -139,7 +141,7 @@ async function main() {
     if (!existsSync(join(RAW, s.file))) { console.warn(`! brak pliku ${s.file} — pomijam ${s.id}`); continue; }
     const { recs, report } = await loadSource(s);
     let qsum = 0;
-    for (const r of recs) {
+    for (const [ri, r] of recs.entries()) {
       const lat = Number(r.rec.szerokosc_geograficzna), lon = Number(r.rec.dlugosc_geograficzna);
       const errs = r.issues.filter((i) => i.level === 'error' && (i.field.includes('geograficzna') || i.field === 'nazwa'));
       if (errs.length) report.rejectedExamples.push(`${r.rec.id || '?'} ${r.rec.nazwa || ''}: ${errs[0].message}`);
@@ -162,7 +164,8 @@ async function main() {
           if (d < MATCH_RADIUS_M && d < best) { best = d; found = idx; }
         }
       }
-      const srcRef = `${s.id}:${r.rec.id || ''}`;
+      // gdy źródło nie ma własnego identyfikatora — numer wiersza (inaczej wszystkie AED zbioru dostałyby ten sam aed_uid)
+      const srcRef = `${s.id}:${r.rec.id || `w${ri + 1}`}`;
       if (found >= 0) {
         const it = integrated[found];
         for (const [k, v] of Object.entries(r.rec)) if (v && !it.rec[k]) it.rec[k] = v; // uzupełnianie luk
@@ -207,6 +210,22 @@ async function main() {
   writeFileSync(join(OUT, 'aed.csv'), '﻿' + [cols.join(','), ...final.map((r) => cols.map((c) => esc(r[c] || '')).join(','))].join('\r\n'));
   // JSON (puste pola pomijane — pełna lista kolumn w datapackage.json)
   const compact = (r: Record<string, string>) => Object.fromEntries(Object.entries(r).filter(([, v]) => v !== ''));
+  // Dziennik zmian: porównanie z poprzednią wersją zbioru (przed nadpisaniem aed.json)
+  const prevPath = join(OUT, 'aed.json');
+  const histPath = join(OUT, 'zmiany.json');
+  let history: ChangeEntry[] = [];
+  try { history = JSON.parse(readFileSync(histPath, 'utf8')).historia || []; } catch { /* pierwsza aktualizacja */ }
+  if (existsSync(prevPath)) {
+    try {
+      const prev = (JSON.parse(readFileSync(prevPath, 'utf8')).dane || []) as Record<string, string>[];
+      const entry = diffDatasets(prev, final.map(compact) as Record<string, string>[], new Date().toISOString());
+      history = appendHistory(history, entry);
+      console.log(`Zmiany: +${entry.dodane} −${entry.usuniete} ~${entry.zmienione}`);
+    } catch (e) { console.warn('Nie udało się porównać z poprzednią wersją:', (e as Error).message); }
+  }
+  const changesJson = JSON.stringify({ opis: 'Dziennik zmian zbioru AED (porównanie kolejnych aktualizacji po aed_uid)', historia: history }, null, 1);
+  writeFileSync(histPath, changesJson);
+  writeFileSync(join(APP_OUT, 'zmiany.json'), changesJson);
   writeFileSync(join(OUT, 'aed.json'), JSON.stringify({ wersja_standardu: SCHEMA_VERSION, data_wygenerowania: today, liczba_rekordow: final.length, dane: final.map(compact) }));
   // GeoJSON (RFC 7946)
   writeFileSync(join(OUT, 'aed.geojson'), JSON.stringify({

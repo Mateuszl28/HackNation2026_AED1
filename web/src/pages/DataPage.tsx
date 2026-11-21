@@ -49,11 +49,14 @@ export default function DataPage() {
               <a className="btn" href="./data/aed.geojson" download>GeoJSON</a>
               <a className="btn btn-ghost" href="./standard/datapackage.json" download>Table Schema (datapackage.json)</a>
               <a className="btn btn-ghost" href="./data/dcat.xml" download>Metadane DCAT-AP (XML)</a>
+              <a className="btn btn-ghost" href="./data/zmiany.json" download>Dziennik zmian (JSON)</a>
               <a className="btn btn-ghost" href="#/api">Dla deweloperów: adresy i przykłady →</a>
               <a className="btn btn-ghost" href="./standard/aed-wzorcowy-zakres-danych.xlsx" download>Wzorcowy zakres danych (XLSX)</a>
             </p>
             <p className="muted">Wygenerowano: {s.data_wygenerowania}. Licencje: dane dysponentów — zgodnie z licencją zbioru na dane.gov.pl; dane OpenStreetMap — ODbL 1.0 (© współtwórcy OpenStreetMap), co wymaga uznania autorstwa i udostępniania na tych samych warunkach.</p>
           </section>
+
+          <ChangeLog />
 
           <section className="card" aria-labelledby="src">
             <h2 id="src">Źródła i ich zakres referencyjny</h2>
@@ -148,5 +151,53 @@ export default function DataPage() {
         <p className="muted">Uruchomienie: <code>npm run data:fetch</code> (wykrywanie + pobranie + integracja). W repozytorium działa to codziennie jako GitHub Action.</p>
       </section>
     </div>
+  );
+}
+
+interface ChangeEntry {
+  data: string; poprzednio: number; teraz: number; dodane: number; usuniete: number; zmienione: number;
+  zmiany_pol: Record<string, number>;
+  przyklady: { dodane: { aed_uid: string; nazwa: string; miejscowosc: string }[]; usuniete: { aed_uid: string; nazwa: string; miejscowosc: string }[]; zmienione: { aed_uid: string; nazwa: string; pola: string[] }[] };
+}
+const FIELD_LABEL: Record<string, string> = Object.fromEntries(FIELDS.map((f) => [f.name, f.label]));
+const fieldLabel = (k: string) => (k === 'zrodla' ? 'Źródła' : FIELD_LABEL[k] || k);
+
+/** Dziennik zmian zbioru: co przyniosła każda automatyczna aktualizacja. */
+function ChangeLog() {
+  const [h, setH] = useState<ChangeEntry[] | null>(null);
+  useEffect(() => { fetch('./data/zmiany.json').then((r) => r.json()).then((d) => setH(d.historia || [])).catch(() => setH([])); }, []);
+  if (!h) return null;
+  return (
+    <section className="card" aria-labelledby="chg">
+      <h2 id="chg">Dziennik zmian zbioru</h2>
+      <p className="muted">Zbiór aktualizuje się automatycznie co noc. Każda aktualizacja jest porównywana z poprzednią po stałym identyfikatorze <code>aed_uid</code> — widać, co przybyło, co zniknęło i co poprawiono. Aktualizacje bez zmian nie tworzą wpisu.</p>
+      {h.length === 0 && <p>Brak zarejestrowanych zmian.</p>}
+      <ol className="changelog">
+        {h.map((e) => (
+          <li key={e.data}>
+            <div className="cl-head">
+              <b>{new Date(e.data).toLocaleString('pl-PL', { dateStyle: 'long', timeStyle: 'short' })}</b>
+              <span className="cl-badges">
+                <span className="cl-b add">+{e.dodane} nowych</span>
+                <span className="cl-b del">−{e.usuniete} usuniętych</span>
+                <span className="cl-b chg">{e.zmienione} zmienionych</span>
+              </span>
+              <small className="muted">{e.poprzednio.toLocaleString('pl-PL')} → {e.teraz.toLocaleString('pl-PL')} AED</small>
+            </div>
+            <details>
+              <summary>Szczegóły</summary>
+              {Object.keys(e.zmiany_pol).length > 0 && (
+                <p><b>Najczęściej zmieniane pola:</b> {Object.entries(e.zmiany_pol).slice(0, 6).map(([k, n]) => `${fieldLabel(k)} (${n})`).join(', ')}</p>
+              )}
+              {e.przyklady.dodane.length > 0 && <p><b>Nowe:</b> {e.przyklady.dodane.map((x) => <a key={x.aed_uid} href={`#/aed/${encodeURIComponent(x.aed_uid)}`}>{x.nazwa.replace(/^AED:\s*/, '')}{x.miejscowosc ? ` (${x.miejscowosc})` : ''}</a>).reduce<React.ReactNode[]>((acc, el, i) => (i ? [...acc, ', ', el] : [el]), [])}</p>}
+              {e.przyklady.usuniete.length > 0 && <p><b>Usunięte:</b> {e.przyklady.usuniete.map((x) => x.nazwa.replace(/^AED:\s*/, '')).join(', ')}</p>}
+              {e.przyklady.zmienione.length > 0 && (
+                <ul className="small">{e.przyklady.zmienione.map((x) => <li key={x.aed_uid}><a href={`#/aed/${encodeURIComponent(x.aed_uid)}`}>{x.nazwa.replace(/^AED:\s*/, '')}</a>: {x.pola.slice(0, 5).map(fieldLabel).join(', ')}</li>)}</ul>
+              )}
+            </details>
+          </li>
+        ))}
+      </ol>
+    </section>
   );
 }
