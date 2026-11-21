@@ -8,6 +8,7 @@ import ReportPage from './pages/ReportPage';
 import AboutPage from './pages/AboutPage';
 import RescuePage from './pages/RescuePage';
 import RankingPage from './pages/RankingPage';
+import Onboarding from './components/Onboarding';
 import StickersPage from './pages/StickersPage';
 import CampaignPage from './pages/CampaignPage';
 
@@ -60,6 +61,7 @@ export default function App() {
         </div>
       )}
 
+      <Onboarding />
       <main id="main" ref={main} tabIndex={-1}>
         <Routes>
           <Route path="/" element={<MapPage />} />

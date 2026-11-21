@@ -7,3 +7,8 @@ web/android/build/
 web/android/.idea/
 *.log
 .DS_Store
+
+# klucze podpisu Androida — nigdy w repozytorium
+web/android/keystore.properties
+*.jks
+*.keystore
