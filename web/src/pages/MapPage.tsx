@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { aedLink } from '../config';
+import { shareText } from '../share';
 import L from 'leaflet';
 import 'leaflet.markercluster';
 import { describeHours } from '@shared/hours.ts';
@@ -42,6 +43,7 @@ export default function MapPage() {
   const meRef = useRef<L.CircleMarker | null>(null);
   const accRef = useRef<L.Circle | null>(null);
   const [accuracy, setAccuracy] = useState<number | null>(null);
+  const [tilesDown, setTilesDown] = useState(false);
   const [aeds, setAeds] = useState<Aed[]>([]);
   const [me, setMe] = useState<[number, number] | null>(null);
   const [center, setCenter] = useState<[number, number]>(BYDGOSZCZ);
@@ -78,9 +80,14 @@ export default function MapPage() {
     if (!mapEl.current || mapRef.current) return;
     const map = L.map(mapEl.current, { zoomControl: false, preferCanvas: true }).setView(BYDGOSZCZ, 13);
     L.control.zoom({ position: 'bottomright', zoomInTitle: 'Przybliż', zoomOutTitle: 'Oddal' }).addTo(map);
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19, attribution: '© <a href="https://www.openstreetmap.org/copyright">współtwórcy OpenStreetMap</a>',
     }).addTo(map);
+    // Czujnik podkładu mapy: przy „Wi-Fi bez internetu” przeglądarka twierdzi, że jest online, a kafelki wiszą.
+    // Jeśli widoczne kafelki nie wczytają się w 10 s — mówimy o tym wprost (dane AED działają bez sieci).
+    let tileTimer: number | undefined;
+    tiles.on('loading', () => { window.clearTimeout(tileTimer); tileTimer = window.setTimeout(() => setTilesDown(true), 10000); });
+    tiles.on('load', () => { window.clearTimeout(tileTimer); setTilesDown(false); });
     map.on('moveend', () => { const c = map.getCenter(); setCenter([c.lat, c.lng]); });
     mapRef.current = map;
     return () => { map.remove(); mapRef.current = null; };
@@ -117,25 +124,40 @@ export default function MapPage() {
     .map((a) => ({ a, d: distanceM(ref[0], ref[1], a.lat, a.lon) }))
     .sort((x, y) => x.d - y.d).slice(0, 8), [filtered, ref[0], ref[1]]);
 
+  // Lokalizacja doprecyzowywana: pierwszy odczyt (często z sieci, ±100–500 m) pokazujemy od razu,
+  // a przez kolejne sekundy przyjmujemy lepsze odczyty z GPS, aż dokładność spadnie poniżej 30 m.
+  const watchRef = useRef<number | null>(null);
+  useEffect(() => () => { if (watchRef.current !== null) navigator.geolocation?.clearWatch(watchRef.current); }, []);
+
   function locate() {
     setGeoMsg('Ustalam Twoją lokalizację…');
     if (!navigator.geolocation) { setGeoMsg('Twoje urządzenie nie udostępnia lokalizacji.'); return; }
-    navigator.geolocation.getCurrentPosition((p) => {
+    if (watchRef.current !== null) navigator.geolocation.clearWatch(watchRef.current);
+    let best = Infinity;
+    let first = true;
+    const stop = () => { if (watchRef.current !== null) { navigator.geolocation.clearWatch(watchRef.current); watchRef.current = null; } };
+    const apply = (p: GeolocationPosition) => {
+      const acc = Math.round(p.coords.accuracy || 9999);
+      if (acc >= best) return; // przyjmujemy tylko dokładniejsze odczyty
+      best = acc;
       const pos: [number, number] = [p.coords.latitude, p.coords.longitude];
-      setMe(pos); setGeoMsg('');
+      setMe(pos); setAccuracy(acc);
+      setGeoMsg(acc > 30 ? `Doprecyzowuję lokalizację… (±${acc} m)` : '');
       const map = mapRef.current!;
       meRef.current?.remove();
       accRef.current?.remove();
-      const acc = Math.round(p.coords.accuracy || 0);
       // okrąg dokładności: użytkownik widzi, na ile pewna jest jego pozycja (sieć ±100 m vs GPS ±5 m)
       if (acc > 15) accRef.current = L.circle(pos, { radius: acc, color: '#1565c0', weight: 1, fillColor: '#1565c0', fillOpacity: 0.12, interactive: false }).addTo(map);
       meRef.current = L.circleMarker(pos, { radius: 9, color: '#fff', weight: 3, fillColor: '#1565c0', fillOpacity: 1 }).addTo(map).bindTooltip(`Tu jesteś (±${acc} m)`);
-      setAccuracy(acc);
       const n = filtered.map((a) => ({ a, d: distanceM(pos[0], pos[1], a.lat, a.lon) })).sort((x, y) => x.d - y.d)[0];
       if (n) { setSel(n.a); showOnMap([pos, [n.a.lat, n.a.lon]]); } else map.setView(pos, 16);
-      setSheet('mid');
-    }, (e) => setGeoMsg(e.code === 1 ? 'Brak zgody na lokalizację. Przesuń mapę albo wybierz miasto.' : 'Nie udało się ustalić lokalizacji.'),
-    { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 });
+      if (first) { setSheet('mid'); first = false; }
+      if (acc <= 30) stop();
+    };
+    watchRef.current = navigator.geolocation.watchPosition(apply,
+      (e) => { if (first) setGeoMsg(e.code === 1 ? 'Brak zgody na lokalizację. Przesuń mapę albo wybierz miasto.' : 'Nie udało się ustalić lokalizacji.'); stop(); },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 });
+    window.setTimeout(() => { stop(); setGeoMsg(''); }, 15000);
   }
 
   // wyszukiwarka (bez polskich znaków) w nazwie, opisie, adresie i dysponencie. Wygrywają AED pasujące do
@@ -209,6 +231,7 @@ export default function MapPage() {
           </label>
         </div>
         {geoMsg && <p className="geo-msg" role="status">{geoMsg}</p>}
+        {tilesDown && <p className="geo-msg tiles-down" role="status"><b>Brak połączenia z serwerem map.</b> Podkład mapy może się nie wyświetlać, ale lista najbliższych AED, nawigacja i tryb ratunkowy działają bez internetu.</p>}
       </div>
 
       <section className={`sheet ${sheet}`} aria-label="Panel informacji o AED">
@@ -261,11 +284,9 @@ function Details({ a, me, now, onClose, accuracy }: { a: Aed; me: [number, numbe
   useEffect(() => setShared(''), [a.aed_uid]);
   async function share(x: Aed) {
     const url = aedLink(x.aed_uid);
-    const text = `AED: ${displayName(x)}${x.opis_lokalizacji ? ` — ${x.opis_lokalizacji}` : ''}`;
-    try {
-      if (navigator.share) await navigator.share({ title: 'AEDostępni', text, url });
-      else { await navigator.clipboard.writeText(`${text}\n${url}`); setShared('Skopiowano link ✓'); }
-    } catch { /* anulowano */ }
+    const sub = subLine(x);
+    const text = `AED: ${displayName(x)}${sub && !sub.startsWith('brak opisu') ? ` — ${sub}` : ''}`;
+    if ((await shareText({ title: 'AEDostępni', text, url })) === 'copied') setShared('Skopiowano link ✓');
   }
   return (
     <div className="sheet-body details">

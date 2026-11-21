@@ -515,3 +515,4 @@ summary { cursor: pointer; font-weight: 700; padding: 6px 0; }
 }
 .dz-text { display: flex; flex-direction: column; gap: 2px; align-items: inherit; } @media (min-width: 761px) { .dz-text { align-items: center; } }
 @media (max-width: 760px) { .dropzone .dz-text { align-items: flex-start; text-align: left; } .dropzone::before { content: "+"; font-size: 1.6rem; font-weight: 800; } }
+.tiles-down { background: #fff4d6; color: #5a3d00; border: 1px solid #f0d9a0; } @media (max-width: 900px) { .sheet-up .tiles-down { display: block; } }

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { loadAeds, availability, distanceM, walkMinutes, fmtDist, is247, displayName, subLine } from '../data';
 import type { Aed } from '../data';
+import { shareText } from '../share';
 
 type Found = { a: Aed; d: number };
 type Lang = 'pl' | 'en' | 'uk';
@@ -101,11 +102,10 @@ export default function RescuePage() {
   const navUrl = (a: Aed) => `https://www.google.com/maps/dir/?api=1&destination=${a.lat},${a.lon}&travelmode=walking`;
 
   async function sendRunner(a: Aed) {
-    const text = `${t.urgent}: ${displayName(a)}. ${a.opis_lokalizacji ? `${t.where}: ${a.opis_lokalizacji}. ` : ''}${t.nav}: ${navUrl(a)}`;
-    try {
-      if (navigator.share) { await navigator.share({ title: t.urgent, text }); setShared('sent'); }
-      else { await navigator.clipboard.writeText(text); setShared('copied'); }
-    } catch { /* anulowano */ }
+    const sub = subLine(a);
+    const text = `${t.urgent}: ${displayName(a)}. ${sub && !sub.startsWith('brak opisu') ? `${t.where}: ${sub}. ` : ''}${t.nav}: ${navUrl(a)}`;
+    const r = await shareText({ title: t.urgent, text });
+    if (r === 'shared') setShared('sent'); else if (r === 'copied') setShared('copied');
   }
 
   return (
