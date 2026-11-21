@@ -4,6 +4,7 @@ import QRCode from 'qrcode';
 import { loadAeds, COUNTIES, displayName, shortAddress } from '../data';
 import type { Aed } from '../data';
 import { PUBLIC_URL } from '../config';
+import SocialCard from '../components/SocialCard';
 
 interface CountyRow { id: string; powiat: string; wojewodztwo: string; aed: number; indeks_gotowosci: number; }
 const pct = (n: number, d: number) => (d ? Math.round((n / d) * 100) : 0);
@@ -121,6 +122,22 @@ export default function ReportCountyPage() {
           <div><b>Udostępnij dane. Daj komuś czas.</b><span>Walidator i instrukcja: {PUBLIC_URL.replace('https://', '')}#/dysponenci</span><span>#AEDostępni · źródła: dane.gov.pl, © współtwórcy OpenStreetMap (ODbL)</span></div>
         </footer>
       </article>
+
+      <section className="card no-print" aria-labelledby="sc-h">
+        <h2 id="sc-h">Grafika do mediów społecznościowych</h2>
+        <p className="muted small">Udostępnij stan danych o AED w swoim powiecie — zachęć samorząd i lokalne firmy do publikacji danych.</p>
+        <SocialCard fileName={`aedostepni-${label.replace(/[^\p{L}\p{N}]+/gu, '-').toLowerCase()}`} stats={{
+          title: `${label.replace(/^powiat /, 'Powiat ').replace(/ \(.*\)$/, '')}: dane o defibrylatorach AED`,
+          subtitle: `stan na ${today}`,
+          big: String(s.dysp),
+          bigLabel: `z ${s.n} znanych AED potwierdzonych w danych właścicieli (dane.gov.pl)`,
+          items: [
+            { v: `${s.godz}%`, l: 'z godzinami dostępności', bad: s.godz < 50 },
+            { v: `${s.kontr}%`, l: 'z datą kontroli', bad: s.kontr < 50 },
+            { v: rank && rank.pos ? `${rank.pos}.` : '–', l: `miejsce na ${rank?.of ?? 380} powiatów`, bad: !!rank && rank.pos > (rank.of / 2) },
+          ],
+        }} />
+      </section>
     </div>
   );
 }
