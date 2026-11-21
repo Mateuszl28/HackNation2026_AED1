@@ -33,7 +33,7 @@ function Accessibility() {
       </section>
       <section className="card">
         <h2>Przygotowanie deklaracji</h2>
-        <p>Deklarację sporządzono {UPDATED} na podstawie samooceny oraz automatycznego audytu narzędziem axe-core 4.10 (reguły WCAG 2.0, 2.1 i 2.2, poziomy A i AA) na 9 ekranach serwisu: 0 naruszeń na 8 ekranach, na mapie jedno ostrzeżenie opisane wyżej.</p>
+        <p>Deklarację sporządzono {UPDATED} na podstawie samooceny oraz automatycznego audytu narzędziem axe-core 4.10 (reguły WCAG 2.0, 2.1 i 2.2, poziomy A i AA) na 12 ekranach serwisu: 0 naruszeń na 11 ekranach, na mapie jedno ostrzeżenie opisane wyżej.</p>
         <h3>Rozwiązania ułatwiające korzystanie</h3>
         <ul>
           <li>obsługa klawiaturą i widoczny fokus, link „Przejdź do treści”;</li>
