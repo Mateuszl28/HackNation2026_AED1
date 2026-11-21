@@ -28,7 +28,9 @@ export default function Onboarding() {
 
   useEffect(() => {
     const path = window.location.hash.replace(/^#/, '');
-    if (path.startsWith('/ratunek') || path.startsWith('/aed/') || path.includes('locate=1')) return;
+    // tylko przy wejściu na mapę (ekran startowy) — nie przy linkach do podstron, kart AED czy trybu SOS
+    const route = path.split('?')[0];
+    if ((route !== '' && route !== '/') || path.includes('locate=1')) return;
     try { if (!localStorage.getItem(KEY)) setOpen(true); } catch { /* bez pamięci — nie pokazujemy */ }
   }, []);
   useEffect(() => { if (open) titleRef.current?.focus(); }, [open, i]);

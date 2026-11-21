@@ -53,6 +53,7 @@ export default function AboutPage() {
       </section>
 
       <footer className="muted small-print">
+        <a href="#/dostepnosc">Deklaracja dostępności</a> · <a href="#/prywatnosc">Polityka prywatności</a> · <a href="#/api">Dla deweloperów</a><br />
         Dane mapy: © współtwórcy OpenStreetMap (ODbL), OpenAEDMap, zbiory dysponentów z dane.gov.pl. Projekt na HackNation 2026 — wyzwanie „Misja AED — Dane na ratunek”.
       </footer>
     </div>

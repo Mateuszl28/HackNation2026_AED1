@@ -7,6 +7,7 @@ import type { StickerItem } from './StickersPage';
 import * as XLSX from 'xlsx';
 import { FIELDS, FIELD_BY_NAME, SCHEMA_VERSION } from '@shared/schema.ts';
 import { dcatXml, MEDIA } from '@shared/dcat.ts';
+import { serviceEvents, toIcs } from '@shared/ics.ts';
 import { stripDiacritics } from '@shared/mapper.ts';
 import { parseCsv, parseJson, autoMap, mapRow, qualityScore, flattenRow, datasetChecks } from '@shared/mapper.ts';
 import type { ColumnMapping, Row, MappedRow } from '@shared/mapper.ts';
@@ -119,6 +120,10 @@ export default function ProvidersPage() {
     czestotliwosc_aktualizacji: 'co miesiąc (oraz po każdej zmianie lokalizacji/stanu AED)',
     format: 'CSV (UTF-8) + XLSX + JSON',
   };
+  function exportIcs() {
+    const ev = serviceEvents(result.map((r) => r.record));
+    download('aed-przypomnienia-serwisowe.ics', toIcs(ev, `AED — przypomnienia serwisowe${defaults.dysponent ? ` (${defaults.dysponent})` : ''}`), 'text/calendar;charset=utf-8');
+  }
   function exportDcat() {
     const who = defaults.dysponent || 'Instytucja';
     const slug = stripDiacritics(who).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -272,6 +277,7 @@ export default function ProvidersPage() {
               <button className="btn" onClick={exportJson}>Pobierz JSON</button>
               <button className="btn btn-ghost" onClick={() => download('metadane-dane-gov-pl.json', JSON.stringify(meta, null, 2), 'application/json')}>Metadane (JSON)</button>
               <button className="btn btn-ghost" onClick={exportDcat}>Metadane DCAT-AP (XML do harvestera)</button>
+              <button className="btn btn-ghost" onClick={exportIcs}>Przypomnienia serwisowe (kalendarz .ics)</button>
             </p>
             <div className="notice notice-info">
               <strong>Oznacz swoje AED naklejką z kodem QR.</strong> Mieszkańcy zeskanują ją, sprawdzą dostępność i zgłoszą usterkę — a Ty dostaniesz sygnał, że dane trzeba poprawić.

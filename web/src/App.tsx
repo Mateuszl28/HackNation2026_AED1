@@ -10,6 +10,7 @@ import RescuePage from './pages/RescuePage';
 import RankingPage from './pages/RankingPage';
 import Onboarding from './components/Onboarding';
 import DevPage from './pages/DevPage';
+import LegalPage from './pages/LegalPage';
 import { APK_URL, isNativeApp } from './config';
 import StickersPage from './pages/StickersPage';
 import CampaignPage from './pages/CampaignPage';
@@ -34,7 +35,7 @@ export default function App() {
     return () => { window.removeEventListener('online', on); window.removeEventListener('offline', off); };
   }, []);
   useEffect(() => {
-    const t = NAV.find((n) => n.to === loc.pathname)?.label ?? ({ '/ratunek': 'Tryb ratunkowy', '/ranking': 'Mapa luk w danych', '/naklejki': 'Naklejki QR', '/kampania': 'Zestaw kampanii', '/api': 'Dla deweloperów' } as Record<string, string>)[loc.pathname] ?? (loc.pathname.startsWith('/aed/') ? 'Karta AED' : 'AEDostępni');
+    const t = NAV.find((n) => n.to === loc.pathname)?.label ?? ({ '/ratunek': 'Tryb ratunkowy', '/ranking': 'Mapa luk w danych', '/naklejki': 'Naklejki QR', '/kampania': 'Zestaw kampanii', '/api': 'Dla deweloperów', '/dostepnosc': 'Deklaracja dostępności', '/prywatnosc': 'Polityka prywatności' } as Record<string, string>)[loc.pathname] ?? (loc.pathname.startsWith('/aed/') ? 'Karta AED' : 'AEDostępni');
     document.title = `${t} — AEDostępni`;
     if (loc.pathname !== '/' && !loc.pathname.startsWith('/aed/')) main.current?.focus();
   }, [loc.pathname]);
@@ -83,6 +84,8 @@ export default function App() {
           <Route path="/naklejki" element={<StickersPage />} />
           <Route path="/kampania" element={<CampaignPage />} />
           <Route path="/api" element={<DevPage />} />
+          <Route path="/dostepnosc" element={<LegalPage kind="dostepnosc" />} />
+          <Route path="/prywatnosc" element={<LegalPage kind="prywatnosc" />} />
         </Routes>
       </main>
 

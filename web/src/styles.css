@@ -646,3 +646,4 @@ summary { cursor: pointer; font-weight: 700; padding: 6px 0; }
   .sheet-title { margin: 10px 0 8px; }
   .sheet-title h2 { font-size: .95rem; }
 }
+.legal ul { padding-left: 20px; } .legal li { margin-bottom: 6px; }

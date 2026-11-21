@@ -119,3 +119,14 @@ test('DCAT-AP: poprawny XML z dystrybucjami i escapowaniem', () => {
   assert.match(xml, /<dcat:mediaType>text\/csv<\/dcat:mediaType>/);
   assert.doesNotMatch(xml, /aedostepni\.pl/);
 });
+
+import { serviceEvents, toIcs } from '../shared/ics.ts';
+test('kalendarz serwisowy: elektrody, bateria, kontrola + poprawny iCalendar', () => {
+  const ev = serviceEvents([{ id: 'A1', nazwa: 'Ratusz', data_waznosci_elektrod: '2027-03-31', data_waznosci_baterii: '2029-06-30', data_ostatniej_kontroli: '2026-10-15' }], '2026-11-21');
+  assert.deepEqual(ev.map((e) => e.date), ['2027-02-28', '2027-10-15', '2029-05-30']);
+  const ics = toIcs(ev);
+  assert.match(ics, /^BEGIN:VCALENDAR\r\n/);
+  assert.equal((ics.match(/BEGIN:VEVENT/g) || []).length, 3);
+  assert.match(ics, /DTSTART;VALUE=DATE:20270228/);
+  assert.ok(ics.split('\r\n').every((l) => new TextEncoder().encode(l).length <= 75));
+});
