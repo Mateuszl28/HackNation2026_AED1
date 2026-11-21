@@ -11,6 +11,9 @@ export interface Aed {
 /** Lista powiatów (etykiety „powiat X (województwo)”) — do wyszukiwania AED dysponenta. */
 export const COUNTIES: string[] = [];
 
+/** Data wygenerowania zbioru (nocna aktualizacja) — pokazywana użytkownikowi. */
+export const DATA_INFO = { generated: '' };
+
 export type Availability = 'open' | 'closed' | 'unknown';
 
 export const BYDGOSZCZ: [number, number] = [53.1235, 18.0084];
@@ -18,7 +21,8 @@ export const BYDGOSZCZ: [number, number] = [53.1235, 18.0084];
 let cache: Promise<Aed[]> | null = null;
 export function loadAeds(): Promise<Aed[]> {
   if (!cache) {
-    cache = fetch('./data/aed-app.json').then((r) => r.json()).then((d: { cols: string[]; rows: unknown[][]; sources: typeof SOURCES; powiaty?: string[] }) => {
+    cache = fetch('./data/aed-app.json').then((r) => r.json()).then((d: { cols: string[]; rows: unknown[][]; sources: typeof SOURCES; powiaty?: string[]; generated?: string }) => {
+      DATA_INFO.generated = d.generated || '';
       Object.assign(SOURCES, d.sources || {});
       const counties = d.powiaty || [];
       COUNTIES.splice(0, COUNTIES.length, ...counties.filter(Boolean));

@@ -4,6 +4,7 @@ import { loadAeds, availability, distanceM, walkMinutes, fmtDist, is247, display
 import type { Aed } from '../data';
 import { shareText } from '../share';
 import { watchFresh } from '../geo';
+import { say, stopSpeech } from '../speech';
 import { reverseAddress } from '../geocode';
 
 type Found = { a: Aed; d: number };
@@ -22,6 +23,9 @@ const T = {
     urgent: 'PILNE! Przynieś AED', where: 'Gdzie', nav: 'Nawigacja',
     cpr: 'Uciskaj klatkę piersiową', cprHint: 'Środek klatki piersiowej, ręce wyprostowane, głębokość 5–6 cm, tempo 100–120/min. Gdy przyniosą AED — włącz go i wykonuj polecenia głosowe.',
     start: 'Start metronomu', stop: 'Stop', perMin: 'uciśnięć/min', rhythm: 'Uciskaj w rytm sygnału', breaths: 'Jeśli umiesz — 2 oddechy ratownicze. Jeśli nie — uciskaj dalej bez przerwy.',
+    voice: 'Głos', vStart: 'Uciskaj mocno środek klatki piersiowej, na głębokość pięciu centymetrów, w rytm sygnału.', vCycle: 'Trzydzieści. Jeśli umiesz, dwa oddechy. Jeśli nie, uciskaj dalej.',
+    aedHere: 'Przynieśli AED', aedTitle: 'Obsługa AED', vAed: 'Włącz defibrylator i wykonuj jego polecenia głosowe. Naklej elektrody na nagą klatkę piersiową, tak jak na rysunku.',
+    aedSteps: ['Włącz AED (przycisk lub otwarcie pokrywy).', 'Odsłoń klatkę piersiową, naklej elektrody jak na rysunku.', 'Podczas analizy i wyładowania NIKT nie dotyka poszkodowanego.', 'Po wyładowaniu lub komunikacie „nie zaleca się” — od razu wróć do uciśnięć.'],
   },
   en: {
     title: 'Emergency mode', exit: 'Exit emergency mode', call: 'Call', callHint: 'Turn on the speaker. The dispatcher will guide you step by step.',
@@ -33,6 +37,9 @@ const T = {
     urgent: 'URGENT! Bring the AED', where: 'Where', nav: 'Directions',
     cpr: 'Push hard on the chest', cprHint: 'Centre of the chest, straight arms, 5–6 cm deep, 100–120 per minute. When the AED arrives — switch it on and follow the voice prompts.',
     start: 'Start metronome', stop: 'Stop', perMin: 'compressions/min', rhythm: 'Push to the beat', breaths: 'If trained — give 2 rescue breaths. If not — keep pushing without pause.',
+    voice: 'Voice', vStart: 'Push hard in the centre of the chest, five centimetres deep, to the beat.', vCycle: 'Thirty. If trained, give two breaths. If not, keep pushing.',
+    aedHere: 'The AED is here', aedTitle: 'Using the AED', vAed: 'Switch on the defibrillator and follow its voice prompts. Attach the pads to the bare chest as shown in the picture.',
+    aedSteps: ['Switch the AED on (button or open the lid).', 'Bare the chest and attach the pads as shown in the picture.', 'During analysis and shock NOBODY touches the patient.', 'After the shock or “no shock advised” — resume compressions immediately.'],
   },
   uk: {
     title: 'Екстрений режим', exit: 'Вийти з екстреного режиму', call: 'Телефонуйте', callHint: 'Увімкніть гучний зв’язок. Диспетчер підкаже, що робити.',
@@ -44,6 +51,9 @@ const T = {
     urgent: 'ТЕРМІНОВО! Принесіть AED', where: 'Де', nav: 'Маршрут',
     cpr: 'Натискайте на грудну клітку', cprHint: 'Центр грудної клітки, прямі руки, глибина 5–6 см, 100–120 за хвилину. Коли принесуть AED — увімкніть його й виконуйте голосові вказівки.',
     start: 'Старт метронома', stop: 'Стоп', perMin: 'натискань/хв', rhythm: 'Натискайте в ритм сигналу', breaths: 'Якщо вмієте — 2 рятувальні вдихи. Якщо ні — продовжуйте натискання без перерви.',
+    voice: 'Голос', vStart: 'Сильно натискайте на центр грудної клітки, на глибину п’яти сантиметрів, у ритм сигналу.', vCycle: 'Тридцять. Якщо вмієте, два вдихи. Якщо ні, натискайте далі.',
+    aedHere: 'AED принесли', aedTitle: 'Як користуватися AED', vAed: 'Увімкніть дефібрилятор і виконуйте його голосові вказівки. Наклейте електроди на оголену грудну клітку, як на малюнку.',
+    aedSteps: ['Увімкніть AED (кнопка або відкрийте кришку).', 'Оголіть грудну клітку, наклейте електроди як на малюнку.', 'Під час аналізу та розряду НІХТО не торкається постраждалого.', 'Після розряду або «розряд не рекомендовано» — одразу продовжуйте натискання.'],
   },
 } as const;
 const LANGS: { code: Lang; label: string; name: string }[] = [{ code: 'pl', label: 'PL', name: 'Polski' }, { code: 'en', label: 'EN', name: 'English' }, { code: 'uk', label: 'UA', name: 'Українська' }];
@@ -166,14 +176,19 @@ export default function RescuePage() {
 
       <section className="rescue-step" aria-labelledby="r3">
         <h2 id="r3"><span className="big">3</span> {t.cpr}</h2>
-        <Metronome t={t} />
+        <Metronome t={t} lang={lang} />
         <p className="muted small">{t.cprHint}</p>
       </section>
     </div>
   );
 }
 
-function Metronome({ t }: { t: (typeof T)[Lang] }) {
+function Metronome({ t, lang }: { t: (typeof T)[Lang]; lang: Lang }) {
+  const [voice, setVoice] = useState(true);
+  const [aed, setAed] = useState(false);
+  const voiceRef = useRef(true);
+  useEffect(() => { voiceRef.current = voice; if (!voice) stopSpeech(); }, [voice]);
+  useEffect(() => () => stopSpeech(), []);
   const [on, setOn] = useState(false);
   const [count, setCount] = useState(0);
   const ctx = useRef<AudioContext | null>(null);
@@ -188,13 +203,14 @@ function Metronome({ t }: { t: (typeof T)[Lang] }) {
     o.connect(g).connect(c.destination); o.start(); o.stop(c.currentTime + 0.09);
   }
   function toggle() {
-    if (on) { if (timer.current) clearInterval(timer.current); timer.current = null; setOn(false); return; }
+    if (on) { if (timer.current) clearInterval(timer.current); timer.current = null; setOn(false); stopSpeech(); return; }
     ctx.current = ctx.current || new (window.AudioContext || (window as any).webkitAudioContext)();
     ctx.current.resume();
     setCount(0); setOn(true);
+    if (voiceRef.current) say(t.vStart, lang);
     timer.current = window.setInterval(() => {
       beep(); navigator.vibrate?.(50);
-      setCount((n) => n + 1);
+      setCount((n) => { const next = n + 1; if (next % 30 === 0 && voiceRef.current) say(t.vCycle, lang); return next; });
     }, 60000 / BPM);
   }
   const inCycle = count % 30;
@@ -206,6 +222,16 @@ function Metronome({ t }: { t: (typeof T)[Lang] }) {
       </button>
       <p className="metro-count" aria-live="off">{on ? <><b>{inCycle === 0 && count > 0 ? 30 : inCycle}</b> / 30</> : t.rhythm}</p>
       {on && count > 0 && inCycle === 0 && <p className="notice notice-warn" role="status">{t.breaths}</p>}
+      <div className="metro-tools">
+        <label className="voice-toggle"><input type="checkbox" checked={voice} onChange={(e) => setVoice(e.target.checked)} /> 🔊 {t.voice}</label>
+        <button className="btn btn-primary" onClick={() => { setAed(true); if (voiceRef.current) say(t.vAed, lang); }}>{t.aedHere}</button>
+      </div>
+      {aed && (
+        <div className="aed-steps" role="region" aria-label={t.aedTitle}>
+          <b>{t.aedTitle}</b>
+          <ol>{t.aedSteps.map((x) => <li key={x}>{x}</li>)}</ol>
+        </div>
+      )}
     </div>
   );
 }

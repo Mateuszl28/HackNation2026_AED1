@@ -12,7 +12,7 @@ import 'leaflet.markercluster';
 import { describeHours } from '@shared/hours.ts';
 import {
   loadAeds, availability, distanceM, walkMinutes, fmtDist, address, is247, sourceList, displayName, subLine, shortAddress,
-  ACCESS_LABEL, SECURITY_LABEL, BYDGOSZCZ,
+  ACCESS_LABEL, SECURITY_LABEL, BYDGOSZCZ, DATA_INFO,
 } from '../data';
 import type { Aed, Availability } from '../data';
 
@@ -302,7 +302,7 @@ export default function MapPage() {
             </Link>
             <div className="sheet-title">
               <h2>{me ? 'Najbliżej Ciebie' : 'Najbliżej środka mapy'}</h2>
-              <span>{filtered.length.toLocaleString('pl-PL')} AED na mapie</span>
+              <span>{filtered.length.toLocaleString('pl-PL')} AED{DATA_INFO.generated && <> · dane z {new Date(DATA_INFO.generated).toLocaleDateString('pl-PL')}</>}</span>
             </div>
             {aeds.length === 0 && <p role="status" className="muted">Wczytywanie danych…</p>}
             <ul className="near-list">
