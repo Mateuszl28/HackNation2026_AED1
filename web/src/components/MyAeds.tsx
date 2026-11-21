@@ -103,6 +103,7 @@ export default function MyAeds({ onLoad }: { onLoad: (name: string, rows: Record
             <p className="btn-row">
               <button className="btn btn-primary" onClick={downloadXlsx}>Pobierz do uzupełnienia (XLSX){found.length > MAX ? ` — pierwsze ${MAX}` : ''}</button>
               <button className="btn" onClick={() => onLoad(`zbiór krajowy: ${label}`, found.slice(0, MAX).map(toRecord))}>Sprawdź w walidatorze</button>
+              {mode === 'county' && <a className="btn btn-ghost" href={`#/raport/${encodeURIComponent(county)}`}>Raport dla samorządu (PDF)</a>}
             </p>
           </div>
         ))}

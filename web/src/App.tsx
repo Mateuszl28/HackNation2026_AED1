@@ -16,12 +16,13 @@ const DevPage = lazy(() => import('./pages/DevPage'));
 const LegalPage = lazy(() => import('./pages/LegalPage'));
 const StickersPage = lazy(() => import('./pages/StickersPage'));
 const CampaignPage = lazy(() => import('./pages/CampaignPage'));
+const ReportCountyPage = lazy(() => import('./pages/ReportCountyPage'));
 
 /** Po wyświetleniu mapy, w wolnej chwili, dociągamy pozostałe ekrany — trafiają do pamięci offline (service worker). */
 function prefetchPages() {
   const load = () => {
     for (const p of [() => import('./pages/DataPage'), () => import('./pages/ReportPage'), () => import('./pages/AboutPage'), () => import('./pages/RankingPage'),
-      () => import('./pages/DevPage'), () => import('./pages/LegalPage'), () => import('./pages/CampaignPage'), () => import('./pages/StickersPage'), () => import('./pages/ProvidersPage')]) p().catch(() => {});
+      () => import('./pages/DevPage'), () => import('./pages/LegalPage'), () => import('./pages/CampaignPage'), () => import('./pages/StickersPage'), () => import('./pages/ProvidersPage'), () => import('./pages/ReportCountyPage')]) p().catch(() => {});
   };
   const w = window as unknown as { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => void };
   window.setTimeout(() => (w.requestIdleCallback ? w.requestIdleCallback(load, { timeout: 5000 }) : load()), 4000);
@@ -48,13 +49,13 @@ export default function App() {
     return () => { window.removeEventListener('online', on); window.removeEventListener('offline', off); };
   }, []);
   useEffect(() => {
-    const t = NAV.find((n) => n.to === loc.pathname)?.label ?? ({ '/ratunek': 'Tryb ratunkowy', '/ranking': 'Mapa luk w danych', '/naklejki': 'Naklejki QR', '/kampania': 'Zestaw kampanii', '/api': 'Dla deweloperów', '/dostepnosc': 'Deklaracja dostępności', '/prywatnosc': 'Polityka prywatności' } as Record<string, string>)[loc.pathname] ?? (loc.pathname.startsWith('/aed/') ? 'Karta AED' : 'AEDostępni');
+    const t = NAV.find((n) => n.to === loc.pathname)?.label ?? ({ '/ratunek': 'Tryb ratunkowy', '/ranking': 'Mapa luk w danych', '/naklejki': 'Naklejki QR', '/kampania': 'Zestaw kampanii', '/api': 'Dla deweloperów', '/raport': 'Raport dla samorządu', '/dostepnosc': 'Deklaracja dostępności', '/prywatnosc': 'Polityka prywatności' } as Record<string, string>)[loc.pathname] ?? (loc.pathname.startsWith('/aed/') ? 'Karta AED' : loc.pathname.startsWith('/raport/') ? `Raport: ${decodeURIComponent(loc.pathname.slice(8))}` : 'AEDostępni');
     document.title = `${t} — AEDostępni`;
     if (loc.pathname !== '/' && !loc.pathname.startsWith('/aed/')) main.current?.focus();
   }, [loc.pathname]);
 
   return (
-    <div className={`app ${loc.pathname === '/' || loc.pathname.startsWith('/aed/') ? 'is-map' : ''} ${loc.pathname === '/ratunek' ? 'is-rescue' : ''} ${loc.pathname === '/naklejki' ? 'is-print' : ''}`}>
+    <div className={`app ${loc.pathname === '/' || loc.pathname.startsWith('/aed/') ? 'is-map' : ''} ${loc.pathname === '/ratunek' ? 'is-rescue' : ''} ${loc.pathname === '/naklejki' || loc.pathname.startsWith('/raport') ? 'is-print' : ''}`}>
       <header className="topbar">
         <NavLink to="/" className="brand" aria-label="AEDostępni — strona główna">
           <Symbol size={34} />
@@ -98,6 +99,8 @@ export default function App() {
           <Route path="/naklejki" element={<StickersPage />} />
           <Route path="/kampania" element={<CampaignPage />} />
           <Route path="/api" element={<DevPage />} />
+          <Route path="/raport" element={<ReportCountyPage />} />
+          <Route path="/raport/:county" element={<ReportCountyPage />} />
           <Route path="/dostepnosc" element={<LegalPage kind="dostepnosc" />} />
           <Route path="/prywatnosc" element={<LegalPage kind="prywatnosc" />} />
         </Routes>

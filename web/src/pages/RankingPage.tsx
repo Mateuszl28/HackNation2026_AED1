@@ -3,7 +3,7 @@ import L from 'leaflet';
 
 type Level = 'woj' | 'pow';
 interface Row {
-  key: string; name: string; sub: string; aed: number; na_100_tys?: number; z_godzinami_pct: number; z_opisem_pct: number;
+  key: string; name: string; sub: string; full?: string; aed: number; na_100_tys?: number; z_godzinami_pct: number; z_opisem_pct: number;
   z_kontrola_pct: number; od_dysponentow_pct: number; indeks_gotowosci: number;
 }
 type Metric = 'indeks_gotowosci' | 'na_100_tys' | 'z_godzinami_pct' | 'z_kontrola_pct' | 'od_dysponentow_pct' | 'aed';
@@ -36,7 +36,7 @@ export default function RankingPage() {
   }, []);
   useEffect(() => {
     if (level !== 'pow' || data.pow.length) return;
-    fetch('./data/powiaty.json').then((r) => r.json()).then((d) => setData((s) => ({ ...s, pow: d.powiaty.map((r: any) => ({ ...r, key: r.id, name: r.powiat.replace(/^powiat /, ''), sub: r.wojewodztwo })) })));
+    fetch('./data/powiaty.json').then((r) => r.json()).then((d) => setData((s) => ({ ...s, pow: d.powiaty.map((r: any) => ({ ...r, key: r.id, name: r.powiat.replace(/^powiat /, ''), sub: r.wojewodztwo, full: `${r.powiat} (${r.wojewodztwo})` })) })));
     fetch('./data/powiaty.geojson').then((r) => r.json()).then((g) => setGeos((s) => ({ ...s, pow: g })));
   }, [level]);
 
@@ -140,7 +140,7 @@ export default function RankingPage() {
                   {visible.map(({ r, rank }) => (
                     <tr key={r.key}>
                       <td>{rank}</td>
-                      <th scope="row"><span className="swatch" style={{ background: colorFor(val(r)) }} aria-hidden="true" />{r.name}{r.sub && <small className="muted"> · {r.sub}</small>}</th>
+                      <th scope="row"><span className="swatch" style={{ background: colorFor(val(r)) }} aria-hidden="true" />{r.name}{r.sub && <small className="muted"> · {r.sub}</small>}{r.full && <> · <a href={`#/raport/${encodeURIComponent(r.full)}`} className="small">raport</a></>}</th>
                       <td><b>{val(r)}{m.unit}</b></td>
                       <td>{r.aed.toLocaleString('pl-PL')}</td>
                     </tr>

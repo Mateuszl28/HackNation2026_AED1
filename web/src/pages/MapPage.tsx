@@ -124,10 +124,26 @@ export default function MapPage() {
     const map = mapRef.current;
     if (!map) return;
     clusterRef.current?.remove();
-    const cluster = L.markerClusterGroup({ chunkedLoading: true, maxClusterRadius: 45, showCoverageOnHover: false });
+    // Klaster pokazuje dostępność: zielony = jest AED dostępny teraz (plakietka: ile), bursztynowy = godziny nieznane, szary = żaden teraz
+    const cluster = L.markerClusterGroup({
+      chunkedLoading: true, maxClusterRadius: 45, showCoverageOnHover: false,
+      iconCreateFunction: (c) => {
+        const ms = c.getAllChildMarkers();
+        const n = c.getChildCount();
+        const open = ms.filter((m) => (m.options as { av?: Availability }).av === 'open').length;
+        const unknown = ms.some((m) => (m.options as { av?: Availability }).av === 'unknown');
+        const cls = open ? 'open' : unknown ? 'unknown' : 'closed';
+        const size = n < 10 ? 36 : n < 100 ? 42 : 48;
+        const label = `${n} AED${open ? `, ${open} dostępnych teraz` : ''}`;
+        return L.divIcon({
+          html: `<div title="${label}"><span>${n}</span>${open && open < n ? `<i>${open}</i>` : ''}</div>`,
+          className: `aed-cluster aed-cluster-${cls}`, iconSize: L.point(size, size),
+        });
+      },
+    });
     cluster.addLayers(filtered.map((a) => {
       const av = availability(a, now);
-      const m = L.marker([a.lat, a.lon], { icon: markerIcon(av), title: displayName(a), alt: `${displayName(a)} — ${AV_LABEL[av]}`, keyboard: true });
+      const m = L.marker([a.lat, a.lon], { icon: markerIcon(av), title: displayName(a), alt: `${displayName(a)} — ${AV_LABEL[av]}`, keyboard: true, av } as L.MarkerOptions);
       m.on('click', () => { setSel(a); setSheet('mid'); });
       return m;
     }));

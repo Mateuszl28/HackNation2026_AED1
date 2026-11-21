@@ -648,3 +648,39 @@ summary { cursor: pointer; font-weight: 700; padding: 6px 0; }
 }
 .legal ul { padding-left: 20px; } .legal li { margin-bottom: 6px; }
 .page-loading { padding: 40px 20px; text-align: center; color: var(--muted); }
+
+/* ---------- raport dla samorządu ---------- */
+.rc-sheet { background: #fff; color: #0b2a3c; border-radius: var(--r); box-shadow: var(--sh-2); padding: 28px 32px; max-width: 210mm; margin: 0 auto 32px; font-size: .95rem; }
+.rc-head { display: flex; align-items: center; gap: 16px; border-bottom: 3px solid #007a3d; padding-bottom: 14px; margin-bottom: 18px; }
+.rc-head img { height: 44px; }
+.rc-head b { display: block; font-family: var(--font-head); font-size: 1.25rem; }
+.rc-head span { color: #51606b; font-size: .9rem; }
+.rc-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 14px; }
+.rc-kpis div { background: #e6f4ec; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; }
+.rc-kpis div.bad { background: #fdecec; }
+.rc-kpis b { font-family: var(--font-head); font-size: 1.6rem; line-height: 1.1; }
+.rc-kpis div.bad b { color: #b01c23; }
+.rc-kpis span { font-size: .78rem; color: #51606b; }
+.rc-lead { font-size: 1rem; }
+.rc-sheet h2 { font-size: 1.05rem; margin: 18px 0 6px; color: #007a3d; }
+.rc-sheet ol { padding-left: 20px; } .rc-sheet li { margin-bottom: 4px; }
+.rc-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+.rc-table th, .rc-table td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #dde4e8; vertical-align: top; }
+.rc-table th { background: #f3f6f5; }
+.rc-small { font-size: .78rem; color: #51606b; }
+.rc-foot { display: flex; gap: 14px; align-items: center; margin-top: 20px; padding-top: 14px; border-top: 1px solid #dde4e8; }
+.rc-foot img { width: 96px; height: 96px; }
+.rc-foot b { display: block; font-size: 1rem; } .rc-foot span { display: block; font-size: .78rem; color: #51606b; }
+@media (max-width: 640px) { .rc-sheet { padding: 18px 16px; } .rc-kpis { grid-template-columns: 1fr 1fr; } }
+@media print {
+  .report-county .rc-sheet { box-shadow: none; border-radius: 0; max-width: none; margin: 0; padding: 12mm 14mm; }
+  .rc-table tr { break-inside: avoid; }
+}
+
+/* klastry z dostępnością */
+.aed-cluster { background: transparent; }
+.aed-cluster > div { position: relative; width: 100%; height: 100%; border-radius: 50%; display: grid; place-items: center; color: #fff; font: 800 13px/1 var(--font-body); border: 3px solid rgba(255, 255, 255, .95); box-shadow: 0 2px 8px rgba(11, 42, 60, .35); box-sizing: border-box; }
+.aed-cluster-open > div { background: var(--green); }
+.aed-cluster-unknown > div { background: var(--amber-dot); }
+.aed-cluster-closed > div { background: var(--grey-dot); }
+.aed-cluster i { position: absolute; top: -6px; right: -6px; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 9px; background: #fff; color: var(--green-700); font-style: normal; font-size: 10px; font-weight: 900; display: grid; place-items: center; box-shadow: 0 1px 3px rgba(0,0,0,.3); }

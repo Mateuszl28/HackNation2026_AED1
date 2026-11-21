@@ -100,7 +100,7 @@ export default function CampaignPage() {
           <a className="brand-tile dark" href="./brand/aedostepni-logo-white.svg" download><img src="./brand/aedostepni-logo-white.svg" alt="" /><span>Negatyw (SVG)</span></a>
           <a className="brand-tile" href="./brand/aedostepni-symbol.svg" download><img src="./brand/aedostepni-symbol.svg" alt="" /><span>Sygnet (SVG)</span></a>
         </div>
-        <p className="btn-row"><a className="btn btn-primary" href="./brand/ksiega-znaku.pdf" target="_blank" rel="noopener">Księga znaku (PDF)</a> <a className="btn" href="#/naklejki">Naklejki QR dla AED</a></p>
+        <p className="btn-row"><a className="btn btn-primary" href="./brand/ksiega-znaku.pdf" target="_blank" rel="noopener">Księga znaku (PDF)</a> <a className="btn" href="#/naklejki">Naklejki QR dla AED</a> <a className="btn" href="#/raport">Raport dla samorządu</a></p>
       </section>
     </div>
   );
