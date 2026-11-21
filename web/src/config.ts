@@ -14,3 +14,9 @@ export function aedLink(ref: string | { lat: number; lon: number }): string {
   const id = typeof ref === 'string' ? ref : `@${ref.lat.toFixed(6)},${ref.lon.toFixed(6)}`;
   return `${appBase()}#/aed/${encodeURIComponent(id)}`;
 }
+
+/** Najnowsza wersja aplikacji Android (GitHub Releases). */
+export const APK_URL = 'https://github.com/Mateuszl28/HackNation2026_AED1/releases/latest/download/AEDostepni.apk';
+
+/** true w aplikacji natywnej (Capacitor) — wtedy nie pokazujemy przycisku pobierania APK. */
+export const isNativeApp = () => !!(window as unknown as { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor?.isNativePlatform?.();

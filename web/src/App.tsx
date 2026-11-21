@@ -9,6 +9,7 @@ import AboutPage from './pages/AboutPage';
 import RescuePage from './pages/RescuePage';
 import RankingPage from './pages/RankingPage';
 import Onboarding from './components/Onboarding';
+import { APK_URL, isNativeApp } from './config';
 import StickersPage from './pages/StickersPage';
 import CampaignPage from './pages/CampaignPage';
 
@@ -49,6 +50,12 @@ export default function App() {
             <NavLink key={n.to} to={n.to} end className={({ isActive }) => (isActive ? 'active' : '')}>{n.label}</NavLink>
           ))}
         </nav>
+        {!isNativeApp() && (
+          <a className="topbar-apk" href={APK_URL} aria-label="Pobierz aplikację AEDostępni na Androida">
+            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.6 9.48l1.84-3.18a.38.38 0 0 0-.66-.38l-1.86 3.22a11.4 11.4 0 0 0-9.84 0L5.22 5.92a.38.38 0 0 0-.66.38L6.4 9.48A10.8 10.8 0 0 0 1 18h22a10.8 10.8 0 0 0-5.4-8.52zM7 15.25a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5zm10 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5z" /></svg>
+            <span>Aplikacja</span>
+          </a>
+        )}
         <a className="btn-112" href="tel:112" aria-label="Zadzwoń pod numer alarmowy 112">
           <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z" /></svg>
           112

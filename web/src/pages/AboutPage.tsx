@@ -1,3 +1,4 @@
+import { APK_URL, isNativeApp } from '../config';
 export default function AboutPage() {
   return (
     <div className="page">
@@ -6,6 +7,7 @@ export default function AboutPage() {
         <p className="lead">Akcja, która zachęca każdego właściciela defibrylatora do opublikowania danych o nim w portalu dane.gov.pl, w jednym, wspólnym standardzie.</p>
         <p className="btn-row">
           <a className="btn btn-primary" href="#/dysponenci">Udostępnij dane swoich AED</a>
+          {!isNativeApp() && <a className="btn btn-android" href={APK_URL}>Pobierz aplikację na Androida</a>}
           <a className="btn" href="#/kampania">Zestaw kampanii</a>
           <a className="btn" href="./brand/ksiega-znaku.pdf" target="_blank" rel="noopener">Księga znaku (PDF)</a>
         </p>

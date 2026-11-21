@@ -535,3 +535,8 @@ summary { cursor: pointer; font-weight: 700; padding: 6px 0; }
 .onb-dots span.on { width: 24px; background: var(--green); }
 .onb-actions { display: flex; gap: 8px; }
 .onb-actions .btn { flex: 1; }
+.topbar-apk { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; color: var(--green-700); background: var(--green-50); font-weight: 800; font-size: .88rem; padding: 6px 12px; min-height: 38px; border-radius: 999px; text-decoration: none; }
+.topbar-apk + .btn-112 { margin-left: 8px; }
+@media (prefers-color-scheme: dark) { .topbar-apk { color: #7fe0aa; } }
+@media (max-width: 380px) { .topbar-apk span { display: none; } }
+.btn-android { border-color: var(--green); color: var(--green-700); }
