@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import MyAeds from '../components/MyAeds';
 import { aedLink } from '../config';
 import { STICKERS_KEY } from './StickersPage';
 import type { StickerItem } from './StickersPage';
@@ -149,6 +150,11 @@ export default function ProvidersPage() {
         <li className={parsed ? (ok ? 'done' : 'current') : ''} aria-current={parsed && !ok ? 'step' : undefined}><span>{ok ? '✓' : '2'}</span>Sprawdź dane</li>
         <li className={ok ? 'current' : ''} aria-current={ok ? 'step' : undefined}><span>3</span>Opublikuj</li>
       </ol>
+
+      <MyAeds onLoad={(name, rows) => {
+        load({ name, headers: FIELDS.map((f) => f.name), rows, fixes: [] });
+        setTimeout(() => document.getElementById('s2')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+      }} />
 
       <section className="card" aria-labelledby="s1">
         <h2 id="s1">1. Wgraj plik z danymi</h2>

@@ -3,6 +3,7 @@ import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { BACK_EVENT } from '../native';
 import { aedLink } from '../config';
 import { shareText } from '../share';
+import { reverseAddress } from '../geocode';
 import L from 'leaflet';
 import 'leaflet.markercluster';
 import { describeHours } from '@shared/hours.ts';
@@ -300,6 +301,15 @@ function Details({ a, me, now, onClose, accuracy }: { a: Aed; me: [number, numbe
   const nav = `https://www.google.com/maps/dir/?api=1&destination=${a.lat},${a.lon}&travelmode=walking`;
   const q = Number(a.jakosc);
   const [shared, setShared] = useState('');
+  // przybliżony adres z OSM, gdy dane nie mają adresu
+  const [approx, setApprox] = useState('');
+  useEffect(() => {
+    setApprox('');
+    if (shortAddress(a)) return;
+    let alive = true;
+    reverseAddress(a.lat, a.lon).then((s) => { if (alive) setApprox(s); }).catch(() => {});
+    return () => { alive = false; };
+  }, [a.aed_uid]);
   useEffect(() => setShared(''), [a.aed_uid]);
   async function share(x: Aed) {
     const url = aedLink(x.aed_uid);
@@ -313,7 +323,7 @@ function Details({ a, me, now, onClose, accuracy }: { a: Aed; me: [number, numbe
         <div>
           <span className={`badge badge-${av}`}>{AV_GLYPH[av]} {AV_LABEL[av]}</span>
           <h2>{displayName(a)}</h2>
-          <p className="muted">{address(a)}</p>
+          <p className="muted">{shortAddress(a) || (approx ? <>ok. {approx} <small>(adres przybliżony, OSM)</small></> : 'adres nieznany')}</p>
         </div>
         <button className="icon-btn" onClick={onClose} aria-label="Zamknij szczegóły i wróć do listy najbliższych">✕</button>
       </div>

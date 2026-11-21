@@ -5,7 +5,11 @@ export interface Aed {
   miejscowosc: string; godziny_dostepnosci: string; dostep: string; zabezpieczenie: string; dysponent: string; telefon_kontaktowy: string;
   data_ostatniej_kontroli: string; zrodla: string; jakosc: string; kondygnacja: string; wewnatrz_budynku: string; zdjecie_url: string;
   stan: string; elektrody_dzieciece: string; instrukcja_dostepu: string;
+  kod_pocztowy: string; wojewodztwo: string; powiat: string;
 }
+
+/** Lista powiatów (etykiety „powiat X (województwo)”) — do wyszukiwania AED dysponenta. */
+export const COUNTIES: string[] = [];
 
 export type Availability = 'open' | 'closed' | 'unknown';
 
@@ -14,12 +18,15 @@ export const BYDGOSZCZ: [number, number] = [53.1235, 18.0084];
 let cache: Promise<Aed[]> | null = null;
 export function loadAeds(): Promise<Aed[]> {
   if (!cache) {
-    cache = fetch('./data/aed-app.json').then((r) => r.json()).then((d: { cols: string[]; rows: unknown[][]; sources: typeof SOURCES }) => {
+    cache = fetch('./data/aed-app.json').then((r) => r.json()).then((d: { cols: string[]; rows: unknown[][]; sources: typeof SOURCES; powiaty?: string[] }) => {
       Object.assign(SOURCES, d.sources || {});
+      const counties = d.powiaty || [];
+      COUNTIES.splice(0, COUNTIES.length, ...counties.filter(Boolean));
       return d.rows.map((row) => {
         const o: Record<string, unknown> = {};
         d.cols.forEach((c, i) => { o[c] = row[i]; });
         o.lat = o.szerokosc_geograficzna; o.lon = o.dlugosc_geograficzna;
+        o.powiat = typeof o.powiat === 'number' ? counties[o.powiat] || '' : o.powiat || '';
         return o as unknown as Aed;
       });
     });

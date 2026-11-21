@@ -260,11 +260,22 @@ async function main() {
   writeFileSync(join(OUT, 'dcat.xml'), dcat);
   writeFileSync(join(APP_OUT, 'dcat.xml'), dcat);
 
+  // Powiaty (380 jednostek; klucz = id, bo nazwy powiatów się powtarzają) — potrzebne mapie luk i wyszukiwaniu AED dysponenta
+  const { regions: counties, geojson: powGeo } = loadRegions(join(ROOT, 'pipeline', 'ref', 'powiaty.geojson'), 'id');
+  const countyNames: Record<string, string> = Object.fromEntries(powGeo.features.map((f: any) => [String(f.properties.id), String(f.properties.nazwa)]));
+  const countyVoiv: Record<string, string> = Object.fromEntries(counties.map((c) => { const [x, y] = interiorPoint(c); return [c.name, regionOf(regions, x, y)]; }));
+  const withCounty = final.map((r) => ({ rec: r, county: regionOf(counties, Number(r.dlugosc_geograficzna), Number(r.szerokosc_geograficzna)) }));
+  const countyLabel = (id: string) => (id ? `${countyNames[id]} (${countyVoiv[id]})` : '');
+
   // Wersja kompaktowa dla aplikacji (mapa)
   const APP_COLS = ['aed_uid', 'szerokosc_geograficzna', 'dlugosc_geograficzna', 'nazwa', 'opis_lokalizacji', 'nazwa_ulicy', 'nr_budynku', 'miejscowosc',
-    'godziny_dostepnosci', 'dostep', 'zabezpieczenie', 'dysponent', 'telefon_kontaktowy', 'data_ostatniej_kontroli', 'zrodla', 'jakosc', 'kondygnacja', 'wewnatrz_budynku', 'zdjecie_url', 'stan', 'elektrody_dzieciece', 'instrukcja_dostepu'];
+    'godziny_dostepnosci', 'dostep', 'zabezpieczenie', 'dysponent', 'telefon_kontaktowy', 'data_ostatniej_kontroli', 'zrodla', 'jakosc', 'kondygnacja', 'wewnatrz_budynku', 'zdjecie_url', 'stan', 'elektrody_dzieciece', 'instrukcja_dostepu',
+    'kod_pocztowy', 'wojewodztwo', 'powiat'];
   const sourceNames = Object.fromEntries(reports.map((r) => [r.id, { name: r.id === 'osm' ? 'OpenStreetMap (OpenAEDMap)' : `dane.gov.pl — ${r.publisher}`, url: r.url }]));
-  writeFileSync(join(APP_OUT, 'aed-app.json'), JSON.stringify({ cols: APP_COLS, generated: today, sources: sourceNames, rows: final.map((r) => APP_COLS.map((c) => (c.includes('geograficzna') ? Number(Number(r[c]).toFixed(6)) : r[c] || ''))) }));
+  // powiat zapisany jako indeks do słownika `powiaty` (oszczędność ~1 MB)
+  const countyList = Array.from(new Set(withCounty.map((w) => countyLabel(w.county)))).sort((x, y) => x.localeCompare(y, 'pl'));
+  const countyIdx = new Map(countyList.map((c, i) => [c, i]));
+  writeFileSync(join(APP_OUT, 'aed-app.json'), JSON.stringify({ cols: APP_COLS, generated: today, sources: sourceNames, powiaty: countyList, rows: final.map((r, i) => APP_COLS.map((c) => (c.includes('geograficzna') ? Number(Number(r[c]).toFixed(6)) : c === 'powiat' ? countyIdx.get(countyLabel(withCounty[i].county)) : r[c] || ''))) }));
   writeFileSync(join(APP_OUT, 'stats.json'), JSON.stringify(stats));
   const regiony = regionStats(final);
   writeFileSync(join(OUT, 'regiony.json'), JSON.stringify({ data_wygenerowania: today, zrodlo_ludnosci: 'GUS, stan na 31.12.2023 (zaokrąglone)', regiony }, null, 2));
@@ -272,11 +283,7 @@ async function main() {
   writeFileSync(join(APP_OUT, 'wojewodztwa.geojson'), JSON.stringify(wojGeo));
   console.log(`  poza granicami województw: ${final.filter((r) => !r.wojewodztwo).length} rekordów`);
 
-  // Mapa luk na poziomie powiatów (380 jednostek; klucz = id, bo nazwy powiatów się powtarzają)
-  const { regions: counties, geojson: powGeo } = loadRegions(join(ROOT, 'pipeline', 'ref', 'powiaty.geojson'), 'id');
-  const countyNames: Record<string, string> = Object.fromEntries(powGeo.features.map((f: any) => [String(f.properties.id), String(f.properties.nazwa)]));
-  const countyVoiv: Record<string, string> = Object.fromEntries(counties.map((c) => { const [x, y] = interiorPoint(c); return [c.name, regionOf(regions, x, y)]; }));
-  const withCounty = final.map((r) => ({ rec: r, county: regionOf(counties, Number(r.dlugosc_geograficzna), Number(r.szerokosc_geograficzna)) }));
+  // Mapa luk na poziomie powiatów
   const powiaty = countyStats(withCounty, counties, countyNames, countyVoiv);
   writeFileSync(join(OUT, 'powiaty.json'), JSON.stringify({ data_wygenerowania: today, powiaty }, null, 2));
   writeFileSync(join(APP_OUT, 'powiaty.json'), JSON.stringify({ data_wygenerowania: today, powiaty }));

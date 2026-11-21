@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { loadAeds, availability, distanceM, walkMinutes, fmtDist, is247, displayName, subLine } from '../data';
+import { loadAeds, availability, distanceM, walkMinutes, fmtDist, is247, displayName, subLine, shortAddress } from '../data';
 import type { Aed } from '../data';
 import { shareText } from '../share';
+import { reverseAddress } from '../geocode';
 
 type Found = { a: Aed; d: number };
 type Lang = 'pl' | 'en' | 'uk';
@@ -99,11 +100,21 @@ export default function RescuePage() {
   }, [pos?.[0], pos?.[1]]);
 
   const best = list[0];
+  // przybliżony adres najbliższego AED — trafia też do wiadomości „Przynieś AED”
+  const [approx, setApprox] = useState('');
+  useEffect(() => {
+    setApprox('');
+    if (!best || shortAddress(best.a)) return;
+    let alive = true;
+    reverseAddress(best.a.lat, best.a.lon).then((s) => { if (alive) setApprox(s); }).catch(() => {});
+    return () => { alive = false; };
+  }, [best?.a.aed_uid]);
   const navUrl = (a: Aed) => `https://www.google.com/maps/dir/?api=1&destination=${a.lat},${a.lon}&travelmode=walking`;
 
   async function sendRunner(a: Aed) {
     const sub = subLine(a);
-    const text = `${t.urgent}: ${displayName(a)}. ${sub && !sub.startsWith('brak opisu') ? `${t.where}: ${sub}. ` : ''}${t.nav}: ${navUrl(a)}`;
+    const addr = shortAddress(a) || (best && best.a.aed_uid === a.aed_uid && approx ? `ok. ${approx}` : '');
+    const text = `${t.urgent}: ${displayName(a)}. ${sub && !sub.startsWith('brak opisu') ? `${t.where}: ${sub}. ` : ''}${addr && !sub.includes(addr) ? `${addr}. ` : ''}${t.nav}: ${navUrl(a)}`;
     const r = await shareText({ title: t.urgent, text });
     if (r === 'shared') setShared('sent'); else if (r === 'copied') setShared('copied');
   }
@@ -135,6 +146,7 @@ export default function RescuePage() {
             <p className="rescue-dist"><b>{fmtDist(best.d)}</b> · {t.roundTrip} ~{walkMinutes(best.d) * 2} min</p>
             <p className="rescue-name">{displayName(best.a)}</p>
             {subLine(best.a) && <p className="rescue-where">{subLine(best.a)}</p>}
+            {!shortAddress(best.a) && approx && <p className="muted">ok. {approx}</p>}
             <p className="muted">{is247(best.a.godziny_dostepnosci) ? t.h247 : availability(best.a) === 'open' ? t.open : t.unknown}</p>
             <div className="btn-row">
               <button className="btn btn-primary btn-lg" onClick={() => sendRunner(best.a)}>{t.send}</button>
