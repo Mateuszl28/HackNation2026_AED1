@@ -1,5 +1,5 @@
 {
-  "data_wygenerowania": "2026-11-21",
+  "data_wygenerowania": "2026-11-22",
   "zrodlo_ludnosci": "GUS, stan na 31.12.2023 (zaokrąglone)",
   "regiony": [
     {
@@ -18,7 +18,7 @@
     {
       "wojewodztwo": "łódzkie",
       "terc": "10",
-      "aed": 1005,
+      "aed": 1006,
       "na_100_tys": 42.1,
       "z_godzinami_pct": 38,
       "z_opisem_pct": 95,
@@ -57,8 +57,8 @@
     {
       "wojewodztwo": "podkarpackie",
       "terc": "18",
-      "aed": 1315,
-      "na_100_tys": 63.2,
+      "aed": 1316,
+      "na_100_tys": 63.3,
       "z_godzinami_pct": 41,
       "z_opisem_pct": 95,
       "z_kontrola_pct": 23,
@@ -83,8 +83,8 @@
     {
       "wojewodztwo": "śląskie",
       "terc": "24",
-      "aed": 1728,
-      "na_100_tys": 39.7,
+      "aed": 1733,
+      "na_100_tys": 39.8,
       "z_godzinami_pct": 39,
       "z_opisem_pct": 93,
       "z_kontrola_pct": 33,
@@ -122,7 +122,7 @@
     {
       "wojewodztwo": "mazowieckie",
       "terc": "14",
-      "aed": 2442,
+      "aed": 2443,
       "na_100_tys": 44.3,
       "z_godzinami_pct": 36,
       "z_opisem_pct": 91,
@@ -135,8 +135,8 @@
     {
       "wojewodztwo": "małopolskie",
       "terc": "12",
-      "aed": 1706,
-      "na_100_tys": 49.7,
+      "aed": 1708,
+      "na_100_tys": 49.8,
       "z_godzinami_pct": 31,
       "z_opisem_pct": 92,
       "z_kontrola_pct": 35,
@@ -161,10 +161,10 @@
     {
       "wojewodztwo": "kujawsko-pomorskie",
       "terc": "04",
-      "aed": 815,
+      "aed": 816,
       "na_100_tys": 40.7,
       "z_godzinami_pct": 28,
-      "z_opisem_pct": 87,
+      "z_opisem_pct": 88,
       "z_kontrola_pct": 41,
       "od_dysponentow_pct": 0,
       "zbiory_dysponentow": 0,

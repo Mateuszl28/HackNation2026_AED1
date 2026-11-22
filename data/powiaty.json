@@ -1,5 +1,5 @@
 {
-  "data_wygenerowania": "2026-11-21",
+  "data_wygenerowania": "2026-11-22",
   "powiaty": [
     {
       "id": "190",
@@ -882,17 +882,6 @@
       "indeks_gotowosci": 49
     },
     {
-      "id": "67",
-      "powiat": "powiat Przemyśl",
-      "wojewodztwo": "podkarpackie",
-      "aed": 42,
-      "z_godzinami_pct": 38,
-      "z_opisem_pct": 81,
-      "z_kontrola_pct": 14,
-      "od_dysponentow_pct": 50,
-      "indeks_gotowosci": 49
-    },
-    {
       "id": "232",
       "powiat": "powiat jędrzejowski",
       "wojewodztwo": "świętokrzyskie",
@@ -1091,6 +1080,17 @@
       "indeks_gotowosci": 48
     },
     {
+      "id": "67",
+      "powiat": "powiat Przemyśl",
+      "wojewodztwo": "podkarpackie",
+      "aed": 43,
+      "z_godzinami_pct": 37,
+      "z_opisem_pct": 81,
+      "z_kontrola_pct": 14,
+      "od_dysponentow_pct": 49,
+      "indeks_gotowosci": 48
+    },
+    {
       "id": "273",
       "powiat": "powiat bieruńsko-lędziński",
       "wojewodztwo": "śląskie",
@@ -1164,6 +1164,17 @@
       "z_godzinami_pct": 29,
       "z_opisem_pct": 100,
       "z_kontrola_pct": 45,
+      "od_dysponentow_pct": 0,
+      "indeks_gotowosci": 48
+    },
+    {
+      "id": "111",
+      "powiat": "powiat piotrkowski",
+      "wojewodztwo": "łódzkie",
+      "aed": 28,
+      "z_godzinami_pct": 36,
+      "z_opisem_pct": 100,
+      "z_kontrola_pct": 36,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 48
     },
@@ -1292,7 +1303,7 @@
       "id": "302",
       "powiat": "powiat Warszawa",
       "wojewodztwo": "mazowieckie",
-      "aed": 1079,
+      "aed": 1080,
       "z_godzinami_pct": 42,
       "z_opisem_pct": 93,
       "z_kontrola_pct": 31,
@@ -1384,17 +1395,6 @@
       "z_godzinami_pct": 42,
       "z_opisem_pct": 90,
       "z_kontrola_pct": 36,
-      "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 47
-    },
-    {
-      "id": "372",
-      "powiat": "powiat gorlicki",
-      "wojewodztwo": "małopolskie",
-      "aed": 51,
-      "z_godzinami_pct": 41,
-      "z_opisem_pct": 98,
-      "z_kontrola_pct": 24,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 47
     },
@@ -1505,17 +1505,6 @@
       "z_godzinami_pct": 32,
       "z_opisem_pct": 93,
       "z_kontrola_pct": 46,
-      "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 47
-    },
-    {
-      "id": "111",
-      "powiat": "powiat piotrkowski",
-      "wojewodztwo": "łódzkie",
-      "aed": 27,
-      "z_godzinami_pct": 33,
-      "z_opisem_pct": 100,
-      "z_kontrola_pct": 37,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 47
     },
@@ -1685,6 +1674,17 @@
       "indeks_gotowosci": 46
     },
     {
+      "id": "277",
+      "powiat": "powiat tatrzański",
+      "wojewodztwo": "małopolskie",
+      "aed": 67,
+      "z_godzinami_pct": 30,
+      "z_opisem_pct": 94,
+      "z_kontrola_pct": 45,
+      "od_dysponentow_pct": 0,
+      "indeks_gotowosci": 46
+    },
+    {
       "id": "176",
       "powiat": "powiat kolbuszowski",
       "wojewodztwo": "podkarpackie",
@@ -1714,6 +1714,17 @@
       "z_godzinami_pct": 26,
       "z_opisem_pct": 92,
       "z_kontrola_pct": 55,
+      "od_dysponentow_pct": 0,
+      "indeks_gotowosci": 46
+    },
+    {
+      "id": "372",
+      "powiat": "powiat gorlicki",
+      "wojewodztwo": "małopolskie",
+      "aed": 52,
+      "z_godzinami_pct": 40,
+      "z_opisem_pct": 98,
+      "z_kontrola_pct": 25,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 46
     },
@@ -1971,17 +1982,6 @@
       "indeks_gotowosci": 45
     },
     {
-      "id": "277",
-      "powiat": "powiat tatrzański",
-      "wojewodztwo": "małopolskie",
-      "aed": 66,
-      "z_godzinami_pct": 27,
-      "z_opisem_pct": 94,
-      "z_kontrola_pct": 45,
-      "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 45
-    },
-    {
       "id": "32",
       "powiat": "powiat stargardzki",
       "wojewodztwo": "zachodniopomorskie",
@@ -2125,6 +2125,17 @@
       "indeks_gotowosci": 45
     },
     {
+      "id": "87",
+      "powiat": "powiat Siemianowice Śląskie",
+      "wojewodztwo": "śląskie",
+      "aed": 22,
+      "z_godzinami_pct": 36,
+      "z_opisem_pct": 100,
+      "z_kontrola_pct": 23,
+      "od_dysponentow_pct": 0,
+      "indeks_gotowosci": 45
+    },
+    {
       "id": "73",
       "powiat": "powiat wschowski",
       "wojewodztwo": "lubuskie",
@@ -2132,17 +2143,6 @@
       "z_godzinami_pct": 24,
       "z_opisem_pct": 94,
       "z_kontrola_pct": 47,
-      "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 45
-    },
-    {
-      "id": "87",
-      "powiat": "powiat Siemianowice Śląskie",
-      "wojewodztwo": "śląskie",
-      "aed": 17,
-      "z_godzinami_pct": 29,
-      "z_opisem_pct": 100,
-      "z_kontrola_pct": 29,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 45
     },
@@ -2796,17 +2796,6 @@
       "indeks_gotowosci": 42
     },
     {
-      "id": "365",
-      "powiat": "powiat bydgoski",
-      "wojewodztwo": "kujawsko-pomorskie",
-      "aed": 37,
-      "z_godzinami_pct": 41,
-      "z_opisem_pct": 84,
-      "z_kontrola_pct": 22,
-      "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 42
-    },
-    {
       "id": "275",
       "powiat": "powiat polkowicki",
       "wojewodztwo": "dolnośląskie",
@@ -3056,6 +3045,17 @@
       "z_godzinami_pct": 20,
       "z_opisem_pct": 100,
       "z_kontrola_pct": 24,
+      "od_dysponentow_pct": 0,
+      "indeks_gotowosci": 41
+    },
+    {
+      "id": "365",
+      "powiat": "powiat bydgoski",
+      "wojewodztwo": "kujawsko-pomorskie",
+      "aed": 38,
+      "z_godzinami_pct": 39,
+      "z_opisem_pct": 84,
+      "z_kontrola_pct": 21,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 41
     },

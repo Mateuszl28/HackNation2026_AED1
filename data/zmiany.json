@@ -2,6 +2,81 @@
  "opis": "Dziennik zmian zbioru AED (porównanie kolejnych aktualizacji po aed_uid)",
  "historia": [
   {
+   "data": "2026-11-22T10:27:22.686Z",
+   "poprzednio": 18320,
+   "teraz": 18331,
+   "dodane": 11,
+   "usuniete": 0,
+   "zmienione": 2,
+   "zmiany_pol": {
+    "godziny_dostepnosci": 1,
+    "dysponent": 1,
+    "nazwa": 1
+   },
+   "przyklady": {
+    "dodane": [
+     {
+      "aed_uid": "PL-AED-osm-node-14403696676",
+      "nazwa": "Ochotnicza Straż Pożarna w Moszczenicy",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14403741029",
+      "nazwa": "OSP Rzepiska 1",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14403762401",
+      "nazwa": "AED: AED dostępne na froncie budynku OSP Kwiatonowice",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14403770242",
+      "nazwa": "AED: przy wejściu głównym na zewnętrznej ścianie budynku",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14403843408",
+      "nazwa": "AED: wewnątrz budynku, na parterze, przy sekretariacie szkoły",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14404244008",
+      "nazwa": "Siemianowickie Centrum Kultury",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14404244009",
+      "nazwa": "Siemianowickie Centrum Kultury",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14404244010",
+      "nazwa": "Siemianowickie Centrum Kultury",
+      "miejscowosc": ""
+     }
+    ],
+    "usuniete": [],
+    "zmienione": [
+     {
+      "aed_uid": "PL-AED-osm-node-13948148901",
+      "nazwa": "OSP Rzepiska 2",
+      "pola": [
+       "godziny_dostepnosci"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-9610715817",
+      "nazwa": "Ochotnicza Straż Pożarna w Moszczenicy",
+      "pola": [
+       "dysponent",
+       "nazwa"
+      ]
+     }
+    ]
+   }
+  },
+  {
    "data": "2026-11-21T19:27:38Z",
    "poprzednio": 18318,
    "teraz": 18320,
