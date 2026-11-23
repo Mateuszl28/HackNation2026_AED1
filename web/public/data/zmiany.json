@@ -2,6 +2,108 @@
  "opis": "Dziennik zmian zbioru AED (porównanie kolejnych aktualizacji po aed_uid)",
  "historia": [
   {
+   "data": "2026-11-23T11:28:25.790Z",
+   "poprzednio": 18331,
+   "teraz": 18345,
+   "dodane": 14,
+   "usuniete": 0,
+   "zmienione": 5,
+   "zmiany_pol": {
+    "nazwa": 2,
+    "data_ostatniej_kontroli": 1,
+    "zdjecie_url": 1,
+    "wewnatrz_budynku": 1,
+    "dysponent": 1,
+    "godziny_dostepnosci": 1,
+    "opis_lokalizacji": 1
+   },
+   "przyklady": {
+    "dodane": [
+     {
+      "aed_uid": "PL-AED-osm-node-14405490358",
+      "nazwa": "AED: na recepcji",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14405527401",
+      "nazwa": "AED: W kapsule, przy wejściu do przedszkola od strony przystanku",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14405527402",
+      "nazwa": "AED: Przy szkole, na ścianie budynku od strony bramy",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14405527403",
+      "nazwa": "AED: Na ścianie remizy, od strony drogi",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14405949801",
+      "nazwa": "AED: Na ścianie budynku obok bramy garażowej",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14405951601",
+      "nazwa": "AED: Na ścianie budynku remizy OSP Borzechów kolonia",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14406293801",
+      "nazwa": "AED: Na ścianie budynku OSP, po lewej stronie bramy garażowej.",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14406942238",
+      "nazwa": "AED: na murze przy wejściu na teren Inneko",
+      "miejscowosc": ""
+     }
+    ],
+    "usuniete": [],
+    "zmienione": [
+     {
+      "aed_uid": "PL-AED-osm-node-11091731805",
+      "nazwa": "OSP WOLA NIESZKOWSKA",
+      "pola": [
+       "data_ostatniej_kontroli"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-12228628283",
+      "nazwa": "Defibrylator AED",
+      "pola": [
+       "zdjecie_url"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-12635852086",
+      "nazwa": "AED: pomieszczenie ratowników na pływalni",
+      "pola": [
+       "wewnatrz_budynku"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-13362009501",
+      "nazwa": "Gmina Bochnia",
+      "pola": [
+       "dysponent",
+       "godziny_dostepnosci",
+       "nazwa"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14133247578",
+      "nazwa": "AED: prawie na końcu molo po prawej stronie pod schodami",
+      "pola": [
+       "nazwa",
+       "opis_lokalizacji"
+      ]
+     }
+    ]
+   }
+  },
+  {
    "data": "2026-11-22T10:27:22.686Z",
    "poprzednio": 18320,
    "teraz": 18331,
