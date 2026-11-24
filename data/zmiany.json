@@ -2,6 +2,110 @@
  "opis": "Dziennik zmian zbioru AED (porównanie kolejnych aktualizacji po aed_uid)",
  "historia": [
   {
+   "data": "2026-11-24T13:01:48.597Z",
+   "poprzednio": 18345,
+   "teraz": 18366,
+   "dodane": 23,
+   "usuniete": 2,
+   "zmienione": 4,
+   "zmiany_pol": {
+    "godziny_dostepnosci": 2,
+    "nazwa": 2,
+    "opis_lokalizacji": 1,
+    "dysponent": 1,
+    "zdjecie_url": 1
+   },
+   "przyklady": {
+    "dodane": [
+     {
+      "aed_uid": "PL-AED-osm-node-11673275731",
+      "nazwa": "Defibrylator AED",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14409331501",
+      "nazwa": "AED: Na ścianie przy bramie do garażu OSP",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14410033401",
+      "nazwa": "Defibrylator AED",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14410386902",
+      "nazwa": "AED: Hala Widowiskowo-Sportowa przy SP21",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14411247601",
+      "nazwa": "AED: Na ścianie obok recepcji",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14411386101",
+      "nazwa": "AED: Ściana budynku przy wejściu",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14411388301",
+      "nazwa": "AED: Ściana budynku przy wejściu do GOK",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14411461901",
+      "nazwa": "AED: Na ścianie budynku",
+      "miejscowosc": ""
+     }
+    ],
+    "usuniete": [
+     {
+      "aed_uid": "PL-AED-osm-node-14299097202",
+      "nazwa": "Defibrylator AED",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14299099101",
+      "nazwa": "Defibrylator AED",
+      "miejscowosc": ""
+     }
+    ],
+    "zmienione": [
+     {
+      "aed_uid": "PL-AED-osm-node-13408292241",
+      "nazwa": "AED: Przy wejściu, po stronie kas biletowych.",
+      "pola": [
+       "godziny_dostepnosci",
+       "nazwa",
+       "opis_lokalizacji"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-13461801801",
+      "nazwa": "Szkoła Podstawowa im. Kawalerów Orderu Uśmiechu w Kobylnicy",
+      "pola": [
+       "godziny_dostepnosci"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14383495701",
+      "nazwa": "Ochotnicza Straż Pożarna w Pisklakach",
+      "pola": [
+       "dysponent",
+       "nazwa"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-9411164617",
+      "nazwa": "Politechnika Rzeszowska",
+      "pola": [
+       "zdjecie_url"
+      ]
+     }
+    ]
+   }
+  },
+  {
    "data": "2026-11-23T11:28:25.790Z",
    "poprzednio": 18331,
    "teraz": 18345,

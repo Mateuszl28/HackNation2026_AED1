@@ -1,5 +1,5 @@
 {
-  "data_wygenerowania": "2026-11-23",
+  "data_wygenerowania": "2026-11-24",
   "powiaty": [
     {
       "id": "190",
@@ -27,12 +27,12 @@
       "id": "370",
       "powiat": "powiat Grudziądz",
       "wojewodztwo": "kujawsko-pomorskie",
-      "aed": 38,
-      "z_godzinami_pct": 68,
+      "aed": 39,
+      "z_godzinami_pct": 67,
       "z_opisem_pct": 100,
-      "z_kontrola_pct": 71,
+      "z_kontrola_pct": 69,
       "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 65
+      "indeks_gotowosci": 64
     },
     {
       "id": "56",
@@ -71,10 +71,10 @@
       "id": "170",
       "powiat": "powiat biłgorajski",
       "wojewodztwo": "lubelskie",
-      "aed": 56,
-      "z_godzinami_pct": 91,
+      "aed": 59,
+      "z_godzinami_pct": 92,
       "z_opisem_pct": 95,
-      "z_kontrola_pct": 9,
+      "z_kontrola_pct": 8,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 58
     },
@@ -112,17 +112,6 @@
       "indeks_gotowosci": 57
     },
     {
-      "id": "214",
-      "powiat": "powiat ostrowski",
-      "wojewodztwo": "wielkopolskie",
-      "aed": 95,
-      "z_godzinami_pct": 51,
-      "z_opisem_pct": 100,
-      "z_kontrola_pct": 56,
-      "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 57
-    },
-    {
       "id": "289",
       "powiat": "powiat bialski",
       "wojewodztwo": "lubelskie",
@@ -143,6 +132,17 @@
       "z_kontrola_pct": 48,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 57
+    },
+    {
+      "id": "214",
+      "powiat": "powiat ostrowski",
+      "wojewodztwo": "wielkopolskie",
+      "aed": 94,
+      "z_godzinami_pct": 49,
+      "z_opisem_pct": 100,
+      "z_kontrola_pct": 55,
+      "od_dysponentow_pct": 0,
+      "indeks_gotowosci": 56
     },
     {
       "id": "141",
@@ -247,10 +247,10 @@
       "id": "241",
       "powiat": "powiat myszkowski",
       "wojewodztwo": "śląskie",
-      "aed": 30,
-      "z_godzinami_pct": 73,
+      "aed": 31,
+      "z_godzinami_pct": 71,
       "z_opisem_pct": 100,
-      "z_kontrola_pct": 10,
+      "z_kontrola_pct": 13,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 54
     },
@@ -578,7 +578,7 @@
       "powiat": "powiat poznański",
       "wojewodztwo": "wielkopolskie",
       "aed": 312,
-      "z_godzinami_pct": 33,
+      "z_godzinami_pct": 34,
       "z_opisem_pct": 98,
       "z_kontrola_pct": 51,
       "od_dysponentow_pct": 0,
@@ -1017,10 +1017,10 @@
       "id": "104",
       "powiat": "powiat nowosądecki",
       "wojewodztwo": "małopolskie",
-      "aed": 93,
-      "z_godzinami_pct": 49,
+      "aed": 94,
+      "z_godzinami_pct": 50,
       "z_opisem_pct": 96,
-      "z_kontrola_pct": 24,
+      "z_kontrola_pct": 23,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 48
     },
@@ -1303,7 +1303,7 @@
       "id": "302",
       "powiat": "powiat Warszawa",
       "wojewodztwo": "mazowieckie",
-      "aed": 1081,
+      "aed": 1082,
       "z_godzinami_pct": 42,
       "z_opisem_pct": 93,
       "z_kontrola_pct": 31,
@@ -1861,6 +1861,17 @@
       "indeks_gotowosci": 46
     },
     {
+      "id": "73",
+      "powiat": "powiat wschowski",
+      "wojewodztwo": "lubuskie",
+      "aed": 20,
+      "z_godzinami_pct": 20,
+      "z_opisem_pct": 95,
+      "z_kontrola_pct": 55,
+      "od_dysponentow_pct": 0,
+      "indeks_gotowosci": 46
+    },
+    {
       "id": "225",
       "powiat": "powiat strzelecko-drezdenecki",
       "wojewodztwo": "lubuskie",
@@ -2147,17 +2158,6 @@
       "indeks_gotowosci": 45
     },
     {
-      "id": "73",
-      "powiat": "powiat wschowski",
-      "wojewodztwo": "lubuskie",
-      "aed": 17,
-      "z_godzinami_pct": 24,
-      "z_opisem_pct": 94,
-      "z_kontrola_pct": 47,
-      "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 45
-    },
-    {
       "id": "261",
       "powiat": "powiat wysokomazowiecki",
       "wojewodztwo": "podlaskie",
@@ -2334,6 +2334,17 @@
       "indeks_gotowosci": 44
     },
     {
+      "id": "359",
+      "powiat": "powiat Zabrze",
+      "wojewodztwo": "śląskie",
+      "aed": 34,
+      "z_godzinami_pct": 24,
+      "z_opisem_pct": 91,
+      "z_kontrola_pct": 47,
+      "od_dysponentow_pct": 0,
+      "indeks_gotowosci": 44
+    },
+    {
       "id": "25",
       "powiat": "powiat Leszno",
       "wojewodztwo": "wielkopolskie",
@@ -2341,17 +2352,6 @@
       "z_godzinami_pct": 52,
       "z_opisem_pct": 88,
       "z_kontrola_pct": 12,
-      "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 44
-    },
-    {
-      "id": "359",
-      "powiat": "powiat Zabrze",
-      "wojewodztwo": "śląskie",
-      "aed": 33,
-      "z_godzinami_pct": 24,
-      "z_opisem_pct": 91,
-      "z_kontrola_pct": 45,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 44
     },
@@ -2543,6 +2543,17 @@
       "indeks_gotowosci": 43
     },
     {
+      "id": "191",
+      "powiat": "powiat kłobucki",
+      "wojewodztwo": "śląskie",
+      "aed": 42,
+      "z_godzinami_pct": 33,
+      "z_opisem_pct": 93,
+      "z_kontrola_pct": 26,
+      "od_dysponentow_pct": 0,
+      "indeks_gotowosci": 43
+    },
+    {
       "id": "75",
       "powiat": "powiat międzyrzecki",
       "wojewodztwo": "lubuskie",
@@ -2708,12 +2719,34 @@
       "indeks_gotowosci": 42
     },
     {
+      "id": "70",
+      "powiat": "powiat Lublin",
+      "wojewodztwo": "lubelskie",
+      "aed": 145,
+      "z_godzinami_pct": 37,
+      "z_opisem_pct": 86,
+      "z_kontrola_pct": 23,
+      "od_dysponentow_pct": 0,
+      "indeks_gotowosci": 42
+    },
+    {
       "id": "278",
       "powiat": "powiat nowotarski",
       "wojewodztwo": "małopolskie",
       "aed": 109,
       "z_godzinami_pct": 23,
       "z_opisem_pct": 97,
+      "z_kontrola_pct": 29,
+      "od_dysponentow_pct": 0,
+      "indeks_gotowosci": 42
+    },
+    {
+      "id": "181",
+      "powiat": "powiat kościański",
+      "wojewodztwo": "wielkopolskie",
+      "aed": 77,
+      "z_godzinami_pct": 31,
+      "z_opisem_pct": 88,
       "z_kontrola_pct": 29,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 42
@@ -2961,17 +2994,6 @@
       "indeks_gotowosci": 42
     },
     {
-      "id": "70",
-      "powiat": "powiat Lublin",
-      "wojewodztwo": "lubelskie",
-      "aed": 145,
-      "z_godzinami_pct": 36,
-      "z_opisem_pct": 86,
-      "z_kontrola_pct": 23,
-      "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 41
-    },
-    {
       "id": "47",
       "powiat": "powiat Toruń",
       "wojewodztwo": "kujawsko-pomorskie",
@@ -2990,17 +3012,6 @@
       "z_godzinami_pct": 25,
       "z_opisem_pct": 93,
       "z_kontrola_pct": 28,
-      "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 41
-    },
-    {
-      "id": "181",
-      "powiat": "powiat kościański",
-      "wojewodztwo": "wielkopolskie",
-      "aed": 75,
-      "z_godzinami_pct": 29,
-      "z_opisem_pct": 88,
-      "z_kontrola_pct": 29,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 41
     },
@@ -3056,17 +3067,6 @@
       "z_godzinami_pct": 38,
       "z_opisem_pct": 82,
       "z_kontrola_pct": 23,
-      "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 41
-    },
-    {
-      "id": "191",
-      "powiat": "powiat kłobucki",
-      "wojewodztwo": "śląskie",
-      "aed": 33,
-      "z_godzinami_pct": 42,
-      "z_opisem_pct": 91,
-      "z_kontrola_pct": 6,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 41
     },
