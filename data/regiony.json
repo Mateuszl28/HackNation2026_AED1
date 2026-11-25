@@ -1,5 +1,5 @@
 {
-  "data_wygenerowania": "2026-11-24",
+  "data_wygenerowania": "2026-11-25",
   "zrodlo_ludnosci": "GUS, stan na 31.12.2023 (zaokrąglone)",
   "regiony": [
     {
@@ -31,8 +31,8 @@
     {
       "wojewodztwo": "wielkopolskie",
       "terc": "30",
-      "aed": 2276,
-      "na_100_tys": 65.4,
+      "aed": 2282,
+      "na_100_tys": 65.6,
       "z_godzinami_pct": 41,
       "z_opisem_pct": 94,
       "z_kontrola_pct": 38,
@@ -70,8 +70,8 @@
     {
       "wojewodztwo": "podlaskie",
       "terc": "20",
-      "aed": 350,
-      "na_100_tys": 30.1,
+      "aed": 351,
+      "na_100_tys": 30.2,
       "z_godzinami_pct": 41,
       "z_opisem_pct": 95,
       "z_kontrola_pct": 28,
@@ -83,11 +83,11 @@
     {
       "wojewodztwo": "śląskie",
       "terc": "24",
-      "aed": 1744,
+      "aed": 1746,
       "na_100_tys": 40.1,
       "z_godzinami_pct": 39,
       "z_opisem_pct": 93,
-      "z_kontrola_pct": 33,
+      "z_kontrola_pct": 34,
       "od_dysponentow_pct": 0,
       "zbiory_dysponentow": 0,
       "srednia_jakosc": 47,
@@ -109,11 +109,11 @@
     {
       "wojewodztwo": "lubelskie",
       "terc": "06",
-      "aed": 712,
-      "na_100_tys": 34.9,
-      "z_godzinami_pct": 41,
+      "aed": 717,
+      "na_100_tys": 35.2,
+      "z_godzinami_pct": 42,
       "z_opisem_pct": 91,
-      "z_kontrola_pct": 26,
+      "z_kontrola_pct": 25,
       "od_dysponentow_pct": 0,
       "zbiory_dysponentow": 0,
       "srednia_jakosc": 45,
@@ -135,8 +135,8 @@
     {
       "wojewodztwo": "małopolskie",
       "terc": "12",
-      "aed": 1712,
-      "na_100_tys": 49.9,
+      "aed": 1716,
+      "na_100_tys": 50,
       "z_godzinami_pct": 31,
       "z_opisem_pct": 92,
       "z_kontrola_pct": 35,

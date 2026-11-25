@@ -2,6 +2,135 @@
  "opis": "Dziennik zmian zbioru AED (porównanie kolejnych aktualizacji po aed_uid)",
  "historia": [
   {
+   "data": "2026-11-25T11:50:26.948Z",
+   "poprzednio": 18366,
+   "teraz": 18384,
+   "dodane": 19,
+   "usuniete": 1,
+   "zmienione": 7,
+   "zmiany_pol": {
+    "szerokosc_geograficzna": 3,
+    "dysponent": 2,
+    "godziny_dostepnosci": 2,
+    "nazwa": 2,
+    "opis_lokalizacji": 2,
+    "dlugosc_geograficzna": 2,
+    "data_ostatniej_kontroli": 2,
+    "telefon_kontaktowy": 1
+   },
+   "przyklady": {
+    "dodane": [
+     {
+      "aed_uid": "PL-AED-osm-node-14412061301",
+      "nazwa": "Defibrylator AED",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14412065601",
+      "nazwa": "Defibrylator AED",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14412599801",
+      "nazwa": "Ochotnicza Straż Pożarna w Turzyńcu",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14412599802",
+      "nazwa": "Ochotnicza Straż Pożarna w Guciowie",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14412599803",
+      "nazwa": "Ochotnicza Straż Pożarna w Obroczy",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14412599804",
+      "nazwa": "Ochotnicza Straż Pożarna w Kosobudach",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14412599805",
+      "nazwa": "Ochotnicza Straż Pożarna w Zwierzyńcu",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14412599806",
+      "nazwa": "Żłobek \"Berek\" w Wywłoczce",
+      "miejscowosc": ""
+     }
+    ],
+    "usuniete": [
+     {
+      "aed_uid": "PL-AED-osm-node-14405949801",
+      "nazwa": "AED: Na ścianie budynku obok bramy garażowej",
+      "miejscowosc": ""
+     }
+    ],
+    "zmienione": [
+     {
+      "aed_uid": "PL-AED-osm-node-11631912738",
+      "nazwa": "Gmina Zwierzyniec",
+      "pola": [
+       "dysponent",
+       "godziny_dostepnosci",
+       "nazwa",
+       "opis_lokalizacji"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-12648387401",
+      "nazwa": "Ochotnicza Straż Pożarna w Rudzie Łańcuckiej",
+      "pola": [
+       "dlugosc_geograficzna",
+       "dysponent",
+       "godziny_dostepnosci",
+       "nazwa",
+       "szerokosc_geograficzna"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-12685314450",
+      "nazwa": "OSP Kościelisko",
+      "pola": [
+       "data_ostatniej_kontroli",
+       "telefon_kontaktowy"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-13226641325",
+      "nazwa": "AED: na ścianie Biedronki",
+      "pola": [
+       "szerokosc_geograficzna"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-8734791024",
+      "nazwa": "OSP Bobrowice",
+      "pola": [
+       "data_ostatniej_kontroli"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-9416338417",
+      "nazwa": "OSP Rudawa",
+      "pola": [
+       "dlugosc_geograficzna",
+       "szerokosc_geograficzna"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-9579081169",
+      "nazwa": "Gmina Kalisz Pomorski",
+      "pola": [
+       "opis_lokalizacji"
+      ]
+     }
+    ]
+   }
+  },
+  {
    "data": "2026-11-24T13:01:48.597Z",
    "poprzednio": 18345,
    "teraz": 18366,
