@@ -2,6 +2,156 @@
  "opis": "Dziennik zmian zbioru AED (porównanie kolejnych aktualizacji po aed_uid)",
  "historia": [
   {
+   "data": "2026-11-26T11:39:00.185Z",
+   "poprzednio": 18384,
+   "teraz": 18541,
+   "dodane": 157,
+   "usuniete": 0,
+   "zmienione": 21,
+   "zmiany_pol": {
+    "data_ostatniej_kontroli": 14,
+    "opis_lokalizacji": 10,
+    "nazwa": 10,
+    "telefon_kontaktowy": 9,
+    "dostep": 7,
+    "kondygnacja": 5,
+    "dlugosc_geograficzna": 3,
+    "szerokosc_geograficzna": 3,
+    "zdjecie_url": 3,
+    "wewnatrz_budynku": 2,
+    "dysponent": 1,
+    "godziny_dostepnosci": 1
+   },
+   "przyklady": {
+    "dodane": [
+     {
+      "aed_uid": "PL-AED-osm-node-14416210601",
+      "nazwa": "23 Wojskowy Szpital Uzdrowiskowo-Rehabilitacyjny SP ZOZ",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14416319201",
+      "nazwa": "Defibrylator AED",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14416331401",
+      "nazwa": "AED: na ścianie po lewej stronie w pokoju biblioteka / archiwum",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14416332401",
+      "nazwa": "Defibrylator AED",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14416345801",
+      "nazwa": "AED: Przedszkole Integracyjne nr 12, Zgodna 10-14, 50-432 Wrocław",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14416365901",
+      "nazwa": "AED: na ścianie po lewej stronie",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14416389701",
+      "nazwa": "AED: Portiernia",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14416421901",
+      "nazwa": "Defibrylator AED",
+      "miejscowosc": ""
+     }
+    ],
+    "usuniete": [],
+    "zmienione": [
+     {
+      "aed_uid": "PL-AED-osm-node-10072761017",
+      "nazwa": "AED: Rozjazd ul. Beskidzkiej i ul. Browarnej obok kapliczki",
+      "pola": [
+       "data_ostatniej_kontroli",
+       "dostep",
+       "wewnatrz_budynku"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-10543676809",
+      "nazwa": "Defibrylator AED",
+      "pola": [
+       "data_ostatniej_kontroli",
+       "kondygnacja",
+       "opis_lokalizacji",
+       "telefon_kontaktowy"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-11293090269",
+      "nazwa": "Ochotnicza Straż Pożarna w Łące",
+      "pola": [
+       "dlugosc_geograficzna",
+       "dysponent",
+       "godziny_dostepnosci",
+       "nazwa",
+       "szerokosc_geograficzna"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-12065040469",
+      "nazwa": "AED: przy sekretariacie",
+      "pola": [
+       "data_ostatniej_kontroli",
+       "dostep",
+       "kondygnacja",
+       "nazwa",
+       "opis_lokalizacji",
+       "telefon_kontaktowy"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-12873343602",
+      "nazwa": "Defibrylator AED",
+      "pola": [
+       "data_ostatniej_kontroli",
+       "dostep",
+       "nazwa",
+       "opis_lokalizacji",
+       "telefon_kontaktowy"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-13341342902",
+      "nazwa": "AED: W wiatrołapie",
+      "pola": [
+       "data_ostatniej_kontroli",
+       "nazwa",
+       "opis_lokalizacji"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-13381126268",
+      "nazwa": "AED: dostępność w godzinach pracy szkoły",
+      "pola": [
+       "wewnatrz_budynku"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-13539348199",
+      "nazwa": "AED: W holu przedszkola",
+      "pola": [
+       "data_ostatniej_kontroli",
+       "dostep",
+       "kondygnacja",
+       "nazwa",
+       "opis_lokalizacji",
+       "telefon_kontaktowy"
+      ]
+     }
+    ]
+   }
+  },
+  {
    "data": "2026-11-25T11:50:26.948Z",
    "poprzednio": 18366,
    "teraz": 18384,

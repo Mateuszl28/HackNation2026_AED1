@@ -1,12 +1,12 @@
 {
-  "data_wygenerowania": "2026-11-25",
+  "data_wygenerowania": "2026-11-26",
   "zrodlo_ludnosci": "GUS, stan na 31.12.2023 (zaokrąglone)",
   "regiony": [
     {
       "wojewodztwo": "świętokrzyskie",
       "terc": "26",
-      "aed": 545,
-      "na_100_tys": 46.3,
+      "aed": 548,
+      "na_100_tys": 46.6,
       "z_godzinami_pct": 50,
       "z_opisem_pct": 95,
       "z_kontrola_pct": 29,
@@ -18,8 +18,8 @@
     {
       "wojewodztwo": "łódzkie",
       "terc": "10",
-      "aed": 1006,
-      "na_100_tys": 42.1,
+      "aed": 1007,
+      "na_100_tys": 42.2,
       "z_godzinami_pct": 38,
       "z_opisem_pct": 95,
       "z_kontrola_pct": 41,
@@ -31,8 +31,8 @@
     {
       "wojewodztwo": "wielkopolskie",
       "terc": "30",
-      "aed": 2282,
-      "na_100_tys": 65.6,
+      "aed": 2290,
+      "na_100_tys": 65.8,
       "z_godzinami_pct": 41,
       "z_opisem_pct": 94,
       "z_kontrola_pct": 38,
@@ -53,6 +53,19 @@
       "zbiory_dysponentow": 0,
       "srednia_jakosc": 47,
       "indeks_gotowosci": 47
+    },
+    {
+      "wojewodztwo": "dolnośląskie",
+      "terc": "02",
+      "aed": 1644,
+      "na_100_tys": 57.1,
+      "z_godzinami_pct": 32,
+      "z_opisem_pct": 92,
+      "z_kontrola_pct": 42,
+      "od_dysponentow_pct": 0,
+      "zbiory_dysponentow": 0,
+      "srednia_jakosc": 48,
+      "indeks_gotowosci": 46
     },
     {
       "wojewodztwo": "podkarpackie",
@@ -83,8 +96,8 @@
     {
       "wojewodztwo": "śląskie",
       "terc": "24",
-      "aed": 1746,
-      "na_100_tys": 40.1,
+      "aed": 1747,
+      "na_100_tys": 40.2,
       "z_godzinami_pct": 39,
       "z_opisem_pct": 93,
       "z_kontrola_pct": 34,
@@ -94,23 +107,10 @@
       "indeks_gotowosci": 46
     },
     {
-      "wojewodztwo": "dolnośląskie",
-      "terc": "02",
-      "aed": 1513,
-      "na_100_tys": 52.6,
-      "z_godzinami_pct": 35,
-      "z_opisem_pct": 92,
-      "z_kontrola_pct": 37,
-      "od_dysponentow_pct": 0,
-      "zbiory_dysponentow": 0,
-      "srednia_jakosc": 46,
-      "indeks_gotowosci": 45
-    },
-    {
       "wojewodztwo": "lubelskie",
       "terc": "06",
-      "aed": 717,
-      "na_100_tys": 35.2,
+      "aed": 723,
+      "na_100_tys": 35.5,
       "z_godzinami_pct": 42,
       "z_opisem_pct": 91,
       "z_kontrola_pct": 25,
@@ -122,7 +122,7 @@
     {
       "wojewodztwo": "mazowieckie",
       "terc": "14",
-      "aed": 2447,
+      "aed": 2448,
       "na_100_tys": 44.4,
       "z_godzinami_pct": 36,
       "z_opisem_pct": 91,
@@ -135,8 +135,8 @@
     {
       "wojewodztwo": "małopolskie",
       "terc": "12",
-      "aed": 1716,
-      "na_100_tys": 50,
+      "aed": 1717,
+      "na_100_tys": 50.1,
       "z_godzinami_pct": 31,
       "z_opisem_pct": 92,
       "z_kontrola_pct": 35,
@@ -161,9 +161,9 @@
     {
       "wojewodztwo": "kujawsko-pomorskie",
       "terc": "04",
-      "aed": 818,
-      "na_100_tys": 40.8,
-      "z_godzinami_pct": 28,
+      "aed": 821,
+      "na_100_tys": 41,
+      "z_godzinami_pct": 29,
       "z_opisem_pct": 87,
       "z_kontrola_pct": 41,
       "od_dysponentow_pct": 0,
@@ -200,8 +200,8 @@
     {
       "wojewodztwo": "warmińsko-mazurskie",
       "terc": "28",
-      "aed": 692,
-      "na_100_tys": 50.1,
+      "aed": 694,
+      "na_100_tys": 50.3,
       "z_godzinami_pct": 33,
       "z_opisem_pct": 88,
       "z_kontrola_pct": 29,

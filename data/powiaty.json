@@ -1,5 +1,5 @@
 {
-  "data_wygenerowania": "2026-11-25",
+  "data_wygenerowania": "2026-11-26",
   "powiaty": [
     {
       "id": "190",
@@ -27,12 +27,12 @@
       "id": "370",
       "powiat": "powiat Grudziądz",
       "wojewodztwo": "kujawsko-pomorskie",
-      "aed": 39,
-      "z_godzinami_pct": 67,
+      "aed": 40,
+      "z_godzinami_pct": 65,
       "z_opisem_pct": 100,
-      "z_kontrola_pct": 69,
+      "z_kontrola_pct": 68,
       "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 64
+      "indeks_gotowosci": 63
     },
     {
       "id": "56",
@@ -112,17 +112,6 @@
       "indeks_gotowosci": 57
     },
     {
-      "id": "289",
-      "powiat": "powiat bialski",
-      "wojewodztwo": "lubelskie",
-      "aed": 49,
-      "z_godzinami_pct": 63,
-      "z_opisem_pct": 98,
-      "z_kontrola_pct": 41,
-      "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 57
-    },
-    {
       "id": "201",
       "powiat": "powiat leski",
       "wojewodztwo": "podkarpackie",
@@ -132,6 +121,17 @@
       "z_kontrola_pct": 48,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 57
+    },
+    {
+      "id": "289",
+      "powiat": "powiat bialski",
+      "wojewodztwo": "lubelskie",
+      "aed": 51,
+      "z_godzinami_pct": 61,
+      "z_opisem_pct": 98,
+      "z_kontrola_pct": 43,
+      "od_dysponentow_pct": 0,
+      "indeks_gotowosci": 56
     },
     {
       "id": "141",
@@ -159,7 +159,7 @@
       "id": "214",
       "powiat": "powiat ostrowski",
       "wojewodztwo": "wielkopolskie",
-      "aed": 96,
+      "aed": 97,
       "z_godzinami_pct": 48,
       "z_opisem_pct": 100,
       "z_kontrola_pct": 54,
@@ -390,8 +390,8 @@
       "id": "242",
       "powiat": "powiat oleśnicki",
       "wojewodztwo": "dolnośląskie",
-      "aed": 82,
-      "z_godzinami_pct": 63,
+      "aed": 83,
+      "z_godzinami_pct": 64,
       "z_opisem_pct": 98,
       "z_kontrola_pct": 17,
       "od_dysponentow_pct": 0,
@@ -405,17 +405,6 @@
       "z_godzinami_pct": 66,
       "z_opisem_pct": 96,
       "z_kontrola_pct": 18,
-      "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 52
-    },
-    {
-      "id": "351",
-      "powiat": "powiat krotoszyński",
-      "wojewodztwo": "wielkopolskie",
-      "aed": 49,
-      "z_godzinami_pct": 37,
-      "z_opisem_pct": 98,
-      "z_kontrola_pct": 55,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 52
     },
@@ -442,6 +431,17 @@
       "indeks_gotowosci": 52
     },
     {
+      "id": "291",
+      "powiat": "powiat zamojski",
+      "wojewodztwo": "lubelskie",
+      "aed": 30,
+      "z_godzinami_pct": 53,
+      "z_opisem_pct": 100,
+      "z_kontrola_pct": 30,
+      "od_dysponentow_pct": 0,
+      "indeks_gotowosci": 52
+    },
+    {
       "id": "272",
       "powiat": "powiat węgorzewski",
       "wojewodztwo": "warmińsko-mazurskie",
@@ -460,6 +460,28 @@
       "z_godzinami_pct": 45,
       "z_opisem_pct": 92,
       "z_kontrola_pct": 52,
+      "od_dysponentow_pct": 0,
+      "indeks_gotowosci": 51
+    },
+    {
+      "id": "209",
+      "powiat": "powiat rzeszowski",
+      "wojewodztwo": "podkarpackie",
+      "aed": 97,
+      "z_godzinami_pct": 52,
+      "z_opisem_pct": 98,
+      "z_kontrola_pct": 28,
+      "od_dysponentow_pct": 0,
+      "indeks_gotowosci": 51
+    },
+    {
+      "id": "351",
+      "powiat": "powiat krotoszyński",
+      "wojewodztwo": "wielkopolskie",
+      "aed": 54,
+      "z_godzinami_pct": 33,
+      "z_opisem_pct": 98,
+      "z_kontrola_pct": 59,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 51
     },
@@ -530,17 +552,6 @@
       "indeks_gotowosci": 51
     },
     {
-      "id": "291",
-      "powiat": "powiat zamojski",
-      "wojewodztwo": "lubelskie",
-      "aed": 26,
-      "z_godzinami_pct": 46,
-      "z_opisem_pct": 100,
-      "z_kontrola_pct": 35,
-      "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 51
-    },
-    {
       "id": "91",
       "powiat": "powiat złotoryjski",
       "wojewodztwo": "dolnośląskie",
@@ -577,7 +588,7 @@
       "id": "114",
       "powiat": "powiat Poznań",
       "wojewodztwo": "wielkopolskie",
-      "aed": 335,
+      "aed": 336,
       "z_godzinami_pct": 53,
       "z_opisem_pct": 95,
       "z_kontrola_pct": 26,
@@ -592,17 +603,6 @@
       "z_godzinami_pct": 34,
       "z_opisem_pct": 98,
       "z_kontrola_pct": 51,
-      "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 50
-    },
-    {
-      "id": "209",
-      "powiat": "powiat rzeszowski",
-      "wojewodztwo": "podkarpackie",
-      "aed": 97,
-      "z_godzinami_pct": 51,
-      "z_opisem_pct": 98,
-      "z_kontrola_pct": 28,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 50
     },
@@ -805,6 +805,17 @@
       "indeks_gotowosci": 50
     },
     {
+      "id": "33",
+      "powiat": "powiat Wrocław",
+      "wojewodztwo": "dolnośląskie",
+      "aed": 531,
+      "z_godzinami_pct": 29,
+      "z_opisem_pct": 94,
+      "z_kontrola_pct": 58,
+      "od_dysponentow_pct": 0,
+      "indeks_gotowosci": 49
+    },
+    {
       "id": "51",
       "powiat": "powiat krośnieński",
       "wojewodztwo": "podkarpackie",
@@ -1003,17 +1014,6 @@
       "indeks_gotowosci": 49
     },
     {
-      "id": "33",
-      "powiat": "powiat Wrocław",
-      "wojewodztwo": "dolnośląskie",
-      "aed": 405,
-      "z_godzinami_pct": 37,
-      "z_opisem_pct": 93,
-      "z_kontrola_pct": 44,
-      "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 48
-    },
-    {
       "id": "331",
       "powiat": "powiat Rzeszów",
       "wojewodztwo": "podkarpackie",
@@ -1182,10 +1182,10 @@
       "id": "111",
       "powiat": "powiat piotrkowski",
       "wojewodztwo": "łódzkie",
-      "aed": 28,
-      "z_godzinami_pct": 36,
+      "aed": 29,
+      "z_godzinami_pct": 38,
       "z_opisem_pct": 100,
-      "z_kontrola_pct": 36,
+      "z_kontrola_pct": 34,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 48
     },
@@ -1314,8 +1314,8 @@
       "id": "92",
       "powiat": "powiat wrocławski",
       "wojewodztwo": "dolnośląskie",
-      "aed": 132,
-      "z_godzinami_pct": 30,
+      "aed": 133,
+      "z_godzinami_pct": 29,
       "z_opisem_pct": 90,
       "z_kontrola_pct": 56,
       "od_dysponentow_pct": 0,
@@ -1336,7 +1336,7 @@
       "id": "3",
       "powiat": "powiat piaseczyński",
       "wojewodztwo": "mazowieckie",
-      "aed": 93,
+      "aed": 94,
       "z_godzinami_pct": 41,
       "z_opisem_pct": 85,
       "z_kontrola_pct": 45,
@@ -1809,10 +1809,10 @@
       "id": "354",
       "powiat": "powiat sandomierski",
       "wojewodztwo": "świętokrzyskie",
-      "aed": 29,
-      "z_godzinami_pct": 38,
+      "aed": 32,
+      "z_godzinami_pct": 34,
       "z_opisem_pct": 100,
-      "z_kontrola_pct": 24,
+      "z_kontrola_pct": 31,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 46
     },
@@ -2183,10 +2183,10 @@
       "id": "345",
       "powiat": "powiat oświęcimski",
       "wojewodztwo": "małopolskie",
-      "aed": 96,
-      "z_godzinami_pct": 17,
+      "aed": 97,
+      "z_godzinami_pct": 16,
       "z_opisem_pct": 95,
-      "z_kontrola_pct": 52,
+      "z_kontrola_pct": 53,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 44
     },
@@ -2499,10 +2499,21 @@
       "indeks_gotowosci": 44
     },
     {
+      "id": "325",
+      "powiat": "powiat sanocki",
+      "wojewodztwo": "podkarpackie",
+      "aed": 67,
+      "z_godzinami_pct": 25,
+      "z_opisem_pct": 99,
+      "z_kontrola_pct": 27,
+      "od_dysponentow_pct": 0,
+      "indeks_gotowosci": 43
+    },
+    {
       "id": "147",
       "powiat": "powiat zawierciański",
       "wojewodztwo": "śląskie",
-      "aed": 63,
+      "aed": 64,
       "z_godzinami_pct": 38,
       "z_opisem_pct": 97,
       "z_kontrola_pct": 13,
@@ -2741,12 +2752,23 @@
       "indeks_gotowosci": 42
     },
     {
+      "id": "249",
+      "powiat": "powiat kłodzki",
+      "wojewodztwo": "dolnośląskie",
+      "aed": 88,
+      "z_godzinami_pct": 27,
+      "z_opisem_pct": 93,
+      "z_kontrola_pct": 31,
+      "od_dysponentow_pct": 0,
+      "indeks_gotowosci": 42
+    },
+    {
       "id": "181",
       "powiat": "powiat kościański",
       "wojewodztwo": "wielkopolskie",
-      "aed": 78,
+      "aed": 79,
       "z_godzinami_pct": 32,
-      "z_opisem_pct": 88,
+      "z_opisem_pct": 89,
       "z_kontrola_pct": 28,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 42
@@ -2759,17 +2781,6 @@
       "z_godzinami_pct": 20,
       "z_opisem_pct": 99,
       "z_kontrola_pct": 30,
-      "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 42
-    },
-    {
-      "id": "325",
-      "powiat": "powiat sanocki",
-      "wojewodztwo": "podkarpackie",
-      "aed": 67,
-      "z_godzinami_pct": 25,
-      "z_opisem_pct": 99,
-      "z_kontrola_pct": 25,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 42
     },
@@ -3001,17 +3012,6 @@
       "z_godzinami_pct": 21,
       "z_opisem_pct": 82,
       "z_kontrola_pct": 52,
-      "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 41
-    },
-    {
-      "id": "249",
-      "powiat": "powiat kłodzki",
-      "wojewodztwo": "dolnośląskie",
-      "aed": 85,
-      "z_godzinami_pct": 25,
-      "z_opisem_pct": 93,
-      "z_kontrola_pct": 28,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 41
     },
@@ -3324,6 +3324,17 @@
       "indeks_gotowosci": 40
     },
     {
+      "id": "281",
+      "powiat": "powiat olecki",
+      "wojewodztwo": "warmińsko-mazurskie",
+      "aed": 21,
+      "z_godzinami_pct": 29,
+      "z_opisem_pct": 95,
+      "z_kontrola_pct": 14,
+      "od_dysponentow_pct": 0,
+      "indeks_gotowosci": 40
+    },
+    {
       "id": "103",
       "powiat": "powiat głubczycki",
       "wojewodztwo": "opolskie",
@@ -3522,17 +3533,6 @@
       "indeks_gotowosci": 39
     },
     {
-      "id": "281",
-      "powiat": "powiat olecki",
-      "wojewodztwo": "warmińsko-mazurskie",
-      "aed": 19,
-      "z_godzinami_pct": 32,
-      "z_opisem_pct": 95,
-      "z_kontrola_pct": 5,
-      "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 39
-    },
-    {
       "id": "120",
       "powiat": "powiat siedlecki",
       "wojewodztwo": "mazowieckie",
@@ -3591,8 +3591,8 @@
       "id": "369",
       "powiat": "powiat Bydgoszcz",
       "wojewodztwo": "kujawsko-pomorskie",
-      "aed": 140,
-      "z_godzinami_pct": 36,
+      "aed": 142,
+      "z_godzinami_pct": 37,
       "z_opisem_pct": 75,
       "z_kontrola_pct": 21,
       "od_dysponentow_pct": 0,
@@ -3863,6 +3863,17 @@
       "indeks_gotowosci": 36
     },
     {
+      "id": "82",
+      "powiat": "powiat ostrowiecki",
+      "wojewodztwo": "świętokrzyskie",
+      "aed": 38,
+      "z_godzinami_pct": 18,
+      "z_opisem_pct": 84,
+      "z_kontrola_pct": 26,
+      "od_dysponentow_pct": 0,
+      "indeks_gotowosci": 36
+    },
+    {
       "id": "204",
       "powiat": "powiat ząbkowicki",
       "wojewodztwo": "dolnośląskie",
@@ -3980,17 +3991,6 @@
       "z_godzinami_pct": 18,
       "z_opisem_pct": 89,
       "z_kontrola_pct": 14,
-      "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 35
-    },
-    {
-      "id": "82",
-      "powiat": "powiat ostrowiecki",
-      "wojewodztwo": "świętokrzyskie",
-      "aed": 38,
-      "z_godzinami_pct": 18,
-      "z_opisem_pct": 82,
-      "z_kontrola_pct": 24,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 35
     },
