@@ -1,5 +1,5 @@
 {
-  "data_wygenerowania": "2026-11-26",
+  "data_wygenerowania": "2026-11-27",
   "zrodlo_ludnosci": "GUS, stan na 31.12.2023 (zaokrąglone)",
   "regiony": [
     {
@@ -34,7 +34,7 @@
       "aed": 2290,
       "na_100_tys": 65.8,
       "z_godzinami_pct": 41,
-      "z_opisem_pct": 94,
+      "z_opisem_pct": 95,
       "z_kontrola_pct": 38,
       "od_dysponentow_pct": 0,
       "zbiory_dysponentow": 0,
@@ -44,7 +44,7 @@
     {
       "wojewodztwo": "zachodniopomorskie",
       "terc": "32",
-      "aed": 1010,
+      "aed": 1011,
       "na_100_tys": 61.4,
       "z_godzinami_pct": 48,
       "z_opisem_pct": 90,
@@ -57,11 +57,11 @@
     {
       "wojewodztwo": "dolnośląskie",
       "terc": "02",
-      "aed": 1644,
-      "na_100_tys": 57.1,
+      "aed": 1678,
+      "na_100_tys": 58.3,
       "z_godzinami_pct": 32,
       "z_opisem_pct": 92,
-      "z_kontrola_pct": 42,
+      "z_kontrola_pct": 44,
       "od_dysponentow_pct": 0,
       "zbiory_dysponentow": 0,
       "srednia_jakosc": 48,
@@ -96,7 +96,7 @@
     {
       "wojewodztwo": "śląskie",
       "terc": "24",
-      "aed": 1747,
+      "aed": 1748,
       "na_100_tys": 40.2,
       "z_godzinami_pct": 39,
       "z_opisem_pct": 93,
@@ -109,20 +109,20 @@
     {
       "wojewodztwo": "lubelskie",
       "terc": "06",
-      "aed": 723,
-      "na_100_tys": 35.5,
-      "z_godzinami_pct": 42,
+      "aed": 725,
+      "na_100_tys": 35.6,
+      "z_godzinami_pct": 43,
       "z_opisem_pct": 91,
       "z_kontrola_pct": 25,
       "od_dysponentow_pct": 0,
       "zbiory_dysponentow": 0,
-      "srednia_jakosc": 45,
+      "srednia_jakosc": 46,
       "indeks_gotowosci": 45
     },
     {
       "wojewodztwo": "mazowieckie",
       "terc": "14",
-      "aed": 2448,
+      "aed": 2449,
       "na_100_tys": 44.4,
       "z_godzinami_pct": 36,
       "z_opisem_pct": 91,
@@ -148,9 +148,9 @@
     {
       "wojewodztwo": "opolskie",
       "terc": "16",
-      "aed": 477,
-      "na_100_tys": 50.5,
-      "z_godzinami_pct": 33,
+      "aed": 478,
+      "na_100_tys": 50.6,
+      "z_godzinami_pct": 34,
       "z_opisem_pct": 95,
       "z_kontrola_pct": 27,
       "od_dysponentow_pct": 0,
@@ -161,7 +161,7 @@
     {
       "wojewodztwo": "kujawsko-pomorskie",
       "terc": "04",
-      "aed": 821,
+      "aed": 822,
       "na_100_tys": 41,
       "z_godzinami_pct": 29,
       "z_opisem_pct": 87,
@@ -187,9 +187,9 @@
     {
       "wojewodztwo": "pomorskie",
       "terc": "22",
-      "aed": 1159,
+      "aed": 1160,
       "na_100_tys": 49.2,
-      "z_godzinami_pct": 32,
+      "z_godzinami_pct": 33,
       "z_opisem_pct": 92,
       "z_kontrola_pct": 22,
       "od_dysponentow_pct": 0,

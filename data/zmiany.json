@@ -2,6 +2,153 @@
  "opis": "Dziennik zmian zbioru AED (porównanie kolejnych aktualizacji po aed_uid)",
  "historia": [
   {
+   "data": "2026-11-27T11:32:33.814Z",
+   "poprzednio": 18541,
+   "teraz": 18583,
+   "dodane": 43,
+   "usuniete": 1,
+   "zmienione": 66,
+   "zmiany_pol": {
+    "wewnatrz_budynku": 42,
+    "data_ostatniej_kontroli": 14,
+    "godziny_dostepnosci": 9,
+    "opis_lokalizacji": 7,
+    "nazwa": 6,
+    "dostep": 5,
+    "telefon_kontaktowy": 5,
+    "zdjecie_url": 5,
+    "dysponent": 4,
+    "dostepny_dla_wozkow": 2,
+    "kondygnacja": 1,
+    "model": 1,
+    "producent": 1
+   },
+   "przyklady": {
+    "dodane": [
+     {
+      "aed_uid": "PL-AED-osm-node-13275874063",
+      "nazwa": "ZS-1",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14419723501",
+      "nazwa": "AED: Na ścianie w szatni dla dzieci.",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14419724701",
+      "nazwa": "AED: W przedsionku, na ścianie przy wejściu od strony ogrodu.",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14419725901",
+      "nazwa": "AED: w holu głównym za szatnią",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14419737202",
+      "nazwa": "AED: Na ścianie przy wejściu głównym",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14419745601",
+      "nazwa": "AED: Wewnątrz budynku, na ścianie przy wejściu",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14419745701",
+      "nazwa": "AED: W budynku",
+      "miejscowosc": ""
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-14419747158",
+      "nazwa": "OSP Baborów",
+      "miejscowosc": ""
+     }
+    ],
+    "usuniete": [
+     {
+      "aed_uid": "PL-AED-osm-node-12615840901",
+      "nazwa": "Defibrylator AED",
+      "miejscowosc": ""
+     }
+    ],
+    "zmienione": [
+     {
+      "aed_uid": "PL-AED-osm-node-10225575499",
+      "nazwa": "ZDM Poznań",
+      "pola": [
+       "data_ostatniej_kontroli",
+       "dostep",
+       "opis_lokalizacji"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-10942838697",
+      "nazwa": "Ochotnicza Straż Pożarna w Niedzieliskach",
+      "pola": [
+       "dysponent",
+       "godziny_dostepnosci",
+       "nazwa"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-11104789685",
+      "nazwa": "Ochotnicza Straż Pożarna w Majdanie Nepryskim",
+      "pola": [
+       "wewnatrz_budynku"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-12603836554",
+      "nazwa": "OSP Baborów",
+      "pola": [
+       "dysponent",
+       "godziny_dostepnosci",
+       "nazwa"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-12626433112",
+      "nazwa": "ZUS",
+      "pola": [
+       "data_ostatniej_kontroli",
+       "dostep",
+       "opis_lokalizacji",
+       "telefon_kontaktowy"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-12626433113",
+      "nazwa": "ZUS",
+      "pola": [
+       "data_ostatniej_kontroli",
+       "dostep"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-12986988201",
+      "nazwa": "AED: W holu basenu szkolnego, obok wejścia do pokoju ratowników.",
+      "pola": [
+       "data_ostatniej_kontroli",
+       "dostep",
+       "nazwa",
+       "opis_lokalizacji",
+       "telefon_kontaktowy",
+       "wewnatrz_budynku"
+      ]
+     },
+     {
+      "aed_uid": "PL-AED-osm-node-13189003202",
+      "nazwa": "AED: Przy wejściu do szkoły na lewo przy sekretariacie.",
+      "pola": [
+       "data_ostatniej_kontroli"
+      ]
+     }
+    ]
+   }
+  },
+  {
    "data": "2026-11-26T11:39:00.185Z",
    "poprzednio": 18384,
    "teraz": 18541,

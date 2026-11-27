@@ -1,5 +1,5 @@
 {
-  "data_wygenerowania": "2026-11-26",
+  "data_wygenerowania": "2026-11-27",
   "powiaty": [
     {
       "id": "190",
@@ -189,6 +189,17 @@
       "indeks_gotowosci": 55
     },
     {
+      "id": "291",
+      "powiat": "powiat zamojski",
+      "wojewodztwo": "lubelskie",
+      "aed": 32,
+      "z_godzinami_pct": 63,
+      "z_opisem_pct": 100,
+      "z_kontrola_pct": 28,
+      "od_dysponentow_pct": 0,
+      "indeks_gotowosci": 55
+    },
+    {
       "id": "145",
       "powiat": "powiat białogardzki",
       "wojewodztwo": "zachodniopomorskie",
@@ -283,7 +294,7 @@
       "aed": 79,
       "z_godzinami_pct": 63,
       "z_opisem_pct": 92,
-      "z_kontrola_pct": 32,
+      "z_kontrola_pct": 33,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 53
     },
@@ -427,17 +438,6 @@
       "z_godzinami_pct": 56,
       "z_opisem_pct": 95,
       "z_kontrola_pct": 34,
-      "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 52
-    },
-    {
-      "id": "291",
-      "powiat": "powiat zamojski",
-      "wojewodztwo": "lubelskie",
-      "aed": 30,
-      "z_godzinami_pct": 53,
-      "z_opisem_pct": 100,
-      "z_kontrola_pct": 30,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 52
     },
@@ -588,7 +588,7 @@
       "id": "114",
       "powiat": "powiat Poznań",
       "wojewodztwo": "wielkopolskie",
-      "aed": 336,
+      "aed": 335,
       "z_godzinami_pct": 53,
       "z_opisem_pct": 95,
       "z_kontrola_pct": 26,
@@ -808,10 +808,21 @@
       "id": "33",
       "powiat": "powiat Wrocław",
       "wojewodztwo": "dolnośląskie",
-      "aed": 531,
-      "z_godzinami_pct": 29,
-      "z_opisem_pct": 94,
-      "z_kontrola_pct": 58,
+      "aed": 565,
+      "z_godzinami_pct": 28,
+      "z_opisem_pct": 95,
+      "z_kontrola_pct": 60,
+      "od_dysponentow_pct": 0,
+      "indeks_gotowosci": 49
+    },
+    {
+      "id": "331",
+      "powiat": "powiat Rzeszów",
+      "wojewodztwo": "podkarpackie",
+      "aed": 130,
+      "z_godzinami_pct": 56,
+      "z_opisem_pct": 91,
+      "z_kontrola_pct": 22,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 49
     },
@@ -1012,17 +1023,6 @@
       "z_kontrola_pct": 20,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 49
-    },
-    {
-      "id": "331",
-      "powiat": "powiat Rzeszów",
-      "wojewodztwo": "podkarpackie",
-      "aed": 130,
-      "z_godzinami_pct": 55,
-      "z_opisem_pct": 91,
-      "z_kontrola_pct": 22,
-      "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 48
     },
     {
       "id": "328",
@@ -1839,6 +1839,17 @@
       "indeks_gotowosci": 46
     },
     {
+      "id": "148",
+      "powiat": "powiat Chorzów",
+      "wojewodztwo": "śląskie",
+      "aed": 23,
+      "z_godzinami_pct": 13,
+      "z_opisem_pct": 100,
+      "z_kontrola_pct": 61,
+      "od_dysponentow_pct": 0,
+      "indeks_gotowosci": 46
+    },
+    {
       "id": "212",
       "powiat": "powiat opoczyński",
       "wojewodztwo": "łódzkie",
@@ -2367,6 +2378,17 @@
       "indeks_gotowosci": 44
     },
     {
+      "id": "340",
+      "powiat": "powiat janowski",
+      "wojewodztwo": "lubelskie",
+      "aed": 28,
+      "z_godzinami_pct": 50,
+      "z_opisem_pct": 89,
+      "z_kontrola_pct": 11,
+      "od_dysponentow_pct": 0,
+      "indeks_gotowosci": 44
+    },
+    {
       "id": "243",
       "powiat": "powiat strzeliński",
       "wojewodztwo": "dolnośląskie",
@@ -2385,17 +2407,6 @@
       "z_godzinami_pct": 17,
       "z_opisem_pct": 92,
       "z_kontrola_pct": 58,
-      "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 44
-    },
-    {
-      "id": "148",
-      "powiat": "powiat Chorzów",
-      "wojewodztwo": "śląskie",
-      "aed": 23,
-      "z_godzinami_pct": 13,
-      "z_opisem_pct": 100,
-      "z_kontrola_pct": 52,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 44
     },
@@ -2623,10 +2634,10 @@
       "id": "199",
       "powiat": "powiat chełmiński",
       "wojewodztwo": "kujawsko-pomorskie",
-      "aed": 27,
-      "z_godzinami_pct": 26,
+      "aed": 28,
+      "z_godzinami_pct": 29,
       "z_opisem_pct": 89,
-      "z_kontrola_pct": 41,
+      "z_kontrola_pct": 39,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 43
     },
@@ -2638,6 +2649,17 @@
       "z_godzinami_pct": 38,
       "z_opisem_pct": 96,
       "z_kontrola_pct": 12,
+      "od_dysponentow_pct": 0,
+      "indeks_gotowosci": 43
+    },
+    {
+      "id": "37",
+      "powiat": "powiat choszczeński",
+      "wojewodztwo": "zachodniopomorskie",
+      "aed": 19,
+      "z_godzinami_pct": 26,
+      "z_opisem_pct": 89,
+      "z_kontrola_pct": 42,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 43
     },
@@ -2667,10 +2689,10 @@
       "id": "144",
       "powiat": "powiat Ruda Śląska",
       "wojewodztwo": "śląskie",
-      "aed": 17,
-      "z_godzinami_pct": 24,
-      "z_opisem_pct": 88,
-      "z_kontrola_pct": 47,
+      "aed": 18,
+      "z_godzinami_pct": 22,
+      "z_opisem_pct": 89,
+      "z_kontrola_pct": 50,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 43
     },
@@ -2851,6 +2873,17 @@
       "indeks_gotowosci": 42
     },
     {
+      "id": "253",
+      "powiat": "powiat grójecki",
+      "wojewodztwo": "mazowieckie",
+      "aed": 28,
+      "z_godzinami_pct": 14,
+      "z_opisem_pct": 96,
+      "z_kontrola_pct": 46,
+      "od_dysponentow_pct": 0,
+      "indeks_gotowosci": 42
+    },
+    {
       "id": "303",
       "powiat": "powiat krapkowicki",
       "wojewodztwo": "opolskie",
@@ -2858,17 +2891,6 @@
       "z_godzinami_pct": 25,
       "z_opisem_pct": 93,
       "z_kontrola_pct": 32,
-      "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 42
-    },
-    {
-      "id": "253",
-      "powiat": "powiat grójecki",
-      "wojewodztwo": "mazowieckie",
-      "aed": 27,
-      "z_godzinami_pct": 11,
-      "z_opisem_pct": 96,
-      "z_kontrola_pct": 48,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 42
     },
@@ -2906,6 +2928,17 @@
       "indeks_gotowosci": 42
     },
     {
+      "id": "103",
+      "powiat": "powiat głubczycki",
+      "wojewodztwo": "opolskie",
+      "aed": 21,
+      "z_godzinami_pct": 38,
+      "z_opisem_pct": 100,
+      "z_kontrola_pct": 5,
+      "od_dysponentow_pct": 0,
+      "indeks_gotowosci": 42
+    },
+    {
       "id": "135",
       "powiat": "powiat namysłowski",
       "wojewodztwo": "opolskie",
@@ -2924,17 +2957,6 @@
       "z_godzinami_pct": 42,
       "z_opisem_pct": 84,
       "z_kontrola_pct": 21,
-      "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 42
-    },
-    {
-      "id": "37",
-      "powiat": "powiat choszczeński",
-      "wojewodztwo": "zachodniopomorskie",
-      "aed": 18,
-      "z_godzinami_pct": 22,
-      "z_opisem_pct": 89,
-      "z_kontrola_pct": 44,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 42
     },
@@ -3012,6 +3034,17 @@
       "z_godzinami_pct": 21,
       "z_opisem_pct": 82,
       "z_kontrola_pct": 52,
+      "od_dysponentow_pct": 0,
+      "indeks_gotowosci": 41
+    },
+    {
+      "id": "156",
+      "powiat": "powiat wejherowski",
+      "wojewodztwo": "pomorskie",
+      "aed": 106,
+      "z_godzinami_pct": 39,
+      "z_opisem_pct": 77,
+      "z_kontrola_pct": 30,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 41
     },
@@ -3137,17 +3170,6 @@
       "indeks_gotowosci": 41
     },
     {
-      "id": "340",
-      "powiat": "powiat janowski",
-      "wojewodztwo": "lubelskie",
-      "aed": 28,
-      "z_godzinami_pct": 39,
-      "z_opisem_pct": 89,
-      "z_kontrola_pct": 11,
-      "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 41
-    },
-    {
       "id": "151",
       "powiat": "powiat Wałbrzych",
       "wojewodztwo": "dolnośląskie",
@@ -3190,17 +3212,6 @@
       "z_kontrola_pct": 57,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 41
-    },
-    {
-      "id": "156",
-      "powiat": "powiat wejherowski",
-      "wojewodztwo": "pomorskie",
-      "aed": 105,
-      "z_godzinami_pct": 37,
-      "z_opisem_pct": 77,
-      "z_kontrola_pct": 30,
-      "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 40
     },
     {
       "id": "222",
@@ -3331,17 +3342,6 @@
       "z_godzinami_pct": 29,
       "z_opisem_pct": 95,
       "z_kontrola_pct": 14,
-      "od_dysponentow_pct": 0,
-      "indeks_gotowosci": 40
-    },
-    {
-      "id": "103",
-      "powiat": "powiat głubczycki",
-      "wojewodztwo": "opolskie",
-      "aed": 20,
-      "z_godzinami_pct": 30,
-      "z_opisem_pct": 100,
-      "z_kontrola_pct": 5,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 40
     },
@@ -3888,10 +3888,10 @@
       "id": "229",
       "powiat": "powiat chodzieski",
       "wojewodztwo": "wielkopolskie",
-      "aed": 33,
+      "aed": 34,
       "z_godzinami_pct": 15,
-      "z_opisem_pct": 61,
-      "z_kontrola_pct": 64,
+      "z_opisem_pct": 62,
+      "z_kontrola_pct": 65,
       "od_dysponentow_pct": 0,
       "indeks_gotowosci": 36
     },
