@@ -22,7 +22,7 @@
         <dcat:keyword xml:lang="pl">pierwsza pomoc</dcat:keyword>
         <dcat:theme rdf:resource="http://publications.europa.eu/resource/authority/data-theme/HEAL"/>
         <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/POL"/>
-        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2026-11-27</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2026-11-28</dct:modified>
         <dct:accrualPeriodicity rdf:resource="http://publications.europa.eu/resource/authority/frequency/DAILY"/>
         <dct:spatial><dct:Location><dct:title xml:lang="pl">Polska</dct:title></dct:Location></dct:spatial>
         <dct:publisher>
@@ -38,7 +38,7 @@
         <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/CSV"/>
         <dcat:mediaType>text/csv</dcat:mediaType>
         <dct:license rdf:resource="https://opendatacommons.org/licenses/odbl/1-0/"/>
-        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2026-11-27</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2026-11-28</dct:modified>
         <dct:conformsTo rdf:resource="https://raw.githubusercontent.com/Mateuszl28/HackNation2026_AED1/main/standard/datapackage.json"/>
       </dcat:Distribution>
     </dcat:distribution>
@@ -50,7 +50,7 @@
         <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/XLSX"/>
         <dcat:mediaType>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</dcat:mediaType>
         <dct:license rdf:resource="https://opendatacommons.org/licenses/odbl/1-0/"/>
-        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2026-11-27</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2026-11-28</dct:modified>
         <dct:conformsTo rdf:resource="https://raw.githubusercontent.com/Mateuszl28/HackNation2026_AED1/main/standard/datapackage.json"/>
       </dcat:Distribution>
     </dcat:distribution>
@@ -62,7 +62,7 @@
         <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/JSON"/>
         <dcat:mediaType>application/json</dcat:mediaType>
         <dct:license rdf:resource="https://opendatacommons.org/licenses/odbl/1-0/"/>
-        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2026-11-27</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2026-11-28</dct:modified>
         <dct:conformsTo rdf:resource="https://raw.githubusercontent.com/Mateuszl28/HackNation2026_AED1/main/standard/datapackage.json"/>
       </dcat:Distribution>
     </dcat:distribution>
@@ -74,7 +74,7 @@
         <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/GEOJSON"/>
         <dcat:mediaType>application/geo+json</dcat:mediaType>
         <dct:license rdf:resource="https://opendatacommons.org/licenses/odbl/1-0/"/>
-        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2026-11-27</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2026-11-28</dct:modified>
         <dct:conformsTo rdf:resource="https://raw.githubusercontent.com/Mateuszl28/HackNation2026_AED1/main/standard/datapackage.json"/>
       </dcat:Distribution>
     </dcat:distribution>
